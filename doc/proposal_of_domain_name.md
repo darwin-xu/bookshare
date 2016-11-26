@@ -1,0 +1,13 @@
+|名字|是否被占用|费用|
+|:--:|:--:|:--:|
+|bookshare|yes||
+|book-share|yes||
+|sharebook|yes|100000|
+|share-book|yes||
+|booktuu|NO|55|
+|booktime|yes|
+|bookexchange|yes||
+|exchangebook|yes||
+|bookex|yes||
+|bookexc|yes||
+|bookexch|yes||

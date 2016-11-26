@@ -1,4 +1,4 @@
-# This is the repository for bookshare platfrom.
+# This is the repository for bookshare platform.
 
 ## Structure of directory
 
