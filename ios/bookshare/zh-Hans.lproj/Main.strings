@@ -1,0 +1,39 @@
+/* Class = "UITabBarItem"; title = "Wall"; ObjectID = "52E-jA-Ne2"; */
+"52E-jA-Ne2.title" = "涂鸦墙";
+
+/* Class = "UITabBarItem"; title = "Library"; ObjectID = "HN8-QV-Vmm"; */
+"HN8-QV-Vmm.title" = "图书馆";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "Kj3-bN-dL0"; */
+"Kj3-bN-dL0.text" = "作者";
+
+/* Class = "UINavigationItem"; title = "Book"; ObjectID = "LbM-WJ-QsP"; */
+"LbM-WJ-QsP.title" = "书";
+
+/* (No Commment) */
+"Ngh-GE-BeQ.title" = "图书馆";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "OaF-MQ-uks"; */
+"OaF-MQ-uks.text" = "作者";
+
+/* Class = "UINavigationItem"; title = "Library"; ObjectID = "PqS-rb-A0E"; */
+"PqS-rb-A0E.title" = "图书馆";
+
+/* Class = "UILabel"; text = "See All >"; ObjectID = "YcA-ku-Pa3"; */
+"YcA-ku-Pa3.text" = "所有 >";
+
+/* Class = "UIButton"; normalTitle = "botton"; ObjectID = "e2f-O7-y44"; */
+"e2f-O7-y44.normalTitle" = "按钮";
+
+/* Class = "UILabel"; text = "Book name"; ObjectID = "fE3-dL-bZV"; */
+"fE3-dL-bZV.text" = "数名";
+
+/* Class = "UITabBarItem"; title = "My"; ObjectID = "nFw-ag-kY2"; */
+"nFw-ag-kY2.title" = "我的";
+
+/* Class = "UITabBarItem"; title = "Activity"; ObjectID = "xVP-bA-rGW"; */
+"xVP-bA-rGW.title" = "活动";
+
+/* Class = "UILabel"; text = "Book name"; ObjectID = "zuz-sg-GYl"; */
+"zuz-sg-GYl.text" = "书名";
+

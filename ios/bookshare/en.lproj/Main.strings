@@ -1,0 +1,9 @@
+
+/* Class = "UITabBarItem"; title = "Item 2"; ObjectID = "52E-jA-Ne2"; */
+"52E-jA-Ne2.title" = "Wall";
+
+/* Class = "UITabBarItem"; title = "Item 1"; ObjectID = "Ngh-GE-BeQ"; */
+"Ngh-GE-BeQ.title" = "Library";
+
+/* Class = "UILabel"; text = "Hello world"; ObjectID = "fJr-y6-3BG"; */
+"fJr-y6-3BG.text" = "Hello world";
