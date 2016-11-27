@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.bookshare.motuan.motuan.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <RadioGroup
+        android:id="@+id/mHomeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBtBarBg"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/mLibrary"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorBtBarBg"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_home_library"
+            android:gravity="center"
+            android:text="@string/home_labrary"
+            android:textColor="@color/colorPrimaryblack" />
+
+        <RadioButton
+            android:id="@+id/mHomeFindRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorBtBarBg"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_home_tea"
+            android:gravity="center"
+            android:text="@string/home_tea"
+            android:textColor="@color/colorPrimaryblack" />
+
+        <RadioButton
+            android:id="@+id/mHomeSearchRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorBtBarBg"
+            android:button="@null"
+            android:drawableTop="@drawable/ic_home_handshake"
+            android:gravity="center"
+            android:text="@string/home_handshake"
+            android:textColor="@color/colorPrimaryblack" />
+
+        <RadioButton
+            android:id="@+id/mHomeProfileRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorBtBarBg"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/ic_home_home"
+            android:gravity="center"
+            android:text="@string/home_home"
+            android:textColor="@color/colorPrimaryblack" />
+    </RadioGroup>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+        <FrameLayout
+            android:id="@+id/mHomeContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"></FrameLayout>
+    </ScrollView>
+
+
+</RelativeLayout>
