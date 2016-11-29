@@ -2,7 +2,7 @@
 |:--:|:--:|:--:|
 |bookshare|yes||
 |book-share|yes||
-|sharebook|yes|100000|
+|sharebook|yes|100,000|
 |share-book|yes||
 |booktuu|NO|55|
 |booktime|yes|
@@ -11,3 +11,14 @@
 |bookex|yes||
 |bookexc|yes||
 |bookexch|yes||
+|booklan|yes||
+|booknet|yes|105,740|
+|booksharenet|NO|55|
+|netbookshare|NO||
+|booknetwork|YES|50,693|
+|bookxiang.com|YES||
+|booktu.com|YES||
+|bookto.com|YES||
+|book2.com|YES||
+|booktou.com|YES||
+|booktoo.com|YES|7,301|
