@@ -11,7 +11,6 @@ import Foundation
 class BackendService {
 
     static let session = URLSession(configuration: URLSessionConfiguration.default)
-    static var task: URLSessionDataTask?
 
     enum ColumnType {
         case Library
@@ -47,43 +46,51 @@ class BackendService {
         }
     }
 
-    static func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book {
+    static func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book? {
         // Try to get the data from local firstly
         // TODO:
         // If not, get it from backend, use callback function to notify.
         let url = URL(string: "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=" + forISBN)
-        task = session.dataTask(with: url! as URL) {
+        let task = session.dataTask(with: url! as URL) {
             (data, response, error) in
             if let error = error {
                 print(error.localizedDescription)
             } else if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
                     let book = parseData(forBook: data)
-                    notify(book)
+                    if (book != nil) {
+                        notify(book!)
+                    }
                 }
             }
         }
-
-        var book = Book()
-        return book
+        task.resume()
+        return nil
     }
 
-    static func parseData(forBook: Data?) -> Book {
-        let book = Book()
+    static func parseData(forBook: Data?) -> Book? {
+        var book: Book? = nil
         do {
             if let data = forBook,
                 let response = try JSONSerialization.jsonObject(with: data, options:JSONSerialization.ReadingOptions(rawValue: 0)) as? [String: AnyObject] {
-                book.name = response["title"] as! String?
-                book.subtitle = response["subtitle"] as! String?
-                book.author = response["author"] as! String?
-                book.translator = response["translator"] as! String?
-                //book.pubdate = response["pubdate"] as! String?
-                book.publisher = response["publisher"] as! String?
-                //book.price = response["price"] as! String?
-                book.summary = response["summary"] as! String?
-                //book.cover = response["images_medium"] as! String?
-                book.ISBN10 = response["isbn10"] as! String?
-                book.ISBN13 = response["isbn13"] as! String?
+                if let errorCode = response["error_code"] as? Int {
+                    if errorCode == 0 {
+                        book = Book()
+                        if let result  = response["result"] {
+                            book!.name = result["title"] as? String
+                            book!.subtitle = result["subtitle"] as? String
+                            book!.author = result["author"] as? String
+                            book!.translator = result["translator"] as? String
+                            //book!.pubdate = result["pubdate"] as? String
+                            book!.publisher = result["publisher"] as? String
+                            book!.price = result["price"] as? Float
+                            book!.summary = result["summary"] as? String
+                            //book!.cover = result["images_medium"] as? String
+                            book!.ISBN10 = result["isbn10"] as? String
+                            book!.ISBN13 = result["isbn13"] as? String
+                        }
+                    }
+                }
             }
         } catch let error as NSError {
             print("Error parsing results: \(error.localizedDescription)")

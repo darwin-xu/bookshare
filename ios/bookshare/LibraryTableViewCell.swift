@@ -37,14 +37,13 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bookCell", for: indexPath)
 
         if let bookCell = cell as? BookCollectionViewCell {
-
             let isbn = bookList[indexPath.row]
 
             if (isbn2Book[isbn] == nil) {
                 isbn2Book[isbn] = BackendService.getBook(forISBN: isbn) {book in
                     self.isbn2Book[isbn] = book
                     DispatchQueue.main.async {
-                        // reloaddata
+                        collectionView.reloadData()
                     }
                 }
             }
