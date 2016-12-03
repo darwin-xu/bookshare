@@ -20,7 +20,7 @@ class Book {
     var price: Float?
     var summary: String?
     var cover: UIImage?
-    var ISBN10: String?
-    var ISBN13: String?
+    var isbn10: String?
+    var isbn13: String?
 
 }

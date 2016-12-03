@@ -21,7 +21,7 @@ class LibraryViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        columnList = BackendService.getColumnList(forPageName: BackendService.ColumnType.Library) {columnList in
+        columnList = DataService.getColumnList(forPageName: DataService.ColumnType.Library) {columnList in
             self.columnList = columnList
             self.tableView.reloadData()
         }
@@ -50,9 +50,9 @@ class LibraryViewController: UITableViewController {
 
         if let libraryCell = cell as? LibraryTableViewCell {
             libraryCell.category?.text = columnList[indexPath.row]
-            libraryCell.bookList = BackendService.getBookISBNList(forColumnName: columnList[indexPath.row])
-            for isbn in libraryCell.bookList {
-                libraryCell.isbn2Book[isbn] = nil
+            libraryCell.bookListInCell = DataService.getBookISBNList(forColumnName: columnList[indexPath.row])
+            for isbn in libraryCell.bookListInCell {
+                libraryCell.isbn2BookInCell[isbn] = nil
             }
         }
 
@@ -60,20 +60,12 @@ class LibraryViewController: UITableViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        NSLog("..")
         if segue.identifier == "selectBook" {
-            if let cell = sender as? LibraryTableViewCell {
-                NSLog("%@ as LibraryTableViewCell", cell)
-            }
             if let libraryCell = sender as? BookCollectionViewCell {
-                NSLog("1")
                 if let bookDetail = segue.destination as? BookDetailViewController {
-                    NSLog("2 %@", libraryCell)
                     bookDetail.cover = libraryCell.bookCover.image
                     bookDetail.name = libraryCell.bookName.text
                     bookDetail.auth = libraryCell.author.text
-                    //bookDetail.bookName?.text = libraryCell.bookName?.text
-                    //bookDetail.author?.text = libraryCell.author?.text
                 }
             }
 
