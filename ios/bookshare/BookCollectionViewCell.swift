@@ -9,9 +9,9 @@
 import UIKit
 
 class BookCollectionViewCell: UICollectionViewCell {
-    
+
     @IBOutlet weak var bookCover: UIImageView!
     @IBOutlet weak var bookName: UILabel!
     @IBOutlet weak var author: UILabel!
-    
+
 }
