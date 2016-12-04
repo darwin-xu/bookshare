@@ -77,11 +77,11 @@ class DataService {
                                 // Save it into CoreData
                                 let entity = NSEntityDescription.entity(forEntityName: "CDBook", in: uiContext!)
                                 let cdBook = NSManagedObject(entity: entity!, insertInto: uiContext!)
-                                cdBook.setValue(book!.name, forKey: "name")
+                                cdBook.setValue(book!.title, forKey: "title")
                                 cdBook.setValue(book!.subtitle, forKey: "subtitle")
                                 cdBook.setValue(book!.author, forKey: "author")
                                 cdBook.setValue(book!.translator, forKey: "translator")
-                                //cdBook.setValue(book!.pubdate, forKey: "pubdate")
+                                //cdBook.setValue(book!.publicationDate, forKey: "publicationDate")
                                 cdBook.setValue(book!.publisher, forKey: "publisher")
                                 cdBook.setValue(book!.price, forKey: "price")
                                 cdBook.setValue(book!.summary, forKey: "summary")
@@ -116,11 +116,11 @@ class DataService {
                     if errorCode == 0 {
                         book = Book()
                         if let result  = response["result"] {
-                            book!.name = result["title"] as? String
+                            book!.title = result["title"] as? String
                             book!.subtitle = result["subtitle"] as? String
                             book!.author = result["author"] as? String
                             book!.translator = result["translator"] as? String
-                            //book!.pubdate = result["pubdate"] as? String
+                            //book!.publicationDate = result["publicationDate"] as? String
                             book!.publisher = result["publisher"] as? String
                             book!.price = result["price"] as? Float
                             book!.summary = result["summary"] as? String
@@ -146,13 +146,14 @@ class DataService {
             let results = try context.fetch(fetchRequest)
             let books = results as! [NSManagedObject]
             for book in books {
+                // context.delete(book)
                 let isbn13 = book.value(forKey: "isbn13") as! String
                 isbn2BookCache[isbn13] = Book()
-                isbn2BookCache[isbn13]!.name = book.value(forKey: "name") as? String
+                isbn2BookCache[isbn13]!.title = book.value(forKey: "title") as? String
                 isbn2BookCache[isbn13]!.subtitle = book.value(forKey: "subtitle") as? String
                 isbn2BookCache[isbn13]!.author = book.value(forKey: "author") as? String
                 isbn2BookCache[isbn13]!.translator = book.value(forKey: "translator") as? String
-                //isbn2BookCache[isbn13]!.pubdate = book.value(forKey: "pubdate") as? String
+                //isbn2BookCache[isbn13]!.publicationDate = book.value(forKey: "publicationDate") as? String
                 isbn2BookCache[isbn13]!.publisher = book.value(forKey: "publisher") as? String
                 isbn2BookCache[isbn13]!.price = book.value(forKey: "price") as? Float
                 isbn2BookCache[isbn13]!.summary = book.value(forKey: "summary") as? String

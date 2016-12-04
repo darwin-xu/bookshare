@@ -3,17 +3,18 @@
     <entity name="CDBook" representedClassName="CDBook" syncable="YES" codeGenerationType="class">
         <attribute name="author" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cover" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="coverURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isbn10" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isbn13" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="pubdate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="publicationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="publisher" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subtitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="translator" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
-        <element name="CDBook" positionX="-54" positionY="-9" width="128" height="210"/>
+        <element name="CDBook" positionX="-54" positionY="-9" width="128" height="225"/>
     </elements>
 </model>

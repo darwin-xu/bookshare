@@ -11,14 +11,15 @@ import UIKit
 
 class Book {
 
-    var name: String?
+    var title: String?
     var subtitle: String?
     var author: String?
     var translator: String?
-    var pubdate: Date?
+    var publicationDate: Date?
     var publisher: String?
     var price: Float?
     var summary: String?
+    var coverURL: String?
     var cover: UIImage?
     var isbn10: String?
     var isbn13: String?

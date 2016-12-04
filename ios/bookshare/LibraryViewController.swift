@@ -63,8 +63,8 @@ class LibraryViewController: UITableViewController {
         if segue.identifier == "selectBook" {
             if let libraryCell = sender as? BookCollectionViewCell {
                 if let bookDetail = segue.destination as? BookDetailViewController {
-                    bookDetail.cover = libraryCell.bookCover.image
-                    bookDetail.name = libraryCell.bookName.text
+                    bookDetail.cover = libraryCell.cover.image
+                    bookDetail.name = libraryCell.title.text
                     bookDetail.auth = libraryCell.author.text
                 }
             }

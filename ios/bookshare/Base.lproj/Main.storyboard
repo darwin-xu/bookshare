@@ -190,10 +190,10 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="100" height="160"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <subviews>
-                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qf4-i1-TdU">
+                                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Qf4-i1-TdU" userLabel="Cover">
                                                                 <rect key="frame" x="0.0" y="0.0" width="100" height="130"/>
                                                             </imageView>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" verticalCompressionResistancePriority="755" text="Book name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE3-dL-bZV">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="255" verticalCompressionResistancePriority="755" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fE3-dL-bZV">
                                                                 <rect key="frame" x="0.0" y="130" width="100" height="16"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                                 <nil key="textColor"/>
@@ -222,8 +222,8 @@
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="author" destination="OaF-MQ-uks" id="3ML-vK-EZz"/>
-                                                        <outlet property="bookCover" destination="Qf4-i1-TdU" id="30Y-xF-Egp"/>
-                                                        <outlet property="bookName" destination="fE3-dL-bZV" id="1Sm-fX-PSU"/>
+                                                        <outlet property="cover" destination="Qf4-i1-TdU" id="5mT-KY-BQ5"/>
+                                                        <outlet property="title" destination="fE3-dL-bZV" id="3iG-5G-Lkk"/>
                                                         <segue destination="ujI-qF-qcx" kind="show" identifier="selectBook" id="AOe-fO-cc4"/>
                                                     </connections>
                                                 </collectionViewCell>

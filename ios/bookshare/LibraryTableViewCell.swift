@@ -47,8 +47,8 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
             }
 
             if (isbn2BookInCell[isbn] != nil) {
-                bookCell.bookCover.image = isbn2BookInCell[isbn]?.cover
-                bookCell.bookName.text = isbn2BookInCell[isbn]?.name
+                bookCell.cover.image = isbn2BookInCell[isbn]?.cover
+                bookCell.title.text = isbn2BookInCell[isbn]?.title
                 bookCell.author.text = isbn2BookInCell[isbn]?.author
             }
         }
