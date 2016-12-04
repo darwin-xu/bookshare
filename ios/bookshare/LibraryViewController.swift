@@ -63,9 +63,9 @@ class LibraryViewController: UITableViewController {
         if segue.identifier == "selectBook" {
             if let libraryCell = sender as? BookCollectionViewCell {
                 if let bookDetail = segue.destination as? BookDetailViewController {
-                    bookDetail.cover = libraryCell.cover.image
-                    bookDetail.name = libraryCell.title.text
-                    bookDetail.auth = libraryCell.author.text
+                    bookDetail.bookCover = libraryCell.ibBookCover.image
+                    bookDetail.bookTitle = libraryCell.ibBookTitle.text
+                    bookDetail.bookAuthor = libraryCell.ibBookAuthor.text
                 }
             }
 

@@ -10,21 +10,20 @@ import UIKit
 
 class BookDetailViewController: UIViewController {
 
-    var cover: UIImage?
-    var name: String?
-    var auth: String?
+    var bookCover: UIImage?
+    var bookTitle: String?
+    var bookAuthor: String?
 
-    @IBOutlet weak var bookCover: UIImageView!
-    @IBOutlet weak var bookName: UILabel!
-    @IBOutlet weak var author: UILabel!
+    @IBOutlet weak var ibBookCover: UIImageView!
+    @IBOutlet weak var ibBookTitle: UILabel!
+    @IBOutlet weak var ibBookAuthor: UILabel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        NSLog("%@", self)
         // Do any additional setup after loading the view.
-        bookCover.image = cover
-        bookName.text = name
-        author.text = auth
+        ibBookCover.image = bookCover
+        ibBookTitle.text = bookTitle
+        ibBookAuthor.text = bookAuthor
     }
 
     override func didReceiveMemoryWarning() {

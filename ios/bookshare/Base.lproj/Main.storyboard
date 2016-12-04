@@ -48,7 +48,7 @@
                                     <constraint firstAttribute="width" constant="125" id="hsW-OW-z6C"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Book name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuz-sg-GYl">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zuz-sg-GYl">
                                 <rect key="frame" x="158" y="96" width="144" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="jm3-NV-Rf6"/>
@@ -90,9 +90,9 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="action" id="2IV-Rf-gr9"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="author" destination="Kj3-bN-dL0" id="d4Q-Rt-CMb"/>
-                        <outlet property="bookCover" destination="ZFw-BE-nwp" id="tf4-Ou-ZXR"/>
-                        <outlet property="bookName" destination="zuz-sg-GYl" id="Uiw-B6-eV4"/>
+                        <outlet property="ibBookAuthor" destination="Kj3-bN-dL0" id="p6z-2M-tFb"/>
+                        <outlet property="ibBookCover" destination="ZFw-BE-nwp" id="grz-Qa-xdH"/>
+                        <outlet property="ibBookTitle" destination="zuz-sg-GYl" id="ff1-Z9-eeU"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PmI-dm-2AL" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -221,9 +221,9 @@
                                                         <constraint firstAttribute="trailing" secondItem="Qf4-i1-TdU" secondAttribute="trailing" id="q9m-iv-f17"/>
                                                     </constraints>
                                                     <connections>
-                                                        <outlet property="author" destination="OaF-MQ-uks" id="3ML-vK-EZz"/>
-                                                        <outlet property="cover" destination="Qf4-i1-TdU" id="5mT-KY-BQ5"/>
-                                                        <outlet property="title" destination="fE3-dL-bZV" id="3iG-5G-Lkk"/>
+                                                        <outlet property="ibBookAuthor" destination="OaF-MQ-uks" id="hNC-Id-raI"/>
+                                                        <outlet property="ibBookCover" destination="Qf4-i1-TdU" id="Pm3-gf-dMF"/>
+                                                        <outlet property="ibBookTitle" destination="fE3-dL-bZV" id="D9Z-x7-HQa"/>
                                                         <segue destination="ujI-qF-qcx" kind="show" identifier="selectBook" id="AOe-fO-cc4"/>
                                                     </connections>
                                                 </collectionViewCell>
