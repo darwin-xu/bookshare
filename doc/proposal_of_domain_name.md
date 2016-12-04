@@ -1,3 +1,5 @@
+可以在 https://wanwang.aliyun.com/ 检查域名有效性
+
 |名字|是否被占用|费用|
 |:--:|:--:|:--:|
 |bookshare|yes||
