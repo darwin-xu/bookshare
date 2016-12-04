@@ -45,7 +45,7 @@ class LibraryViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        NSLog("tableview: %d", indexPath.row)
         let cell = tableView.dequeueReusableCell(withIdentifier: "LibraryIdentifier", for: indexPath)
 
         if let libraryCell = cell as? LibraryTableViewCell {

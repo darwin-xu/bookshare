@@ -28,8 +28,7 @@ class DataService {
         case ColumnType.Library:
 
             Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
-                //columnList = ["热门", "经典", "流行", "青春"]
-                columnList = ["热门"]
+                columnList = ["热门", "经典", "流行", "青春"]
                 callback(columnList)
             }
 
@@ -40,15 +39,13 @@ class DataService {
     static func getBookISBNList(forColumnName: String) -> [String] {
         switch forColumnName {
         case "热门":
-            return ["9787505417731"]
-            //        case "热门":
-            //            return ["9787500648192", "9787505417731", "9787508622545", "9787301150894"]
-            //        case "经典":
-            //            return ["9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450", "9787301268711"]
-            //        case "流行":
-            //            return ["9787532772322", "9787553805900", "9787203079729", "9787108056153", "9787308161459"]
-            //        case "青春":
-        //            return ["9787557812546", "9787122260277", "9787553764320", "9787518409211", "9787553755571", "9787518407156", "9787545911305"]
+            return ["9787500648192", "9787505417731", "9787508622545", "9787301150894"]
+        case "经典":
+            return ["9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450", "9787301268711"]
+        case "流行":
+            return ["9787532772322", "9787553805900", "9787203079729", "9787108056153", "9787308161459"]
+        case "青春":
+            return ["9787557812546", "9787122260277", "9787553764320", "9787518409211", "9787553755571", "9787518407156", "9787545911305"]
         default:
             return [];
         }
@@ -75,23 +72,40 @@ class DataService {
                                 isbn2BookCache[book!.isbn13!] = book
 
                                 // Save it into CoreData
-                                let entity = NSEntityDescription.entity(forEntityName: "CDBook", in: uiContext!)
-                                let cdBook = NSManagedObject(entity: entity!, insertInto: uiContext!)
-                                cdBook.setValue(book!.title, forKey: "title")
-                                cdBook.setValue(book!.subtitle, forKey: "subtitle")
-                                cdBook.setValue(book!.author, forKey: "author")
-                                cdBook.setValue(book!.translator, forKey: "translator")
-                                //cdBook.setValue(book!.publicationDate, forKey: "publicationDate")
-                                cdBook.setValue(book!.publisher, forKey: "publisher")
-                                cdBook.setValue(book!.price, forKey: "price")
-                                cdBook.setValue(book!.summary, forKey: "summary")
-                                cdBook.setValue(book!.coverURL, forKey: "coverURL")
-                                cdBook.setValue(book!.isbn10, forKey: "isbn10")
-                                cdBook.setValue(book!.isbn13, forKey: "isbn13")
+                                // Check if it is exist first
+                                var exist = false
+                                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CDBook")
+                                fetchRequest.predicate = NSPredicate(format: "isbn13 == %@", forISBN)
                                 do {
-                                    try uiContext!.save()
-                                } catch let error as NSError  {
-                                    print("Could not save \(error), \(error.userInfo)")
+                                    if let books = try uiContext!.fetch(fetchRequest) as? [NSManagedObject] {
+                                        for _ in books {
+                                            exist = true
+                                            break
+                                        }
+                                    }
+                                } catch let error as NSError {
+                                    print("Could not fetch \(error), \(error.userInfo)")
+                                }
+
+                                if (!exist) {
+                                    let entity = NSEntityDescription.entity(forEntityName: "CDBook", in: uiContext!)
+                                    let cdBook = NSManagedObject(entity: entity!, insertInto: uiContext!)
+                                    cdBook.setValue(book!.title, forKey: "title")
+                                    cdBook.setValue(book!.subtitle, forKey: "subtitle")
+                                    cdBook.setValue(book!.author, forKey: "author")
+                                    cdBook.setValue(book!.translator, forKey: "translator")
+                                    //cdBook.setValue(book!.publicationDate, forKey: "publicationDate")
+                                    cdBook.setValue(book!.publisher, forKey: "publisher")
+                                    cdBook.setValue(book!.price, forKey: "price")
+                                    cdBook.setValue(book!.summary, forKey: "summary")
+                                    cdBook.setValue(book!.coverURL, forKey: "coverURL")
+                                    cdBook.setValue(book!.isbn10, forKey: "isbn10")
+                                    cdBook.setValue(book!.isbn13, forKey: "isbn13")
+                                    do {
+                                        try uiContext!.save()
+                                    } catch let error as NSError  {
+                                        print("Could not save \(error), \(error.userInfo)")
+                                    }
                                 }
 
                                 // Notify UI
@@ -107,6 +121,7 @@ class DataService {
     }
 
     static func getCoverImage(forISBN: String, notify: @escaping (_ image: UIImage) -> Void = {_ in }) {
+        NSLog("Get cover image for %@", forISBN)
         if let book = isbn2BookCache[forISBN] {
             if book.coverURL != nil {
                 let url = URL(string: book.coverURL!)
@@ -125,15 +140,18 @@ class DataService {
 
                                 do {
                                     if let books = try uiContext!.fetch(fetchRequest) as? [NSManagedObject] {
+                                        NSLog("begin")
                                         for book in books {
+                                            NSLog("find = %@", book.value(forKey: "title") as! String)
                                             book.setValue(data, forKey: "cover")
                                         }
+                                        NSLog("end")
                                     }
                                     try uiContext!.save()
                                 } catch let error as NSError {
                                     print("Could not fetch \(error), \(error.userInfo)")
                                 }
-                                
+
                                 notify(book.cover!)
                             }
                         }
@@ -201,10 +219,16 @@ class DataService {
                 isbn2BookCache[isbn13]!.isbn10 = book.value(forKey: "isbn10") as? String
                 isbn2BookCache[isbn13]!.isbn13 = book.value(forKey: "isbn13") as? String
 
+                NSLog("Title: %@", isbn2BookCache[isbn13]!.title!)
+
                 // Read image from CoreData
                 if let data = book.value(forKey: "cover") {
                     isbn2BookCache[isbn13]!.cover = UIImage(data: data as! Data)
                 }
+                book.setValue(nil, forKey: "cover")
+                
+                try uiContext!.save()
+                
             }
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")

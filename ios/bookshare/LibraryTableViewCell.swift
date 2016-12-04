@@ -37,30 +37,35 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bookCell", for: indexPath)
 
         if let bookCell = cell as? BookCollectionViewCell {
+            NSLog("collection: %d", indexPath.row)
             let isbn = bookListInCell[indexPath.row]
 
             if (isbn2BookInCell[isbn] == nil) {
-                isbn2BookInCell[isbn] = DataService.getBook(forISBN: isbn) {book in
+                isbn2BookInCell[isbn] = DataService.getBook(forISBN: isbn) { book in
                     self.isbn2BookInCell[isbn] = book
-                    collectionView.reloadData()
+                    self.fill(bookCell: bookCell, withBook: book)
+                    //collectionView.reloadData()
                 }
             }
 
-            if (isbn2BookInCell[isbn] != nil) {
-                if isbn2BookInCell[isbn]?.cover != nil {
-                    bookCell.ibBookCover.image = isbn2BookInCell[isbn]?.cover
-                } else {
-                    DataService.getCoverImage(forISBN: isbn) { image in
-                        bookCell.ibBookCover.image = image
-                    }
-                }
-
-                bookCell.ibBookTitle.text = isbn2BookInCell[isbn]?.title
-                bookCell.ibBookAuthor.text = isbn2BookInCell[isbn]?.author
+            if let book = isbn2BookInCell[isbn] {
+                fill(bookCell: bookCell, withBook: book)
             }
         }
         
         return cell
+    }
+
+    func fill(bookCell: BookCollectionViewCell, withBook: Book) {
+        if withBook.cover != nil {
+            bookCell.ibBookCover.image = withBook.cover
+        } else {
+            DataService.getCoverImage(forISBN: withBook.isbn13!) { image in
+                bookCell.ibBookCover.image = image
+            }
+            bookCell.ibBookTitle.text = withBook.title
+            bookCell.ibBookAuthor.text = withBook.author
+        }
     }
     
 }
