@@ -42,6 +42,7 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
 
             if (isbn2BookInCell[isbn] == nil) {
                 isbn2BookInCell[isbn] = DataService.getBook(forISBN: isbn) { book in
+                    NSLog("Data from data service: %@", book.title!)
                     self.isbn2BookInCell[isbn] = book
                     self.fill(bookCell: bookCell, withBook: book)
                     //collectionView.reloadData()
@@ -49,6 +50,7 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
             }
 
             if let book = isbn2BookInCell[isbn] {
+                NSLog("Data in cache: %@", book.title!)
                 fill(bookCell: bookCell, withBook: book)
             }
         }
@@ -63,9 +65,9 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
             DataService.getCoverImage(forISBN: withBook.isbn13!) { image in
                 bookCell.ibBookCover.image = image
             }
-            bookCell.ibBookTitle.text = withBook.title
-            bookCell.ibBookAuthor.text = withBook.author
         }
+        bookCell.ibBookTitle.text = withBook.title
+        bookCell.ibBookAuthor.text = withBook.author
     }
-    
+
 }
