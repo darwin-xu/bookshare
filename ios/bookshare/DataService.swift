@@ -43,9 +43,9 @@ class DataService {
         case "经典":
             return ["9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450", "9787301268711"]
         case "流行":
-            return ["9787532772322", "9787553805900", "9787203079729", "9787108056153", "9787308161459"]
+            return ["9787532772322", "9787540477783", "9787203079729", "9787108056153", "9787308161459"]
         case "青春":
-            return ["9787557812546", "9787122260277", "9787553764320", "9787518409211", "9787553755571", "9787518407156", "9787545911305"]
+            return ["9787540478025", "9787539962887", "9787515804743", "9787508654812"]
         default:
             return [];
         }
@@ -219,16 +219,12 @@ class DataService {
                 isbn2BookCache[isbn13]!.isbn10 = book.value(forKey: "isbn10") as? String
                 isbn2BookCache[isbn13]!.isbn13 = book.value(forKey: "isbn13") as? String
 
-                NSLog("Title: %@", isbn2BookCache[isbn13]!.title!)
+                NSLog("Title: %@, Author: %@", isbn2BookCache[isbn13]!.title!, isbn2BookCache[isbn13]!.author!)
 
                 // Read image from CoreData
                 if let data = book.value(forKey: "cover") {
                     isbn2BookCache[isbn13]!.cover = UIImage(data: data as! Data)
                 }
-                book.setValue(nil, forKey: "cover")
-                
-                try uiContext!.save()
-                
             }
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")

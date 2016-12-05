@@ -20,7 +20,6 @@
 		D6DE3B901DDCA5F900653AB1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6DE3B8E1DDCA5F900653AB1 /* LaunchScreen.storyboard */; };
 		D6DE3BA11DDCBFD200653AB1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D6DE3BA31DDCBFD200653AB1 /* InfoPlist.strings */; };
 		D6DE3BA51DDDF9D500653AB1 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6DE3BA41DDDF9D500653AB1 /* LibraryViewController.swift */; };
-		D6DE3BE91DE0456F00653AB1 /* cover.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D6DE3BE81DE0456F00653AB1 /* cover.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,7 +42,6 @@
 		D6DE3B9E1DDCB82B00653AB1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D6DE3BA21DDCBFD200653AB1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		D6DE3BA41DDDF9D500653AB1 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
-		D6DE3BE81DE0456F00653AB1 /* cover.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = cover.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,7 +78,6 @@
 				D6DE3B851DDCA5F900653AB1 /* AppDelegate.swift */,
 				D6DE3B871DDCA5F900653AB1 /* ViewController.swift */,
 				D6DE3B891DDCA5F900653AB1 /* Main.storyboard */,
-				D6DE3BE81DE0456F00653AB1 /* cover.jpg */,
 				D6DE3B8C1DDCA5F900653AB1 /* Assets.xcassets */,
 				D6DE3B8E1DDCA5F900653AB1 /* LaunchScreen.storyboard */,
 				D6DE3B911DDCA5F900653AB1 /* Info.plist */,
@@ -157,7 +154,6 @@
 			files = (
 				D6DE3B901DDCA5F900653AB1 /* LaunchScreen.storyboard in Resources */,
 				D6DE3BA11DDCBFD200653AB1 /* InfoPlist.strings in Resources */,
-				D6DE3BE91DE0456F00653AB1 /* cover.jpg in Resources */,
 				D6DE3B8D1DDCA5F900653AB1 /* Assets.xcassets in Resources */,
 				D6DE3B8B1DDCA5F900653AB1 /* Main.storyboard in Resources */,
 			);
