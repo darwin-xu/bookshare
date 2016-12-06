@@ -42,19 +42,25 @@ public class Book implements Serializable {
     @Column(nullable = false)
     private String summary;
 
-    @Column(nullable = false)
+    @Column
     private String pubDate;
 
+    @Column
     private String originTitle;
 
+    @Column
     private String binding;
 
+    @Column
     private String translator;
 
+    @Column
     private String imageMedium;
 
+    @Column
     private String imageLarge;
 
+    @Column
     private String levelNum;
 
     public Book() {

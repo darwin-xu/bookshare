@@ -27,11 +27,12 @@ import java.util.List;
 
 @RepositoryRestResource(collectionResourceRel = "page", path = "page")
 interface BookRepository extends PagingAndSortingRepository<Book, Long> {
+	//interface BookRepository  {
 /*
 	List<String> getColumnList(@Param("pageName") String pageName);
 
 	List<String> getBookList(@Param("columnName") String columnName);
 */
-	Book getBook(@Param("isbn10")String isbn10);
+	Book getBookByIsbn10(@Param("isbn10")String isbn10);
 
 }

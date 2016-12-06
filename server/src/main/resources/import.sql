@@ -123,6 +123,5 @@ insert into city(country, name, state, map) values ('USA', 'Washington', 'DC', '
 insert into hotel(city_id, name, address, zip) values (21, 'Hotel Rouge', '1315 16th Street NW', '20036')
 
 
-insert into book(title, isbn10, isbn13, author, pages, publisher, price, summary, pubDate)
-    values ('Clean Code', '10', '13', 'Kevin', 300, 'bookshare', 100.00, 'good book', '2017-01-01')
+insert into book(title, isbn10, isbn13, author, pages, publisher, price, summary) values ('Clean Code', '10', '13', 'Kevin', 300, 'bookshare', 100.00, 'good book')
 
