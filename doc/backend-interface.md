@@ -5,3 +5,15 @@
 |GET|/library/{book-isbn}|N/A|Book detail|Get the detail information|
 |GET|/app/page/{page-name}|N/A|Column list|Get the column list of the page|
 |GET|/app/page/{page-name}/{column-name}|N/A|Book list|Get the book list of the page|
+
+{user-id} 用户ID，目前用用户的手机号：
+
+Req:
+
+/user/186163976453/login
+
+Entity:
+
+{
+   "password":"abcd1234"
+}
