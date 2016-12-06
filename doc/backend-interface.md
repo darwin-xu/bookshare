@@ -6,7 +6,10 @@
 |GET|/app/page/{page-name}|N/A|Column list|Get the column list of the page|
 |GET|/app/page/{page-name}/{column-name}|N/A|Book list|Get the book list of the page|
 
-{user-id} 用户ID，目前用用户的手机号：
+
+/user/{user-id}/login
+-----
+{user-id} 用户ID，目前用用户的手机号
 
 Req:
 
@@ -17,3 +20,13 @@ Entity:
 {
    "password":"abcd1234"
 }
+
+/user/{user-id}/genOneTimePwd
+-----
+Req:
+
+/user/186163976453/genOneTimePwd
+
+Entity:
+
+N/A
