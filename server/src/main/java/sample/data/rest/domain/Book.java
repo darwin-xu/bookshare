@@ -134,7 +134,7 @@ public class Book implements Serializable {
     }
 
     public String getIsbn10() {
-        return isbn10;
+        return this.isbn10;
     }
 
     public String getIsbn13() {
