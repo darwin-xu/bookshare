@@ -16,23 +16,16 @@
 
 package sample.data.rest.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import sample.data.rest.domain.Book;
+import sample.data.rest.domain.ColumnItem;
 
 import java.util.List;
 
-@RepositoryRestResource(collectionResourceRel = "books", path = "books")
-interface BookRepository extends PagingAndSortingRepository<Book, Long> {
-	//interface BookRepository  {
-/*
-	List<String> getColumnListByPageName(@Param("pageName") String pageName);
+@RepositoryRestResource(collectionResourceRel = "columns", path = "columns")
+interface ColumnRepository extends PagingAndSortingRepository<ColumnItem, Long> {
 
 	List<String> getBookListByColumnName(@Param("columnName") String columnName);
-*/
-	Book getBookByIsbn10(@Param("isbn10")String isbn10);
-
 }

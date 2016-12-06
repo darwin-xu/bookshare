@@ -10,6 +10,7 @@ import java.util.List;
  * Created by ezhonke on 12/6/2016.
  */
 public class BookSearchCriteria implements Serializable{
+    /*
 
     public List<String> getColumnList(@Param("pageName") String pageName) {
         return null;
@@ -24,4 +25,5 @@ public class BookSearchCriteria implements Serializable{
         book.setIsbn10("1234567890");
         return book;
     }
+    */
 }
