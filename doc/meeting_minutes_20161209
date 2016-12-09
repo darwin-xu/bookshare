@@ -1,0 +1,6 @@
+1. We will intergrate wechat, weibo into our login.
+2. Change the method of /user/{user-id}/genOneTimePwd from GET to PUT.
+3. Change the method of /user/{user-id}/login from POST to PUT.
+4. There be a interface to send SMS after /user/{user-id}/genOneTimePwd
+5. /library/{book-isbn} could support get a list of books.
+6. /app/page/{page-name} and /app/page/{page-name}/{column-name} will be combine into a single interface.
