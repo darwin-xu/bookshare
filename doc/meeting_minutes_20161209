@@ -5,3 +5,4 @@
 5. /library/{book-isbn} could support get a list of books.
 6. /app/page/{page-name} and /app/page/{page-name}/{column-name} will be combine into a single interface.
 7. The development still goes on three lines: iOS, android, back-end.
+8. First page of app should be well designed, we will review the candidate page when the main workflow is ready.
