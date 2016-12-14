@@ -53,11 +53,8 @@ class DataService {
 
     static func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book? {
         if let book = isbn2BookCache[forISBN] {
-            // Try to get the data from local firstly
             return book
-        }
-        else {
-            // If not, get it from backend, use callback function to notify.
+        } else {
             NSLog("fetch data for " + forISBN)
             let url = URL(string: "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=" + forISBN)
             let task = session.dataTask(with: url! as URL) { data, response, error in
@@ -65,50 +62,9 @@ class DataService {
                     print(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
-                        let book = parseData(forBook: data)
-                        if (book != nil) {
-                            DispatchQueue.main.async {
-                                // Update local cache
-                                isbn2BookCache[book!.isbn13!] = book
-
-                                // Save it into CoreData
-                                // Check if it is exist first
-                                var exist = false
-                                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CDBook")
-                                fetchRequest.predicate = NSPredicate(format: "isbn13 == %@", forISBN)
-                                do {
-                                    if let books = try uiContext!.fetch(fetchRequest) as? [NSManagedObject] {
-                                        for _ in books {
-                                            exist = true
-                                            break
-                                        }
-                                    }
-                                } catch let error as NSError {
-                                    print("Could not fetch \(error), \(error.userInfo)")
-                                }
-
-                                if (!exist) {
-                                    let entity = NSEntityDescription.entity(forEntityName: "CDBook", in: uiContext!)
-                                    let cdBook = NSManagedObject(entity: entity!, insertInto: uiContext!)
-                                    cdBook.setValue(book!.title, forKey: "title")
-                                    cdBook.setValue(book!.subtitle, forKey: "subtitle")
-                                    cdBook.setValue(book!.author, forKey: "author")
-                                    cdBook.setValue(book!.translator, forKey: "translator")
-                                    //cdBook.setValue(book!.publicationDate, forKey: "publicationDate")
-                                    cdBook.setValue(book!.publisher, forKey: "publisher")
-                                    cdBook.setValue(book!.price, forKey: "price")
-                                    cdBook.setValue(book!.summary, forKey: "summary")
-                                    cdBook.setValue(book!.coverURL, forKey: "coverURL")
-                                    cdBook.setValue(book!.isbn10, forKey: "isbn10")
-                                    cdBook.setValue(book!.isbn13, forKey: "isbn13")
-                                    do {
-                                        try uiContext!.save()
-                                    } catch let error as NSError  {
-                                        print("Could not save \(error), \(error.userInfo)")
-                                    }
-                                }
-
-                                // Notify UI
+                        DispatchQueue.main.async {
+                            let book = parseData(forBook: data)
+                            if (book != nil) {
                                 notify(book!)
                             }
                         }
@@ -132,27 +88,15 @@ class DataService {
                         if httpResponse.statusCode == 200 {
                             DispatchQueue.main.async {
                                 // Update local cache
-                                book.cover = UIImage(data: data!)
-
-                                // Save it into CoreData
-                                let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CDBook")
-                                fetchRequest.predicate = NSPredicate(format: "isbn13 == %@", forISBN)
+                                book.cover = data as NSData?
 
                                 do {
-                                    if let books = try uiContext!.fetch(fetchRequest) as? [NSManagedObject] {
-                                        NSLog("begin")
-                                        for book in books {
-                                            NSLog("find = %@", book.value(forKey: "title") as! String)
-                                            book.setValue(data, forKey: "cover")
-                                        }
-                                        NSLog("end")
-                                    }
                                     try uiContext!.save()
                                 } catch let error as NSError {
                                     print("Could not fetch \(error), \(error.userInfo)")
                                 }
 
-                                notify(book.cover!)
+                                notify(UIImage(data: book.cover as! Data)!)
                             }
                         }
                     }
@@ -168,22 +112,36 @@ class DataService {
 
         do {
             if let data = forBook,
-                let response = try JSONSerialization.jsonObject(with: data, options:JSONSerialization.ReadingOptions(rawValue: 0)) as? [String: AnyObject] {
+                let response = try JSONSerialization.jsonObject(with: data,
+                                                                options: JSONSerialization.ReadingOptions(rawValue: 0))
+                    as? [String: AnyObject] {
                 if let errorCode = response["error_code"] as? Int {
                     if errorCode == 0 {
-                        book = Book()
                         if let result  = response["result"] {
-                            book!.title = result["title"] as? String
-                            book!.subtitle = result["subtitle"] as? String
-                            book!.author = result["author"] as? String
-                            book!.translator = result["translator"] as? String
-                            //book!.publicationDate = result["publicationDate"] as? String
-                            book!.publisher = result["publisher"] as? String
-                            book!.price = result["price"] as? Float
-                            book!.summary = result["summary"] as? String
-                            book!.coverURL = result["images_medium"] as? String
-                            book!.isbn10 = result["isbn10"] as? String
-                            book!.isbn13 = result["isbn13"] as? String
+                            let isbn13 = result["isbn13"] as! String
+                            if isbn2BookCache[isbn13] == nil {
+                                let entity = NSEntityDescription.entity(forEntityName: "Book", in: uiContext!)
+                                book = (NSManagedObject(entity: entity!, insertInto: uiContext!) as! Book)
+                                book?.title = result["title"] as? String
+                                book?.subtitle = result["subtitle"] as? String
+                                book?.author = result["author"] as? String
+                                book?.translator = result["translator"] as? String
+                                //book?.publicationDate = result["publicationDate"] as? String
+                                book?.publisher = result["publisher"] as? String
+                                book?.price = ((result["price"] as? NSString)?.floatValue)!
+                                book?.summary = result["summary"] as? String
+                                book?.coverURL = result["images_medium"] as? String
+                                book?.isbn10 = result["isbn10"] as? String
+                                book?.isbn13 = result["isbn13"] as? String
+
+                                isbn2BookCache[isbn13] = book
+
+                                do {
+                                    try uiContext!.save()
+                                } catch let error as NSError  {
+                                    print("Could not save \(error), \(error.userInfo)")
+                                }
+                            }
                         }
                     }
                 }
@@ -191,40 +149,19 @@ class DataService {
         } catch let error as NSError {
             print("Error parsing results: \(error.localizedDescription)")
         }
-
+        
         return book
     }
 
     static func loadData(context: NSManagedObjectContext) {
         uiContext = context
         // TODO: try to put this into background to improve performance.
-        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CDBook")
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Book")
         do {
             let results = try context.fetch(fetchRequest)
-            let books = results as! [NSManagedObject]
-            for book in books {
-                // context.delete(book)
-
-                let isbn13 = book.value(forKey: "isbn13") as! String
-                isbn2BookCache[isbn13] = Book()
-                isbn2BookCache[isbn13]!.title = book.value(forKey: "title") as? String
-                isbn2BookCache[isbn13]!.subtitle = book.value(forKey: "subtitle") as? String
-                isbn2BookCache[isbn13]!.author = book.value(forKey: "author") as? String
-                isbn2BookCache[isbn13]!.translator = book.value(forKey: "translator") as? String
-                //isbn2BookCache[isbn13]!.publicationDate = book.value(forKey: "publicationDate") as? String
-                isbn2BookCache[isbn13]!.publisher = book.value(forKey: "publisher") as? String
-                isbn2BookCache[isbn13]!.price = book.value(forKey: "price") as? Float
-                isbn2BookCache[isbn13]!.summary = book.value(forKey: "summary") as? String
-                isbn2BookCache[isbn13]!.coverURL = book.value(forKey: "coverURL") as? String
-                isbn2BookCache[isbn13]!.isbn10 = book.value(forKey: "isbn10") as? String
-                isbn2BookCache[isbn13]!.isbn13 = book.value(forKey: "isbn13") as? String
-
-                NSLog("Title: %@, Author: %@", isbn2BookCache[isbn13]!.title!, isbn2BookCache[isbn13]!.author!)
-
-                // Read image from CoreData
-                if let data = book.value(forKey: "cover") {
-                    isbn2BookCache[isbn13]!.cover = UIImage(data: data as! Data)
-                }
+            for b in results as! [Book] {
+                NSLog("title: %@", b.title!)
+                isbn2BookCache[b.isbn13!] = b
             }
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
