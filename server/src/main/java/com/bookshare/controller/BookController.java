@@ -5,6 +5,7 @@ import com.bookshare.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 
 /**
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/books")
 public class BookController {
     private BookRepository bookRepository;
+
+    private static final String ISBN_URL = "http://localhost:8080/bookshare/books/";
 
     @Autowired
     public void setBookRepository(BookRepository bookRepository) {
@@ -33,5 +36,53 @@ public class BookController {
     @RequestMapping(method = RequestMethod.GET, produces="application/json")
     public Iterable<Book> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+
+    /**
+     * Reader scan a isbn to upload his/her book
+     * @param isbn13
+     * @return book
+     */
+    @RequestMapping(params={"isbn13"}, method = RequestMethod.POST, consumes ="application/json")
+    public Book addBook(@RequestParam("isbn13") String isbn13) {
+        // Step 1. Check system cache
+        // Step 2. Check database
+        // Step 3. Request to ISBN service
+        //         - persist to system database
+
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("Get isbn from request :[" + isbn13 +"]");
+        System.out.println("----------------------------------------------------------------------------");
+        Book book;
+        book = bookRepository.findBookByIsbn13(isbn13);
+
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("Get isbn from database...");
+        System.out.println("----------------------------------------------------------------------------");
+
+        if (null == book) {
+            // Get the book info from 3rd party service
+            RestTemplate restTemplate = new RestTemplate();
+            //book = restTemplate.getForObject(ISBN_URL + isbn13, Book.class);
+            book = restTemplate.getForObject(ISBN_URL + isbn13, Book.class);
+
+            System.out.println("---------------------------------");
+            System.out.println(book.toString());
+            System.out.println("---------------------------------");
+
+            if (null != book) {
+                System.out.println("Save book");
+                // save book
+                //bookRepository.save(book);
+            } else {
+                // Throw out an exception
+                // Set HttpStatus 404 NOT_FOUND
+                System.out.println("This book doesn't exist!!!");
+            }
+
+            // persis
+        }
+        return book;
     }
 }
