@@ -17,7 +17,6 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-@JsonCreator
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 1L;
