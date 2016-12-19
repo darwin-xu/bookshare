@@ -1,13 +1,23 @@
 
 package com.bookshare.domain;
 
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 @Entity
-//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
+@JsonCreator
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -48,6 +58,7 @@ public class Book implements Serializable {
     private String pubDate;
 
     @Column
+    @XmlElement(name = "origin_title")
     private String originTitle;
 
     @Column
@@ -57,9 +68,11 @@ public class Book implements Serializable {
     private String translator;
 
     @Column
+    @XmlElement(name = "images_medium")
     private String imageMedium;
 
     @Column
+    @XmlElement(name = "images_large")
     private String imageLarge;
 
     @Column
