@@ -1,5 +1,7 @@
 package com.bookshare.dto;
 
+import com.bookshare.domain.Book;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -14,7 +16,7 @@ public class BookDto {
     private String reason;
 
     @XmlElement(name = "result")
-    private Result result;
+    private Book result;
 
     @XmlElement(name = "error_code")
     private int errorCode;
@@ -28,11 +30,11 @@ public class BookDto {
         this.reason = reason;
     }
 
-    public Result getResult() {
+    public Book getResult() {
         return result;
     }
 
-    public void setResult(Result result) {
+    public void setResult(Book result) {
         this.result = result;
     }
 
@@ -52,16 +54,16 @@ public class BookDto {
         BookDto bookDto = (BookDto) o;
 
         if (errorCode != bookDto.errorCode) return false;
-        if (reason != null ? !reason.equals(bookDto.reason) : bookDto.reason != null) return false;
-        return result != null ? result.equals(bookDto.result) : bookDto.result == null;
+        if (!reason.equals(bookDto.reason)) return false;
+        return result.equals(bookDto.result);
     }
 
     @Override
     public int hashCode() {
-        int result = reason != null ? reason.hashCode() : 0;
-        result = 31 * result + (this.result != null ? this.result.hashCode() : 0);
-        result = 31 * result + errorCode;
-        return result;
+        int result1 = reason.hashCode();
+        result1 = 31 * result1 + result.hashCode();
+        result1 = 31 * result1 + errorCode;
+        return result1;
     }
 
     @Override

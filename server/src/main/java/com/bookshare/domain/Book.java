@@ -15,43 +15,54 @@ import java.io.Serializable;
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
+@XmlRootElement(name = "result")
 public class Book implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
+    @XmlElement(nillable = true)
     private Long id;
 
+    @XmlElement
     @Column(nullable = false)
     private String title;
 
+    @XmlElement
     @Column
     private String subtitle;
 
+    @XmlElement
     @Column(nullable = false)
     private String isbn10;
 
 
+    @XmlElement
     @Column(nullable = false)
     private String isbn13;
 
+    @XmlElement
     @Column(nullable = false)
     private String author;
 
+    @XmlElement
     @Column(nullable = false)
     private int pages;
 
+    @XmlElement
     @Column(nullable = false)
     private String publisher;
 
+    @XmlElement
     @Column(nullable = false)
     private float price;
 
+    @XmlElement
     @Column(nullable = false)
     private String summary;
 
+    @XmlElement
     @Column
     private String pubDate;
 
@@ -59,9 +70,11 @@ public class Book implements Serializable {
     @XmlElement(name = "origin_title")
     private String originTitle;
 
+    @XmlElement
     @Column
     private String binding;
 
+    @XmlElement
     @Column
     private String translator;
 
@@ -74,6 +87,7 @@ public class Book implements Serializable {
     private String imageLarge;
 
     @Column
+    @XmlElement
     private String levelNum;
 
     public Book() {
