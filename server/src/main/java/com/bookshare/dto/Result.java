@@ -1,86 +1,74 @@
 
-package com.bookshare.domain;
+package com.bookshare.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
-public class Book implements Serializable {
+public class Result implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(nullable = false)
+    @XmlElement
     private String title;
 
-    @Column
+    @XmlElement
     private String subtitle;
 
-    @Column(nullable = false)
+    @XmlElement
     private String isbn10;
 
 
-    @Column(nullable = false)
+    @XmlElement
     private String isbn13;
 
-    @Column(nullable = false)
+    @XmlElement
     private String author;
 
-    @Column(nullable = false)
+    @XmlElement
     private int pages;
 
-    @Column(nullable = false)
+    @XmlElement
     private String publisher;
 
-    @Column(nullable = false)
+    @XmlElement
     private float price;
 
-    @Column(nullable = false)
+    @XmlElement
     private String summary;
 
-    @Column
+    @XmlElement
     private String pubDate;
 
-    @Column
     @XmlElement(name = "origin_title")
     private String originTitle;
 
-    @Column
+    @XmlElement
     private String binding;
 
-    @Column
+    @XmlElement
     private String translator;
 
-    @Column
     @XmlElement(name = "images_medium")
     private String imageMedium;
 
-    @Column
     @XmlElement(name = "images_large")
     private String imageLarge;
 
-    @Column
+    @XmlElement
     private String levelNum;
 
-    public Book() {
+    public Result() {
     }
 
-    public Book(Long id, String title, String subtitle, String isbn10, String isbn13, String author, int pages, String publisher, float price) {
-        this.id = id;
+    public Result(String title, String subtitle, String isbn10, String isbn13, String author, int pages, String publisher, float price) {
         this.title = title;
         this.subtitle = subtitle;
         this.isbn10 = isbn10;
@@ -96,11 +84,10 @@ public class Book implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Book book = (Book) o;
+        Result book = (Result) o;
 
         if (pages != book.pages) return false;
         if (Float.compare(book.price, price) != 0) return false;
-        if (id != null ? !id.equals(book.id) : book.id != null) return false;
         if (title != null ? !title.equals(book.title) : book.title != null) return false;
         if (subtitle != null ? !subtitle.equals(book.subtitle) : book.subtitle != null) return false;
         if (isbn10 != null ? !isbn10.equals(book.isbn10) : book.isbn10 != null) return false;
@@ -120,8 +107,7 @@ public class Book implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
+        int result = title != null ? title.hashCode() : 0;
         result = 31 * result + (subtitle != null ? subtitle.hashCode() : 0);
         result = 31 * result + (isbn10 != null ? isbn10.hashCode() : 0);
         result = 31 * result + (isbn13 != null ? isbn13.hashCode() : 0);
@@ -140,9 +126,6 @@ public class Book implements Serializable {
         return result;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public String getTitle() {
         return title;
@@ -210,9 +193,6 @@ public class Book implements Serializable {
 
 
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public void setTitle(String title) {
         this.title = title;
@@ -281,7 +261,6 @@ public class Book implements Serializable {
     @Override
     public String toString() {
         return "Book{" +
-                "id=" + id +
                 ", title='" + title + '\'' +
                 ", subtitle='" + subtitle + '\'' +
                 ", isbn10='" + isbn10 + '\'' +

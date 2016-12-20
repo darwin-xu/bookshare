@@ -3,6 +3,7 @@ package com.bookshare.controller;
 import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
 import com.bookshare.dto.BookDto;
+import com.bookshare.dto.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class BookController {
         System.out.println("Get isbn from request :[" + isbn13 +"]");
         System.out.println("----------------------------------------------------------------------------");
         Book book;
+        Result result;
         book = bookRepository.findBookByIsbn13(isbn13);
 
         System.out.println("----------------------------------------------------------------------------");
@@ -50,7 +52,7 @@ public class BookController {
         if (null == book) {
             // Get the book info from 3rd party service
             RestTemplate restTemplate = new RestTemplate();
-            //BookDto bookDto = restTemplate.getForObject(ISBN_URL + isbn13, BookDto.class);
+            BookDto bookDto = restTemplate.getForObject(ISBN_URL + isbn13, BookDto.class);
 
 
             System.out.println("request URL : " + ISBN_URL + isbn13);
@@ -61,12 +63,13 @@ public class BookController {
             //book = restTemplate.getForObject(ISBN_URL + isbn13, Book.class);
 
             System.out.println("---------------------------------");
-            //System.out.println(bookDto.toString());
+            System.out.println(bookDto.toString());
             System.out.println("---------------------------------");
+            result = bookDto.getResult();
 
-            if (null != book) {
+            if (null != result) {
                 System.out.println("---------------------------------");
-                System.out.println(book.toString());
+                System.out.println(result.toString());
                 System.out.println("---------------------------------");
                 System.out.println("Save book");
                 // save book

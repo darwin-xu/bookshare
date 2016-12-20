@@ -1,7 +1,5 @@
 package com.bookshare.dto;
 
-import com.bookshare.domain.Book;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,29 +14,30 @@ public class BookDto {
     private String reason;
 
     @XmlElement(name = "result")
-    private Book book;
+    private Result result;
 
     @XmlElement(name = "error_code")
     private int errorCode;
 
+
     public String getReason() {
         return reason;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public int getErrorCode() {
-        return errorCode;
     }
 
     public void setReason(String reason) {
         this.reason = reason;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
+    }
+
+    public int getErrorCode() {
+        return errorCode;
     }
 
     public void setErrorCode(int errorCode) {
@@ -54,13 +53,13 @@ public class BookDto {
 
         if (errorCode != bookDto.errorCode) return false;
         if (reason != null ? !reason.equals(bookDto.reason) : bookDto.reason != null) return false;
-        return book != null ? book.equals(bookDto.book) : bookDto.book == null;
+        return result != null ? result.equals(bookDto.result) : bookDto.result == null;
     }
 
     @Override
     public int hashCode() {
         int result = reason != null ? reason.hashCode() : 0;
-        result = 31 * result + (book != null ? book.hashCode() : 0);
+        result = 31 * result + (this.result != null ? this.result.hashCode() : 0);
         result = 31 * result + errorCode;
         return result;
     }
@@ -69,7 +68,7 @@ public class BookDto {
     public String toString() {
         return "BookDto{" +
                 "reason='" + reason + '\'' +
-                ", book=" + book +
+                ", result=" + result +
                 ", errorCode=" + errorCode +
                 '}';
     }
