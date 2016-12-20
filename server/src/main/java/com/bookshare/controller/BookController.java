@@ -52,15 +52,14 @@ public class BookController {
 
             if (null != book) {
                 System.out.println("Save book");
-                // Get image_url and save to database;
-                bookRepository.save(book);
+                // TODO: Get image_url and save to database;
+                book = bookRepository.save(book);
             } else {
                 // Throw out an exception
                 // Set HttpStatus 404 NOT_FOUND
                 System.out.println("This book doesn't exist!!!");
             }
 
-            // persis
         }
         return book;
     }
@@ -71,4 +70,8 @@ public class BookController {
     }
 
 
+    @RequestMapping(method = RequestMethod.POST, produces="application/json")
+    public Book addBook(@RequestBody Book book) {
+        return bookRepository.save(book);
+    }
 }
