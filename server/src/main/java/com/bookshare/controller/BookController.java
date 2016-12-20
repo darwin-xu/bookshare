@@ -18,10 +18,12 @@ import java.net.URL;
 @RestController
 @RequestMapping("/books")
 public class BookController {
+
+    private String imagePath = ".";
     private BookRepository bookRepository;
 
     //private static final String ISBN_URL = "http://localhost:8080/bookshare/books/";
-    //private static final String ISBN_URL ="http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
+    private static final String ISBN_URL ="http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
 
     @Autowired
     public void setBookRepository(BookRepository bookRepository) {
@@ -64,10 +66,10 @@ public class BookController {
 
                     // Get image_url and save to database;
                     if (null != book.getImageMedium()) {
-                        downloadImage(book.getImageMedium(), "C://Kevin/", book.getIsbn13() + "_medium");
+                        downloadImage(book.getImageMedium(), imagePath, book.getIsbn13() + "_medium");
                     }
                     if (null != book.getImageLarge()) {
-                        downloadImage(book.getImageLarge(), "C://Kevin/", book.getIsbn13() + "_large");
+                        downloadImage(book.getImageLarge(), imagePath, book.getIsbn13() + "_large");
                     }
                 } else {
                     // Throw out an exception

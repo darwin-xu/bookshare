@@ -41,9 +41,9 @@ public class Book implements Serializable {
     private String publisher;
 
     @Column(nullable = false)
-    private float price;
+    private String price;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64000)
     private String summary;
 
     @Column
@@ -73,7 +73,7 @@ public class Book implements Serializable {
     public Book() {
     }
 
-    public Book(Long id, String title, String subtitle, String isbn10, String isbn13, String author, int pages, String publisher, float price) {
+    public Book(Long id, String title, String subtitle, String isbn10, String isbn13, String author, int pages, String publisher, String price) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -93,7 +93,7 @@ public class Book implements Serializable {
         Book book = (Book) o;
 
         if (pages != book.pages) return false;
-        if (Float.compare(book.price, price) != 0) return false;
+        if (price != null ? !price.equals(book.price) : book.price != null) return false;
         if (id != null ? !id.equals(book.id) : book.id != null) return false;
         if (title != null ? !title.equals(book.title) : book.title != null) return false;
         if (subtitle != null ? !subtitle.equals(book.subtitle) : book.subtitle != null) return false;
@@ -122,7 +122,7 @@ public class Book implements Serializable {
         result = 31 * result + (author != null ? author.hashCode() : 0);
         result = 31 * result + pages;
         result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
-        result = 31 * result + (price != +0.0f ? Float.floatToIntBits(price) : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (summary != null ? summary.hashCode() : 0);
         result = 31 * result + (pubDate != null ? pubDate.hashCode() : 0);
         result = 31 * result + (originTitle != null ? originTitle.hashCode() : 0);
@@ -166,7 +166,7 @@ public class Book implements Serializable {
         return publisher;
     }
 
-    public float getPrice() {
+    public String getPrice() {
         return price;
     }
 
@@ -236,7 +236,7 @@ public class Book implements Serializable {
         this.publisher = publisher;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
