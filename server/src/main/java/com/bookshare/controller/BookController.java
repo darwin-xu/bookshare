@@ -21,7 +21,7 @@ public class BookController {
     private BookRepository bookRepository;
 
     //private static final String ISBN_URL = "http://localhost:8080/bookshare/books/";
-    private static final String ISBN_URL ="http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
+    //private static final String ISBN_URL ="http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
 
     @Autowired
     public void setBookRepository(BookRepository bookRepository) {
