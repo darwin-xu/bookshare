@@ -39,31 +39,47 @@ public class BookController {
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("Get isbn from request :[" + isbn13 +"]");
         System.out.println("----------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------");
+        System.out.println("----------------------------------------------------------------------------");
         Book book = bookRepository.findBookByIsbn13(isbn13);
 
         if (null == book) {
             // Get the book info from 3rd party service
             RestTemplate restTemplate = new RestTemplate();
             BookDto bookDto = restTemplate.getForObject(ISBN_URL + isbn13, BookDto.class);
+            if (0 == bookDto.getErrorCode()) {
 
-            System.out.println("request URL : " + ISBN_URL + isbn13);
+                System.out.println("request URL : " + ISBN_URL + isbn13);
 
-            System.out.println("---------------------------------");
-            System.out.println(bookDto.toString());
-            System.out.println("---------------------------------");
-            book = bookDto.getResult();
+                System.out.println("---------------------------------");
+                System.out.println(bookDto.toString());
+                System.out.println("---------------------------------");
+                book = bookDto.getBook();
 
-            if (null != book) {
-                System.out.println("Save book");
-                book = bookRepository.save(book);
-                // TODO: Get image_url and save to database;
+                if (null != book) {
+                    System.out.println("Save book");
+                    book = bookRepository.save(book);
+
+                    // Get image_url and save to database;
+                    if (null != book.getImageMedium()) {
+                        downloadImage(book.getImageMedium(), "C://Kevin/", book.getIsbn13() + "_medium");
+                    }
+                    if (null != book.getImageLarge()) {
+                        downloadImage(book.getImageLarge(), "C://Kevin/", book.getIsbn13() + "_large");
+                    }
+                } else {
+                    // Throw out an exception
+                    // Set HttpStatus 404 NOT_FOUND
+                    System.out.println("This book doesn't exist!!!");
+                }
             } else {
-                // Throw out an exception
-                // Set HttpStatus 404 NOT_FOUND
-                System.out.println("This book doesn't exist!!!");
+                System.out.println("Get book from 3rd Party Failure, error code : [" + bookDto.getErrorCode() + "]");
             }
 
         }
+        // TODO: set HTTP status for client check
         return book;
     }
 
@@ -75,11 +91,6 @@ public class BookController {
 
     @RequestMapping(method = RequestMethod.POST, produces="application/json")
     public Book addBook(@RequestBody Book book) {
-        System.out.println("??????????????????????????????????????????????????????????");
-        System.out.println(book.getImageLarge());
-        System.out.println(book.getIsbn13());
-        System.out.println("??????????????????????????????????????????????????????????");
-
         downloadImage(book.getImageLarge(),"C://Kevin/" , book.getIsbn13() + "_large");
         downloadImage(book.getImageMedium(),"C://Kevin/" , book.getIsbn13() + "_medium");
 
@@ -90,12 +101,13 @@ public class BookController {
     {
         boolean result;
         URL imageUrl;
-        InputStream imageReader = null;
+        InputStream imageReader  = null;
         OutputStream imageWriter = null;
         try {
-            imageUrl = new URL(sourceUrl);
-            imageReader = new BufferedInputStream( imageUrl.openStream());
-            imageWriter = new BufferedOutputStream( new FileOutputStream(targetDirectory + File.separator + isbn13 + ".jpg"));
+            imageUrl    = new URL(sourceUrl);
+            imageReader = new BufferedInputStream(imageUrl.openStream());
+            imageWriter = new BufferedOutputStream(
+                    new FileOutputStream(targetDirectory + File.separator + isbn13 + ".jpg"));
             int readByte;
 
             while ((readByte = imageReader.read()) != -1) {
