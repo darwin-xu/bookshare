@@ -3,7 +3,7 @@ package com.bookshare.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -67,7 +67,7 @@ public class Book implements Serializable {
     private String pubDate;
 
     @Column
-    @XmlElement(name = "origin_title")
+    @JsonProperty("origin_title")
     private String originTitle;
 
     @XmlElement
@@ -79,11 +79,11 @@ public class Book implements Serializable {
     private String translator;
 
     @Column
-    @XmlElement(name = "images_medium")
+    @JsonProperty("images_medium")
     private String imageMedium;
 
     @Column
-    @XmlElement(name = "images_large")
+    @JsonProperty("images_large")
     private String imageLarge;
 
     @Column

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.*;
+import java.net.URL;
+
 
 /**
  * Created by kevinzhong on 09/12/2016.
@@ -52,8 +55,8 @@ public class BookController {
 
             if (null != book) {
                 System.out.println("Save book");
-                // TODO: Get image_url and save to database;
                 book = bookRepository.save(book);
+                // TODO: Get image_url and save to database;
             } else {
                 // Throw out an exception
                 // Set HttpStatus 404 NOT_FOUND
@@ -72,6 +75,51 @@ public class BookController {
 
     @RequestMapping(method = RequestMethod.POST, produces="application/json")
     public Book addBook(@RequestBody Book book) {
+        System.out.println("??????????????????????????????????????????????????????????");
+        System.out.println(book.getImageLarge());
+        System.out.println(book.getIsbn13());
+        System.out.println("??????????????????????????????????????????????????????????");
+
+        downloadImage(book.getImageLarge(),"C://Kevin/" , book.getIsbn13() + "_large");
+        downloadImage(book.getImageMedium(),"C://Kevin/" , book.getIsbn13() + "_medium");
+
         return bookRepository.save(book);
+    }
+
+    private boolean downloadImage(String sourceUrl, String targetDirectory, String isbn13)
+    {
+        boolean result;
+        URL imageUrl;
+        InputStream imageReader = null;
+        OutputStream imageWriter = null;
+        try {
+            imageUrl = new URL(sourceUrl);
+            imageReader = new BufferedInputStream( imageUrl.openStream());
+            imageWriter = new BufferedOutputStream( new FileOutputStream(targetDirectory + File.separator + isbn13 + ".jpg"));
+            int readByte;
+
+            while ((readByte = imageReader.read()) != -1) {
+                imageWriter.write(readByte);
+            }
+
+            result = true;
+        } catch (IOException e) {
+            result = false;
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != imageReader) {
+                    imageReader.close();
+                }
+                if (null != imageWriter) {
+                    imageWriter.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+
     }
 }
