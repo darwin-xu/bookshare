@@ -1,16 +1,27 @@
 package com.bookshare.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+
+import com.bookshare.BookshareApplication;
 import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
 import com.bookshare.dto.BookDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.*;
-import java.net.URL;
+import com.bookshare.utility.RandomFile;
 
 /**
  * Created by kevinzhong on 09/12/2016.
@@ -19,7 +30,7 @@ import java.net.URL;
 @RequestMapping("/books")
 public class BookController {
 
-    private String imagePath = ".";
+    private Path coverImageRoot = Paths.get(BookshareApplication.prop.getProperty("bookshare.book.cover.path"));
     private BookRepository bookRepository;
 
     // private static final String ISBN_URL =
@@ -62,15 +73,20 @@ public class BookController {
 
                 if (null != book) {
                     System.out.println("Save book");
+                    Path coverPath = RandomFile.genFilePath(coverImageRoot, ".jpg");
+                    downloadImage(book.getImageMedium(), coverPath);
+                    book.setImageMedium(coverImageRoot.relativize(coverPath).toString());
                     book = bookRepository.save(book);
 
                     // Get image_url and save to database;
-                    if (null != book.getImageMedium()) {
-                        downloadImage(book.getImageMedium(), imagePath, book.getIsbn13() + "_medium");
-                    }
-                    if (null != book.getImageLarge()) {
-                        downloadImage(book.getImageLarge(), imagePath, book.getIsbn13() + "_large");
-                    }
+                    // if (null != book.getImageMedium()) {
+                    // downloadImage(book.getImageMedium(),
+                    // RandomFile.genFilePath(coverImagePath, "*.jpg"));
+                    // }
+                    // if (null != book.getImageLarge()) {
+                    // downloadImage(book.getImageLarge(),
+                    // RandomFile.genFilePath(coverImagePath, "*.jpg"));
+                    // }
                 } else {
                     // Throw out an exception
                     // Set HttpStatus 404 NOT_FOUND
@@ -89,15 +105,18 @@ public class BookController {
         return bookRepository.findAll();
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public Book addBook(@RequestBody Book book) {
-        downloadImage(book.getImageLarge(), "C://Kevin/", book.getIsbn13() + "_large");
-        downloadImage(book.getImageMedium(), "C://Kevin/", book.getIsbn13() + "_medium");
+    // @RequestMapping(method = RequestMethod.POST, produces =
+    // "application/json")
+    // public Book addBook(@RequestBody Book book) {
+    // downloadImage(book.getImageLarge(), "C://Kevin/", book.getIsbn13() +
+    // "_large");
+    // downloadImage(book.getImageMedium(), "C://Kevin/", book.getIsbn13() +
+    // "_medium");
+    //
+    // return bookRepository.save(book);
+    // }
 
-        return bookRepository.save(book);
-    }
-
-    private boolean downloadImage(String sourceUrl, String targetDirectory, String isbn13) {
+    private boolean downloadImage(String sourceUrl, Path targetFileName) {
         boolean result;
         URL imageUrl;
         InputStream imageReader = null;
@@ -105,8 +124,8 @@ public class BookController {
         try {
             imageUrl = new URL(sourceUrl);
             imageReader = new BufferedInputStream(imageUrl.openStream());
-            imageWriter = new BufferedOutputStream(
-                    new FileOutputStream(targetDirectory + File.separator + isbn13 + ".jpg"));
+            targetFileName.toFile().getParentFile().mkdirs();
+            imageWriter = new BufferedOutputStream(new FileOutputStream(targetFileName.toFile()));
             int readByte;
 
             while ((readByte = imageReader.read()) != -1) {
