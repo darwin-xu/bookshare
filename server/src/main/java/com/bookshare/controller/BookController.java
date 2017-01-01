@@ -4,13 +4,13 @@ import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
 import com.bookshare.dto.BookDto;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.net.URL;
-
 
 /**
  * Created by kevinzhong on 09/12/2016.
@@ -22,24 +22,24 @@ public class BookController {
     private String imagePath = ".";
     private BookRepository bookRepository;
 
-    //private static final String ISBN_URL = "http://localhost:8080/bookshare/books/";
-    private static final String ISBN_URL ="http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
+    // private static final String ISBN_URL =
+    // "http://localhost:8080/bookshare/books/";
+    private static final String ISBN_URL = "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
 
     @Autowired
     public void setBookRepository(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-
-    @RequestMapping(value="{isbn13}", method = RequestMethod.GET, produces="application/json")
+    @RequestMapping(value = "{isbn13}", method = RequestMethod.GET, produces = "application/json")
     public Book getBook(@PathVariable String isbn13) {
         // Step 1. Check system cache
         // Step 2. Check database
         // Step 3. Request to ISBN service
-        //         - persist to system database
+        // - persist to system database
 
         System.out.println("----------------------------------------------------------------------------");
-        System.out.println("Get isbn from request :[" + isbn13 +"]");
+        System.out.println("Get isbn from request :[" + isbn13 + "]");
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("----------------------------------------------------------------------------");
         System.out.println("----------------------------------------------------------------------------");
@@ -79,34 +79,31 @@ public class BookController {
             } else {
                 System.out.println("Get book from 3rd Party Failure, error code : [" + bookDto.getErrorCode() + "]");
             }
-
         }
         // TODO: set HTTP status for client check
         return book;
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public Iterable<Book> getAllBooks() {
         return bookRepository.findAll();
     }
 
-
-    @RequestMapping(method = RequestMethod.POST, produces="application/json")
+    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public Book addBook(@RequestBody Book book) {
-        downloadImage(book.getImageLarge(),"C://Kevin/" , book.getIsbn13() + "_large");
-        downloadImage(book.getImageMedium(),"C://Kevin/" , book.getIsbn13() + "_medium");
+        downloadImage(book.getImageLarge(), "C://Kevin/", book.getIsbn13() + "_large");
+        downloadImage(book.getImageMedium(), "C://Kevin/", book.getIsbn13() + "_medium");
 
         return bookRepository.save(book);
     }
 
-    private boolean downloadImage(String sourceUrl, String targetDirectory, String isbn13)
-    {
+    private boolean downloadImage(String sourceUrl, String targetDirectory, String isbn13) {
         boolean result;
         URL imageUrl;
-        InputStream imageReader  = null;
+        InputStream imageReader = null;
         OutputStream imageWriter = null;
         try {
-            imageUrl    = new URL(sourceUrl);
+            imageUrl = new URL(sourceUrl);
             imageReader = new BufferedInputStream(imageUrl.openStream());
             imageWriter = new BufferedOutputStream(
                     new FileOutputStream(targetDirectory + File.separator + isbn13 + ".jpg"));
