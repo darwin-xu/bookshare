@@ -16,7 +16,7 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
     public static Properties prop;
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        (prop = new Properties()).load(new FileInputStream("src/main/resources/application.properties"));
+        (prop = new Properties()).load(BookshareApplication.class.getResourceAsStream("/application.properties"));
         SpringApplication.run(BookshareApplication.class, args);
     }
 
