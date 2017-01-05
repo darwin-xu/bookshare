@@ -1,10 +1,10 @@
 package com.bookshare.utility;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Random;
 import java.util.UUID;
 
-public class RandomFile {
+public class RandomUtil {
 
     private static Path genFilePathHelper(Path root, String suffix) {
         UUID uuid = UUID.randomUUID();
@@ -21,7 +21,7 @@ public class RandomFile {
         return path;
     }
 
-    public static Path genFilePath(Path root, String suffix) {
+    public static Path genRandomFilePath(Path root, String suffix) {
 
         Path path;
 
@@ -30,6 +30,15 @@ public class RandomFile {
         } while (path.toFile().exists());
 
         return path;
+    }
+
+    public static String genDigitals(int n) {
+        String d = "";
+        Random r = new Random();
+        for (int i = 0; i < n; ++i) {
+            d += r.nextInt(10);
+        }
+        return d;
     }
 
 }

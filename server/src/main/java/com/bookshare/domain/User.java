@@ -1,21 +1,25 @@
 package com.bookshare.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import java.io.Serializable;
-import java.util.List;
+
+import com.bookshare.utility.RandomUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * Created by kevinzhong on 23/12/2016.
  */
 @Entity
-public class User implements Serializable{
+public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final long validityLimit = 10 * 1000;// 60 * 1000;
 
     @Id
     @GeneratedValue
@@ -26,9 +30,13 @@ public class User implements Serializable{
 
     private String password;
 
+    private String verifyCode;
+
+    @JsonIgnoreProperties
+    private long verifyCodeValidty;
+
     @OneToMany
     private List<Book> bookList;
-
 
     public String getId() {
         return id;
@@ -62,35 +70,92 @@ public class User implements Serializable{
         this.bookList = bookList;
     }
 
+    public String getVerifyCode() {
+        return verifyCode;
+    }
+
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
+    }
+
+    public void setVerifyCodeValidty(long verifyCodeValidty) {
+        this.verifyCodeValidty = verifyCodeValidty;
+    }
+
+    public long getVerifyCodeValidty() {
+        return verifyCodeValidty;
+    }
+
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        User user = (User) o;
-
-        if (!id.equals(user.id)) return false;
-        if (!username.equals(user.username)) return false;
-        if (!password.equals(user.password)) return false;
-        return bookList.equals(user.bookList);
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        User other = (User) obj;
+        if (bookList == null) {
+            if (other.bookList != null)
+                return false;
+        } else if (!bookList.equals(other.bookList))
+            return false;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (password == null) {
+            if (other.password != null)
+                return false;
+        } else if (!password.equals(other.password))
+            return false;
+        if (username == null) {
+            if (other.username != null)
+                return false;
+        } else if (!username.equals(other.username))
+            return false;
+        if (verifyCode == null) {
+            if (other.verifyCode != null)
+                return false;
+        } else if (!verifyCode.equals(other.verifyCode))
+            return false;
+        if (verifyCodeValidty != other.verifyCodeValidty)
+            return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + username.hashCode();
-        result = 31 * result + password.hashCode();
-        result = 31 * result + bookList.hashCode();
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((bookList == null) ? 0 : bookList.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        result = prime * result + ((verifyCode == null) ? 0 : verifyCode.hashCode());
+        result = prime * result + (int) (verifyCodeValidty ^ (verifyCodeValidty >>> 32));
         return result;
     }
 
     @Override
     public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", bookList=" + bookList +
-                '}';
+        return "User{" + "id='" + id + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
+                + ", bookList=" + bookList + '}';
     }
+
+    public void generateVerifyCode() {
+        verifyCode = RandomUtil.genDigitals(6);
+        verifyCodeValidty = System.currentTimeMillis();
+    }
+
+    public boolean verify(User user) {
+        System.out.println(
+                verifyCode + " " + user.getVerifyCode() + " " + System.currentTimeMillis() + " " + verifyCodeValidty);
+        if (verifyCode.equals(user.getVerifyCode()) && (System.currentTimeMillis() - verifyCodeValidty < validityLimit))
+            return true;
+        else
+            return false;
+    }
+
 }

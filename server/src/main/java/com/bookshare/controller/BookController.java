@@ -21,7 +21,7 @@ import com.bookshare.BookshareApplication;
 import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
 import com.bookshare.dto.BookDto;
-import com.bookshare.utility.RandomFile;
+import com.bookshare.utility.RandomUtil;
 
 /**
  * Created by kevinzhong on 09/12/2016.
@@ -73,7 +73,7 @@ public class BookController {
 
                 if (null != book) {
                     System.out.println("Save book");
-                    Path coverPath = RandomFile.genFilePath(coverImageRoot, ".jpg");
+                    Path coverPath = RandomUtil.genRandomFilePath(coverImageRoot, ".jpg");
                     downloadImage(book.getImageMedium(), coverPath);
                     book.setImageMedium(coverImageRoot.relativize(coverPath).toString());
                     book = bookRepository.save(book);

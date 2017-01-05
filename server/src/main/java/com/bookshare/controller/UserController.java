@@ -39,19 +39,37 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public boolean login(@RequestBody User user) {
-        userRepository.save(user);
+    public boolean getVerifyCode(@RequestBody User user) {
+        User u = userRepository.findByUsername(user.getUsername());
+        if (u == null) {
+            u = new User();
+            u.setUsername(user.getUsername());
+            u.generateVerifyCode();
+            userRepository.save(u);
+        } else {
+            u.generateVerifyCode();
+            userRepository.save(u);
+        }
+        System.out.println("====" + u.getVerifyCode() + "====");
         return true;
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, produces = "application/json")
+    public boolean modify(@RequestBody User user) {
+        User u = userRepository.findByUsername(user.getUsername());
+        if (u != null) {
+            if (u.verify(user)) {
+                u.setPassword(user.getPassword());
+                userRepository.save(u);
+                return true;
+            }
+        }
+        return false;
     }
 
     @RequestMapping(value = "{username}", method = RequestMethod.GET, produces = "application/json")
     public User logout(@PathVariable String username) {
         return userRepository.findByUsername(username);
-    }
-
-    @RequestMapping(method = RequestMethod.PUT, produces = "application/json")
-    public boolean modify(@RequestBody User user) {
-        return false;
     }
 
     @RequestMapping(value = "{username}", method = RequestMethod.DELETE, produces = "application/json")

@@ -1,17 +1,20 @@
 
 package com.bookshare.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import javax.persistence.*;
 import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 public class Book implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue
@@ -26,7 +29,6 @@ public class Book implements Serializable {
 
     @Column(nullable = false)
     private String isbn10;
-
 
     @Column(nullable = false)
     private String isbn13;
@@ -73,7 +75,8 @@ public class Book implements Serializable {
     public Book() {
     }
 
-    public Book(Long id, String title, String subtitle, String isbn10, String isbn13, String author, int pages, String publisher, String price) {
+    public Book(Long id, String title, String subtitle, String isbn10, String isbn13, String author, int pages,
+            String publisher, String price) {
         this.id = id;
         this.title = title;
         this.subtitle = subtitle;
@@ -87,27 +90,45 @@ public class Book implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Book book = (Book) o;
 
-        if (pages != book.pages) return false;
-        if (price != null ? !price.equals(book.price) : book.price != null) return false;
-        if (id != null ? !id.equals(book.id) : book.id != null) return false;
-        if (title != null ? !title.equals(book.title) : book.title != null) return false;
-        if (subtitle != null ? !subtitle.equals(book.subtitle) : book.subtitle != null) return false;
-        if (isbn10 != null ? !isbn10.equals(book.isbn10) : book.isbn10 != null) return false;
-        if (isbn13 != null ? !isbn13.equals(book.isbn13) : book.isbn13 != null) return false;
-        if (author != null ? !author.equals(book.author) : book.author != null) return false;
-        if (publisher != null ? !publisher.equals(book.publisher) : book.publisher != null) return false;
-        if (summary != null ? !summary.equals(book.summary) : book.summary != null) return false;
-        if (pubDate != null ? !pubDate.equals(book.pubDate) : book.pubDate != null) return false;
-        if (originTitle != null ? !originTitle.equals(book.originTitle) : book.originTitle != null) return false;
-        if (binding != null ? !binding.equals(book.binding) : book.binding != null) return false;
-        if (translator != null ? !translator.equals(book.translator) : book.translator != null) return false;
-        if (imageMedium != null ? !imageMedium.equals(book.imageMedium) : book.imageMedium != null) return false;
-        if (imageLarge != null ? !imageLarge.equals(book.imageLarge) : book.imageLarge != null) return false;
+        if (pages != book.pages)
+            return false;
+        if (price != null ? !price.equals(book.price) : book.price != null)
+            return false;
+        if (id != null ? !id.equals(book.id) : book.id != null)
+            return false;
+        if (title != null ? !title.equals(book.title) : book.title != null)
+            return false;
+        if (subtitle != null ? !subtitle.equals(book.subtitle) : book.subtitle != null)
+            return false;
+        if (isbn10 != null ? !isbn10.equals(book.isbn10) : book.isbn10 != null)
+            return false;
+        if (isbn13 != null ? !isbn13.equals(book.isbn13) : book.isbn13 != null)
+            return false;
+        if (author != null ? !author.equals(book.author) : book.author != null)
+            return false;
+        if (publisher != null ? !publisher.equals(book.publisher) : book.publisher != null)
+            return false;
+        if (summary != null ? !summary.equals(book.summary) : book.summary != null)
+            return false;
+        if (pubDate != null ? !pubDate.equals(book.pubDate) : book.pubDate != null)
+            return false;
+        if (originTitle != null ? !originTitle.equals(book.originTitle) : book.originTitle != null)
+            return false;
+        if (binding != null ? !binding.equals(book.binding) : book.binding != null)
+            return false;
+        if (translator != null ? !translator.equals(book.translator) : book.translator != null)
+            return false;
+        if (imageMedium != null ? !imageMedium.equals(book.imageMedium) : book.imageMedium != null)
+            return false;
+        if (imageLarge != null ? !imageLarge.equals(book.imageLarge) : book.imageLarge != null)
+            return false;
         return levelNum != null ? levelNum.equals(book.levelNum) : book.levelNum == null;
 
     }
@@ -202,8 +223,6 @@ public class Book implements Serializable {
         return levelNum;
     }
 
-
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -274,24 +293,11 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", subtitle='" + subtitle + '\'' +
-                ", isbn10='" + isbn10 + '\'' +
-                ", isbn13='" + isbn13 + '\'' +
-                ", author='" + author + '\'' +
-                ", pages=" + pages +
-                ", publisher='" + publisher + '\'' +
-                ", price=" + price +
-                ", summary='" + summary + '\'' +
-                ", pubDate='" + pubDate + '\'' +
-                ", originTitle='" + originTitle + '\'' +
-                ", binding='" + binding + '\'' +
-                ", translator='" + translator + '\'' +
-                ", imageMedium='" + imageMedium + '\'' +
-                ", imageLarge='" + imageLarge + '\'' +
-                ", levelNum='" + levelNum + '\'' +
-                '}';
+        return "Book{" + "id=" + id + ", title='" + title + '\'' + ", subtitle='" + subtitle + '\'' + ", isbn10='"
+                + isbn10 + '\'' + ", isbn13='" + isbn13 + '\'' + ", author='" + author + '\'' + ", pages=" + pages
+                + ", publisher='" + publisher + '\'' + ", price=" + price + ", summary='" + summary + '\''
+                + ", pubDate='" + pubDate + '\'' + ", originTitle='" + originTitle + '\'' + ", binding='" + binding
+                + '\'' + ", translator='" + translator + '\'' + ", imageMedium='" + imageMedium + '\''
+                + ", imageLarge='" + imageLarge + '\'' + ", levelNum='" + levelNum + '\'' + '}';
     }
 }
