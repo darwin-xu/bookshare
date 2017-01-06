@@ -44,12 +44,9 @@ public class UserController {
         if (u == null) {
             u = new User();
             u.setUsername(user.getUsername());
-            u.generateVerifyCode();
-            userRepository.save(u);
-        } else {
-            u.generateVerifyCode();
-            userRepository.save(u);
         }
+        u.generateVerifyCode();
+        userRepository.save(u);
         System.out.println("====" + u.getVerifyCode() + "====");
         return true;
     }
