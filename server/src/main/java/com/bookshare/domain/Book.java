@@ -155,10 +155,6 @@ public class Book implements Serializable {
         return result;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -221,10 +217,6 @@ public class Book implements Serializable {
 
     public String getLevelNum() {
         return levelNum;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public void setTitle(String title) {

@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.bookshare.utility.RandomUtil;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Created by kevinzhong on 23/12/2016.
@@ -19,11 +19,11 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private static final long validityLimit = 10 * 1000;// 60 * 1000;
+    private static final long validityLimit = 60 * 1000;
 
     @Id
     @GeneratedValue
-    @JsonIgnoreProperties
+    @JsonIgnore
     private String id;
 
     private String username;
@@ -32,19 +32,14 @@ public class User implements Serializable {
 
     private String verifyCode;
 
-    @JsonIgnoreProperties
+    @JsonIgnore
     private long verifyCodeValidty;
+
+    @JsonIgnore
+    private Session session;
 
     @OneToMany
     private List<Book> bookList;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -84,6 +79,14 @@ public class User implements Serializable {
 
     public long getVerifyCodeValidty() {
         return verifyCodeValidty;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     @Override
@@ -153,6 +156,13 @@ public class User implements Serializable {
         System.out.println(
                 verifyCode + " " + user.getVerifyCode() + " " + System.currentTimeMillis() + " " + verifyCodeValidty);
         if (verifyCode.equals(user.getVerifyCode()) && (System.currentTimeMillis() - verifyCodeValidty < validityLimit))
+            return true;
+        else
+            return false;
+    }
+
+    public boolean authenticate(User user) {
+        if (username.equals(user.username) && password.equals(user.password))
             return true;
         else
             return false;

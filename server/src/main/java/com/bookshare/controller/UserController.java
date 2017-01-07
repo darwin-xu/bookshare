@@ -46,8 +46,9 @@ public class UserController {
             u.setUsername(user.getUsername());
         }
         u.generateVerifyCode();
-        userRepository.save(u);
+        // TODO: Send to SMS center.
         System.out.println("====" + u.getVerifyCode() + "====");
+        userRepository.save(u);
         return true;
     }
 

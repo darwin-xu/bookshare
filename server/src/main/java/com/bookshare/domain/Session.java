@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Session implements Serializable {
@@ -16,10 +16,13 @@ public class Session implements Serializable {
 
     @Id
     @GeneratedValue
-    @JsonIgnoreProperties
+    @JsonIgnore
     private String id;
 
     private String sessionID;
+
+    @JsonIgnore
+    private User user;
 
     @Override
     public int hashCode() {
@@ -60,16 +63,12 @@ public class Session implements Serializable {
         this.sessionID = sessionID;
     }
 
-    public String getId() {
-        return id;
+    public User getUser() {
+        return user;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public static Session createNewSession() {
