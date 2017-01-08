@@ -32,8 +32,6 @@ public class SessionController {
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    // public Session login(@CookieValue("theme") String themeCookie,
-    // @RequestBody User user) {
     public ModelAndView login(@RequestBody User user) {
         // Search the user in repository
         User userInRepo = userRepository.findByUsername(user.getUsername());

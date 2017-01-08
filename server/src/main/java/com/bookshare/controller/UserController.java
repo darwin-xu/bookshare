@@ -1,13 +1,16 @@
 package com.bookshare.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
+import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
 /**
@@ -19,23 +22,16 @@ public class UserController {
 
     private UserRepository userRepository;
 
+    private SessionRepository sessionRepository;
+
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = { "username" }, method = RequestMethod.POST, produces = "application/json")
-    public boolean register(@PathVariable("username") String username) {
-        // Check the new username exist or not in database
-        if (null == userRepository.findByUsername(username)) {
-            // TODO: Generate a random number and sent to SMS center to verify
-            // the client
-            int randomNumber = 333;
-            User u = new User();
-            return (null != userRepository.save(u));
-        } else {
-            return false;
-        }
+    @Autowired
+    public void setSessionRepository(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
@@ -47,20 +43,17 @@ public class UserController {
         }
         u.generateVerifyCode();
         // TODO: Send to SMS center.
-        System.out.println("====" + u.getVerifyCode() + "====");
         userRepository.save(u);
         return true;
     }
 
     @RequestMapping(method = RequestMethod.PATCH, produces = "application/json")
-    public boolean modify(@RequestBody User user) {
-        User u = userRepository.findByUsername(user.getUsername());
-        if (u != null) {
-            if (u.verify(user)) {
-                u.setPassword(user.getPassword());
-                userRepository.save(u);
-                return true;
-            }
+    public boolean modify(@CookieValue(value = "session", required = false) String sessionID, @RequestBody User user) {
+        User authUser = getAuthUser(sessionID, user);
+        if (authUser != null) {
+            authUser.setPassword(user.getPassword());
+            userRepository.save(authUser);
+            return true;
         }
         return false;
     }
@@ -73,6 +66,25 @@ public class UserController {
     @RequestMapping(value = "{username}", method = RequestMethod.DELETE, produces = "application/json")
     public boolean unregister(@PathVariable String username) {
         return false;
+    }
+
+    private User getAuthUser(String sessionID, User user) {
+        if (sessionID != null) {
+            Session s = sessionRepository.findBySessionID(sessionID);
+            if (s != null)
+                return s.getUser();
+        }
+        User u = userRepository.findByUsername(user.getUsername());
+        if (u != null) {
+            if (u.verify(user)) {
+                // Invalidate VerifyCode after use.
+                u.setVerifyCode("");
+                u.setVerifyCodeValidty(0);
+                userRepository.save(u);
+                return u;
+            }
+        }
+        return null;
     }
 
 }

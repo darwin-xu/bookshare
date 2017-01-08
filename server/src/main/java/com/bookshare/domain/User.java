@@ -8,8 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.bookshare.utility.RandomUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 /**
  * Created by kevinzhong on 23/12/2016.
@@ -30,6 +31,7 @@ public class User implements Serializable {
 
     private String password;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String verifyCode;
 
     @JsonIgnore
@@ -148,13 +150,13 @@ public class User implements Serializable {
     }
 
     public void generateVerifyCode() {
-        verifyCode = RandomUtil.genDigitals(6);
+        // TODO: Change to RandomUtil.genDigitals(6); in real system.
+        // verifyCode = RandomUtil.genDigitals(6);
+        verifyCode = "112233";
         verifyCodeValidty = System.currentTimeMillis();
     }
 
     public boolean verify(User user) {
-        System.out.println(
-                verifyCode + " " + user.getVerifyCode() + " " + System.currentTimeMillis() + " " + verifyCodeValidty);
         if (verifyCode.equals(user.getVerifyCode()) && (System.currentTimeMillis() - verifyCodeValidty < validityLimit))
             return true;
         else
