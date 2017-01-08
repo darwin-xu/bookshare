@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
@@ -32,7 +34,7 @@ public class SessionController {
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     // public Session login(@CookieValue("theme") String themeCookie,
     // @RequestBody User user) {
-    public Session login(@RequestBody User user) {
+    public ModelAndView login(@RequestBody User user) {
         // Search the user in repository
         User userInRepo = userRepository.findByUsername(user.getUsername());
         Session newSession = null;
@@ -48,7 +50,9 @@ public class SessionController {
             newSession.setUser(userInRepo);
             sessionRepository.save(newSession);
         }
-        return newSession;
+        ModelAndView mav = new ModelAndView(new MappingJackson2JsonView());
+        mav.addObject(newSession);
+        return mav;
     }
 
 }
