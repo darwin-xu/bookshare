@@ -1,6 +1,5 @@
 package com.bookshare;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -15,15 +14,21 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
 
     public static Properties prop;
 
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        (prop = new Properties()).load(BookshareApplication.class.getResourceAsStream("/application.properties"));
+    static {
+        try {
+            (prop = new Properties()).load(BookshareApplication.class.getResourceAsStream("/application.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
         SpringApplication.run(BookshareApplication.class, args);
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/files/**")
-                .addResourceLocations("file:" + prop.getProperty("bookshare.book.cover.path") + "/");
+        registry.addResourceHandler("/files/**").addResourceLocations("file:" + prop.getProperty("bookshare.book.cover.path") + "/");
     }
 
     @Override
