@@ -1,12 +1,13 @@
 package com.bookshare.controller;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
@@ -14,7 +15,7 @@ import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
 @RestController
-@RequestMapping("/sessions")
+@RequestMapping(value = "sessions")
 public class SessionController {
 
     private SessionRepository sessionRepository;
@@ -31,8 +32,8 @@ public class SessionController {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public ModelAndView login(@RequestBody User user) {
+    @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json")
+    public void login(@RequestBody User user, HttpServletResponse response) {
         // Search the user in repository
         User userInRepo = userRepository.findByUsername(user.getUsername());
         Session newSession = null;
@@ -47,10 +48,11 @@ public class SessionController {
             userInRepo.setSession(newSession);
             newSession.setUser(userInRepo);
             sessionRepository.save(newSession);
-        }
-        ModelAndView mav = new ModelAndView(new MappingJackson2JsonView());
-        mav.addObject(newSession);
-        return mav;
+            
+            // Set cookie for HTTP.
+            response.addCookie(new Cookie("session", newSession.getSessionID()));
+        } else
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
 }

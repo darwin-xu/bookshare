@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 /**
  * Created by kevinzhong on 23/12/2016.
@@ -31,7 +29,6 @@ public class User implements Serializable {
 
     private String password;
 
-    @JsonProperty(access = Access.WRITE_ONLY)
     private String verifyCode;
 
     @JsonIgnore

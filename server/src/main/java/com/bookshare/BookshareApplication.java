@@ -28,7 +28,8 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/files/**").addResourceLocations("file:" + prop.getProperty("bookshare.book.cover.path") + "/");
+        registry.addResourceHandler("/files/**")
+                .addResourceLocations("file:" + prop.getProperty("bookshare.book.cover.path") + "/");
     }
 
     @Override
