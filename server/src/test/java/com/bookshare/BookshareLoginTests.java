@@ -2,6 +2,8 @@ package com.bookshare;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import javax.servlet.http.Cookie;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.bookshare.domain.User;
@@ -76,8 +79,15 @@ public class BookshareLoginTests {
         user = new User();
         user.setUsername("TestNo1");
         user.setPassword("qtqtqt");
-        mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
+        MvcResult result = mockMvc
+                .perform(MockMvcRequestBuilders.post("/sessions/login").contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        // Get Cookie from response.
+        Cookie cookie = result.getResponse().getCookies()[0];
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/sessions/logout").cookie(cookie).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
 
