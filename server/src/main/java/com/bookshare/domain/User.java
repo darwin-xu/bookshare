@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.bookshare.utility.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -18,6 +22,8 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private static final Logger logger = LoggerFactory.getLogger(User.class);
+
     private static final long validityLimit = 60 * 1000;
 
     @Id
@@ -26,6 +32,8 @@ public class User implements Serializable {
     private String id;
 
     private String username;
+
+    private String oldPassword;
 
     private String password;
 
@@ -107,10 +115,20 @@ public class User implements Serializable {
                 return false;
         } else if (!id.equals(other.id))
             return false;
+        if (oldPassword == null) {
+            if (other.oldPassword != null)
+                return false;
+        } else if (!oldPassword.equals(other.oldPassword))
+            return false;
         if (password == null) {
             if (other.password != null)
                 return false;
         } else if (!password.equals(other.password))
+            return false;
+        if (session == null) {
+            if (other.session != null)
+                return false;
+        } else if (!session.equals(other.session))
             return false;
         if (username == null) {
             if (other.username != null)
@@ -133,7 +151,9 @@ public class User implements Serializable {
         int result = 1;
         result = prime * result + ((bookList == null) ? 0 : bookList.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((oldPassword == null) ? 0 : oldPassword.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
+        result = prime * result + ((session == null) ? 0 : session.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
         result = prime * result + ((verifyCode == null) ? 0 : verifyCode.hashCode());
         result = prime * result + (int) (verifyCodeValidty ^ (verifyCodeValidty >>> 32));
@@ -151,20 +171,45 @@ public class User implements Serializable {
         // verifyCode = RandomUtil.genDigitals(6);
         verifyCode = "112233";
         verifyCodeValidty = System.currentTimeMillis();
+        logger.debug("Username:" + username + " verifyCode:" + verifyCode + " verifyCodeValidty:" + verifyCodeValidty);
     }
 
     public boolean verify(User user) {
-        if (verifyCode.equals(user.getVerifyCode()) && (System.currentTimeMillis() - verifyCodeValidty < validityLimit))
+        long currentTimeMillis = System.currentTimeMillis();
+        logger.debug("(this.verifyCode:" + verifyCode + " == user.verifyCode:" + user.getVerifyCode()
+                + ") && (currentTimeMillis:" + currentTimeMillis + " - verifyCodeValidty:" + verifyCodeValidty
+                + " < validityLimit:" + validityLimit + ")");
+        if (StringUtil.equalsWithoutNull(verifyCode, user.getVerifyCode())
+                && (currentTimeMillis - verifyCodeValidty < validityLimit)) {
+            logger.debug("true");
             return true;
-        else
+        } else {
+            logger.debug("false");
             return false;
+        }
     }
 
     public boolean authenticate(User user) {
-        if (username.equals(user.username) && password.equals(user.password))
+        logger.debug("(this.username:" + username + " == user.username:" + user.username + ") && (user.oldPassword:"
+                + user.oldPassword + " == password:" + password + " || user.password:" + user.password + " == password:"
+                + password + ")");
+        if (StringUtil.equalsWithoutNull(username, user.username)
+                && (StringUtil.equalsWithoutNull(user.oldPassword, password)
+                        || StringUtil.equalsWithoutNull(user.password, password))) {
+            logger.debug("true");
             return true;
-        else
+        } else {
+            logger.debug("false");
             return false;
+        }
+    }
+
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
     }
 
 }

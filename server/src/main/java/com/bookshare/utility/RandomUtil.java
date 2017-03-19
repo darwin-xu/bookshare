@@ -4,6 +4,9 @@ import java.nio.file.Path;
 import java.util.Random;
 import java.util.UUID;
 
+/**
+ * Created by Darwin on 1/1/2017.
+ */
 public class RandomUtil {
 
     private static Path genFilePathHelper(Path root, String suffix) {

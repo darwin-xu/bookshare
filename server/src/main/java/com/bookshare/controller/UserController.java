@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
-import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
 /**
@@ -51,10 +49,9 @@ public class UserController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    @RequestMapping(value = "modify", method = RequestMethod.PATCH, produces = "application/json")
-    public void modify(@CookieValue(value = "session", required = false) String sessionID, @RequestBody User user,
-            HttpServletResponse response) {
-        User authUser = getAuthUser(sessionID, user);
+    @RequestMapping(value = "changePassword", method = RequestMethod.PATCH, produces = "application/json")
+    public void changePassword(@RequestBody User user, HttpServletResponse response) {
+        User authUser = getAuthUser(user);
         if (authUser != null) {
             authUser.setPassword(user.getPassword());
             userRepository.save(authUser);
@@ -85,12 +82,7 @@ public class UserController {
      *            for just once.
      * @return A authorized user.
      */
-    private User getAuthUser(String sessionID, User user) {
-        if (sessionID != null) {
-            Session s = sessionRepository.findBySessionID(sessionID);
-            if (s != null)
-                return s.getUser();
-        }
+    private User getAuthUser(User user) {
         User u = userRepository.findByUsername(user.getUsername());
         if (u != null) {
             if (u.verify(user)) {
@@ -98,6 +90,8 @@ public class UserController {
                 u.setVerifyCode("");
                 u.setVerifyCodeValidty(0);
                 userRepository.save(u);
+                return u;
+            } else if (u.authenticate(user)) {
                 return u;
             }
         }
