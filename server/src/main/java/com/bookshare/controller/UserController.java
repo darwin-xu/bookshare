@@ -3,6 +3,8 @@ package com.bookshare.controller;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,8 @@ import com.bookshare.domain.User;
 @RestController
 @RequestMapping(value = "users")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private UserRepository userRepository;
 
@@ -41,6 +45,9 @@ public class UserController {
             if (u == null) {
                 u = new User();
                 u.setUsername(user.getUsername());
+                logger.debug("Create a new user:" + user.getUsername());
+            } else {
+                logger.debug("Find an existing user:" + user.getUsername());
             }
             u.generateVerifyCode();
             // TODO: Send to SMS center.
