@@ -58,7 +58,7 @@ class LibraryViewController: UITableViewController {
 
         return cell
     }
-
+//: ## Using a Private Serial Queue
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "selectBook" {
             if let libraryCell = sender as? BookCollectionViewCell {

@@ -96,7 +96,7 @@ class DataService {
                                     print("Could not fetch \(error), \(error.userInfo)")
                                 }
 
-                                notify(UIImage(data: book.cover as! Data)!)
+                                notify(UIImage(data: book.cover! as Data)!)
                             }
                         }
                     }
