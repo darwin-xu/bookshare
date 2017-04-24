@@ -9,3 +9,10 @@ ios     - Directory for iOS app.
 server  - Directory for backend server.
 web     - Directory for web portal.
 ```
+## Commit tag legend
+
+```
+DEV     - Coding, tunning, debugging, refactoring.
+TEST    - Unit testing, integration testing.
+MISC    - Project, resource, 3rd party library.
+```
