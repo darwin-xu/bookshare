@@ -1,7 +1,10 @@
 |Action|Resource|Req Entity|Rsp Entity|Note|
 |---|---|---|---|---|
-|POST|/user/{user-id}/login|password|session-id|Login|
-|GET|/user/{user-id}/genOneTimePwd|N/A|N/A|Generate the one time password for user|
+|POST|/users/getVerifyCode|{username}|N/A|Get the verify code for login|
+|PATCH|/users/changePassword|{username, verifyCode}|N/A|Set the password by verifyCode|
+|POST|/sessions/login|{username, password}|N/A|Use the user name and password to login|
+|PATCH|/users/changePassword|{username, oldPassword, password}|N/A|Use the user name and old password to change the password|
+|POST|/sessions/logout|{sessionID}|N/A|Logout the session|
 |GET|/library/{book-isbn}|N/A|Book detail|Get the detail information|
 |GET|/app/page/{page-name}|N/A|Column list|Get the column list of the page|
 |GET|/app/page/{page-name}/{column-name}|N/A|Book list|Get the book list of the page|
