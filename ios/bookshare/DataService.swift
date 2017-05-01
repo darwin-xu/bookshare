@@ -13,9 +13,10 @@ import UIKit
 class DataService {
 
     static let session = URLSession(configuration: URLSessionConfiguration.default)
-
-    enum ColumnType {
+    
+    enum PageName : String {
         case Library
+        case Personal
     }
 
     static var uiContext: NSManagedObjectContext?
@@ -23,9 +24,9 @@ class DataService {
     static var columnList: [String] = []
     static var isbn2BookCache: [String: Book] = [:]
 
-    static func getColumnList(forPageName: ColumnType, callback: @escaping (_ columnList: [String]) -> Void = {_ in }) -> [String] {
-        switch forPageName {
-        case ColumnType.Library:
+    static func getColumnList(for pageName: PageName, callback: @escaping (_ columnList: [String]) -> Void = {_ in }) -> [String] {
+        switch pageName {
+        case PageName.Library:
 
             Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
                 columnList = ["热门", "经典", "流行", "青春"]
@@ -33,6 +34,10 @@ class DataService {
             }
 
             return columnList
+            
+        case PageName.Personal:
+            // TODO: load personal page.
+            return 
         }
     }
 

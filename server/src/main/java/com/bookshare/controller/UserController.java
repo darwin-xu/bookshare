@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.User;
 
@@ -26,16 +25,9 @@ public class UserController {
 
     private UserRepository userRepository;
 
-    private SessionRepository sessionRepository;
-
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
-    }
-
-    @Autowired
-    public void setSessionRepository(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
     }
 
     @RequestMapping(value = "getVerifyCode", method = RequestMethod.POST)

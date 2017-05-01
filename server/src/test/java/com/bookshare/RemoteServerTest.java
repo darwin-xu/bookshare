@@ -5,7 +5,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.bookshare.domain.User;
 
-public class BookshareRemoteTest {
+public class RemoteServerTest {
     
     @Test
     public void userWithName() {
