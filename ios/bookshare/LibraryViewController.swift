@@ -21,9 +21,11 @@ class LibraryViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        columnList = DataService.getColumnList(forPageName: DataService.ColumnType.Library) {columnList in
-            self.columnList = columnList
-            self.tableView.reloadData()
+        columnList = DataService.getColumnList(for: DataService.PageName.Library) {columnList in
+            DispatchQueue.main.async {
+                self.columnList = columnList
+                self.tableView.reloadData()
+            }
         }
     }
 

@@ -13,6 +13,8 @@ import UIKit
 class DataService {
 
     static let session = URLSession(configuration: URLSessionConfiguration.default)
+    static let host = "112.213.117.196"
+    static let port = "8080"
     
     enum PageName : String {
         case Library
@@ -27,18 +29,28 @@ class DataService {
     static func getColumnList(for pageName: PageName, callback: @escaping (_ columnList: [String]) -> Void = {_ in }) -> [String] {
         switch pageName {
         case PageName.Library:
-
-            Timer.scheduledTimer(withTimeInterval: 5, repeats: false) {_ in
-                columnList = ["热门", "经典", "流行", "青春"]
-                callback(columnList)
+            let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/sheet/" + PageName.Library.rawValue)
+            let task = session.dataTask(with: url!) {
+                data, response, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                } else if let httpResponse = response as? HTTPURLResponse {
+                    if httpResponse.statusCode == 200 {
+                        do {
+                            let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+                            let columns = json["columns"] as! [String]
+                            callback(columns)
+                        } catch {
+                        }
+                    }
+                }
             }
-
-            return columnList
-            
+            task.resume()
         case PageName.Personal:
             // TODO: load personal page.
-            return 
+            return []
         }
+        return []
     }
 
     static func getBookISBNList(forColumnName: String) -> [String] {
