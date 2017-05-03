@@ -1,5 +1,7 @@
 package com.bookshare.controller;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +23,7 @@ import com.bookshare.domain.User;
 @RequestMapping(value = "sessions")
 public class SessionController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SessionController.class);
+    private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private SessionRepository sessionRepository;
 

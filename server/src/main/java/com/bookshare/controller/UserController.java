@@ -1,5 +1,7 @@
 package com.bookshare.controller;
 
+import java.lang.invoke.MethodHandles;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +23,7 @@ import com.bookshare.domain.User;
 @RequestMapping(value = "users")
 public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private UserRepository userRepository;
 

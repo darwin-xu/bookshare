@@ -1,5 +1,6 @@
 package com.bookshare.controller;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,7 @@ import com.bookshare.domain.Sheet;
 @RequestMapping(value = "app/sheet")
 public class SheetController {
 
-    private static final Logger logger = LoggerFactory.getLogger(SheetController.class);
+    private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private SheetRepository sheetRepository;
 
