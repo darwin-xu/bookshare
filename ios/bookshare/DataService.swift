@@ -38,7 +38,7 @@ class DataService {
                     if httpResponse.statusCode == 200 {
                         do {
                             let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-                            let columns = json["columns"] as! [String]
+                            let columns = json["sections"] as! [String]
                             callback(columns)
                         } catch {
                         }

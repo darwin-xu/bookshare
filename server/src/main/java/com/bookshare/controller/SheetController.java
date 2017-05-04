@@ -3,8 +3,6 @@ package com.bookshare.controller;
 import java.lang.invoke.MethodHandles;
 import java.util.Vector;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.SheetRepository;
-import com.bookshare.domain.Sheet;
+import com.bookshare.domain.app.Sheet;
 
 @RestController
 @RequestMapping(value = "app/sheet")
@@ -30,8 +28,7 @@ public class SheetController {
     }
 
     @RequestMapping(value = "{sheetName}", method = RequestMethod.GET, produces = "application/json")
-    public com.bookshare.dto.Sheet getByName(@PathVariable(value = "sheetName") String sheetName,
-            HttpServletResponse response) {
+    public com.bookshare.dto.Sheet getByName(@PathVariable(value = "sheetName") String sheetName) {
         logger.debug("SheetName: " + sheetName);
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         Vector<String> columnVector = new Vector<String>();
@@ -39,7 +36,6 @@ public class SheetController {
             logger.debug("    " + s.getSectionName());
             columnVector.add(s.getSectionName());
         }
-
         com.bookshare.dto.Sheet returnSheet = new com.bookshare.dto.Sheet();
         returnSheet.setName(sheetName);
         returnSheet.setSections(columnVector.toArray(new String[columnVector.size()]));

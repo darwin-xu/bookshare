@@ -1,4 +1,4 @@
-package com.bookshare.domain;
+package com.bookshare.domain.app;
 
 import java.io.Serializable;
 

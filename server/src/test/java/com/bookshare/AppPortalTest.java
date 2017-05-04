@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SheetTest {
+public class AppPortalTest {
 
     ObjectMapper mapper = new ObjectMapper();
 
@@ -26,7 +26,7 @@ public class SheetTest {
     private MockMvc mockMvc;
 
     @Test
-    public void getDefaultSheet() throws Exception {
+    public void getSheet() throws Exception {
         com.bookshare.dto.Sheet sheetActual = mapper.readValue(
                 mockMvc.perform(MockMvcRequestBuilders.get("/app/sheet/Library").accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
@@ -38,6 +38,22 @@ public class SheetTest {
         String columns[] = { "热门", "经典", "流行", "青春" };
         sheetExpect.setSections(columns);
         assertEquals(sheetExpect, sheetActual);
+    }
+
+    @Test
+    public void getSection() throws Exception {
+        com.bookshare.dto.Section sectionActual = mapper.readValue(
+                mockMvc.perform(MockMvcRequestBuilders.get("/app/section/经典").accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                com.bookshare.dto.Section.class);
+
+        com.bookshare.dto.Section sectionExpect = new com.bookshare.dto.Section();
+
+        sectionExpect.setName("经典");
+        String isbns[] = { "9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450",
+                "9787301268711" };
+        sectionExpect.setIsbns(isbns);
+        assertEquals(sectionExpect, sectionActual);
     }
 
 }
