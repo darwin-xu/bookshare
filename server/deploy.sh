@@ -1,6 +1,6 @@
 #!/bin/bash
 
-service bookshare stop
+service bookshared stop
 git pull
 mvn package -Dmaven.test.skip=true
-service bookshare start
+service bookshared start
