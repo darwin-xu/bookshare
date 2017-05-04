@@ -36,13 +36,13 @@ public class SheetController {
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         Vector<String> columnVector = new Vector<String>();
         for (Sheet s : sheets) {
-            logger.debug("    " + s.getColumnName());
-            columnVector.add(s.getColumnName());
+            logger.debug("    " + s.getSectionName());
+            columnVector.add(s.getSectionName());
         }
 
         com.bookshare.dto.Sheet returnSheet = new com.bookshare.dto.Sheet();
         returnSheet.setName(sheetName);
-        returnSheet.setColumns(columnVector.toArray(new String[columnVector.size()]));
+        returnSheet.setSections(columnVector.toArray(new String[columnVector.size()]));
         return returnSheet;
     }
 }

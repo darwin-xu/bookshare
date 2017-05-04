@@ -9,13 +9,13 @@ public class Sheet implements Serializable {
 
     private String name;
 
-    private String columns[];
+    private String sections[];
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(columns);
+        result = prime * result + Arrays.hashCode(sections);
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -29,7 +29,7 @@ public class Sheet implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         Sheet other = (Sheet) obj;
-        if (!Arrays.equals(columns, other.columns))
+        if (!Arrays.equals(sections, other.sections))
             return false;
         if (name == null) {
             if (other.name != null)
@@ -47,12 +47,12 @@ public class Sheet implements Serializable {
         this.name = name;
     }
 
-    public String[] getColumns() {
-        return columns;
+    public String[] getSections() {
+        return sections;
     }
 
-    public void setColumns(String[] columns) {
-        this.columns = columns;
+    public void setSections(String[] sections) {
+        this.sections = sections;
     }
 
 }

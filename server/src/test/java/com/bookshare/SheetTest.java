@@ -36,7 +36,7 @@ public class SheetTest {
 
         sheetExpect.setName("Library");
         String columns[] = { "热门", "经典", "流行", "青春" };
-        sheetExpect.setColumns(columns);
+        sheetExpect.setSections(columns);
         assertEquals(sheetExpect, sheetActual);
     }
 
