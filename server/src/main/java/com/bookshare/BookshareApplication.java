@@ -2,6 +2,7 @@ package com.bookshare;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
 
@@ -30,9 +31,11 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
 
     public static void main(String[] args) {
         Map<String, String> env = System.getenv();
+        logger.debug("System environment list:");
         for (String envName : env.keySet()) {
-            logger.debug("System [" + envName + "]: " + env.get(envName));
+            logger.debug("[" + envName + "]: " + env.get(envName));
         }
+        logger.debug("Default Charset=" + Charset.defaultCharset());
         SpringApplication.run(BookshareApplication.class, args);
     }
 
