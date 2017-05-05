@@ -9,6 +9,11 @@ public class Sheet {
     private String sections[];
 
     @Override
+    public String toString() {
+        return "Sheet [name=" + name + ", sections=" + Arrays.toString(sections) + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

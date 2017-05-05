@@ -9,6 +9,11 @@ public class Section {
     private String isbns[];
 
     @Override
+    public String toString() {
+        return "Section [name=" + name + ", isbns=" + Arrays.toString(isbns) + "]";
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
