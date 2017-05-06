@@ -31,14 +31,14 @@ public class SheetController {
     public com.bookshare.dto.Sheet getByName(@PathVariable(value = "sheetName") String sheetName) {
         logger.debug("SheetName: " + sheetName);
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
-        Vector<String> columnVector = new Vector<String>();
+        Vector<String> sectionVector = new Vector<String>();
         for (Sheet s : sheets) {
             logger.debug("    " + s.getSectionName());
-            columnVector.add(s.getSectionName());
+            sectionVector.add(s.getSectionName());
         }
         com.bookshare.dto.Sheet returnSheet = new com.bookshare.dto.Sheet();
         returnSheet.setName(sheetName);
-        returnSheet.setSections(columnVector.toArray(new String[columnVector.size()]));
+        returnSheet.setSections(sectionVector.toArray(new String[sectionVector.size()]));
         return returnSheet;
     }
 }

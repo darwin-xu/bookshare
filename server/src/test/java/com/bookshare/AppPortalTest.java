@@ -35,8 +35,8 @@ public class AppPortalTest {
         com.bookshare.dto.Sheet sheetExpect = new com.bookshare.dto.Sheet();
 
         sheetExpect.setName("Library");
-        String columns[] = { "热门", "经典", "流行", "青春" };
-        sheetExpect.setSections(columns);
+        String sections[] = { "热门", "经典", "流行", "青春" };
+        sheetExpect.setSections(sections);
         assertEquals(sheetExpect, sheetActual);
     }
 
