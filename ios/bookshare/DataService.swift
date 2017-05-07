@@ -15,57 +15,98 @@ class DataService {
     static let session = URLSession(configuration: URLSessionConfiguration.default)
     static let host = "112.213.117.196"
     static let port = "8080"
-    
+    static let serialQueue = DispatchQueue(label: "serial.DataService")
+    static let group = DispatchGroup()
+
     enum PageName : String {
         case Library
         case Personal
     }
 
-    static var uiContext: NSManagedObjectContext?
+    enum SheetName: String {
+        case Library
+        case Personal
+    }
 
-    static var columnList: [String] = []
+    static var uiContext: NSManagedObjectContext?
+    static var sectionsCache: [String] = []
+    static var section2IsbnCache: [String: [String]] = [:]
     static var isbn2BookCache: [String: Book] = [:]
 
-    static func getColumnList(for pageName: PageName, callback: @escaping (_ columnList: [String]) -> Void = {_ in }) -> [String] {
-        switch pageName {
-        case PageName.Library:
-            let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/sheet/" + PageName.Library.rawValue)
-            let task = session.dataTask(with: url!) {
-                data, response, error in
+    static private func getUrl(for relativePath: String) -> URL {
+        let urlPath = "http://" + host + ":" + port + relativePath
+        return URL(string: urlPath.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)!
+    }
+
+    static func currentThread() -> String {
+        let name = __dispatch_queue_get_label(nil)
+        return String(cString: name, encoding: .utf8)! + "___" + Thread.current.description
+    }
+
+    static public func getSection2Isbn(for sheetName: SheetName,
+                                callback: @escaping (_ sections: [String], _ section2Isbns: [String: [String]]) -> Void = {_ in }) -> ([String], [String: [String]]) {
+        if sectionsCache == [] {
+            let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/sheet/" + sheetName.rawValue)
+            let task = session.dataTask(with: url!) { data, response, error in
                 if let error = error {
                     print(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         do {
                             let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-                            let columns = json["sections"] as! [String]
-                            callback(columns)
-                        } catch {
+                            // TODO: this update occurs at OperationQueue and background thread.
+                            // It may have problem when main thread and background thread access the
+                            // same variable at the same time.
+                            sectionsCache = json["sections"] as! [String]
+                            DispatchQueue.global(qos: .background).async {
+                                for section: String in sectionsCache {
+                                    getIsbns(for: section, group: group)
+                                }
+                                group.wait()
+                                print("sectionsCache \(sectionsCache)")
+                                print("= section2IsbnCache \(section2IsbnCache)")
+                                callback(sectionsCache, section2IsbnCache)
+                            }
+                        } catch let error as NSError {
+                            print("Could not fetch \(error), \(error.userInfo)")
                         }
                     }
                 }
             }
             task.resume()
-        case PageName.Personal:
-            // TODO: load personal page.
-            return []
         }
-        return []
+        return (sectionsCache, section2IsbnCache)
     }
-
-    static func getBookISBNList(forColumnName: String) -> [String] {
-        switch forColumnName {
-        case "热门":
-            return ["9787500648192", "9787505417731", "9787508622545", "9787301150894"]
-        case "经典":
-            return ["9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450", "9787301268711"]
-        case "流行":
-            return ["9787532772322", "9787540477783", "9787203079729", "9787108056153", "9787308161459"]
-        case "青春":
-            return ["9787540478025", "9787539962887", "9787515804743", "9787508654812"]
-        default:
-            return [];
+    
+    static private func getIsbns(for sectionName: String, group: DispatchGroup) {
+        //let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/section/" + sectionName)
+        let url = getUrl(for: "/bookshare/app/section/" + sectionName)
+        print("getIsbns: \(url)")
+        print("getIsbns:"+currentThread())
+        group.enter()
+        let task = session.dataTask(with: url) { data, response, error in
+            print("---")
+            group.leave()
+            if let error = error {
+                print(error.localizedDescription)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    do {
+                        print("getIsbns return:"+currentThread())
+                        let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
+                        let isbns = json["isbns"] as! [String]
+                        //print("getIsbns return: \(isbns)")
+                        serialQueue.async(group: group) {
+                            section2IsbnCache[sectionName] = isbns
+                            print("* section2IsbnCache \(section2IsbnCache)")
+                        }
+                    } catch let error as NSError {
+                        print("Could not fetch \(error), \(error.userInfo)")
+                    }
+                }
+            }
         }
+        task.resume()
     }
 
     static func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book? {

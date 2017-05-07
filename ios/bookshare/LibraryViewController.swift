@@ -10,7 +10,8 @@ import UIKit
 
 class LibraryViewController: UITableViewController {
 
-    var columnList: [String] = []
+    var sections: [String] = []
+    var section2Isbns: [String: [String]] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,9 +22,10 @@ class LibraryViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
 
-        columnList = DataService.getColumnList(for: DataService.PageName.Library) {columnList in
+        (sections, section2Isbns) = DataService.getSection2Isbn(for: DataService.SheetName.Library) { sections, section2Isbns in
             DispatchQueue.main.async {
-                self.columnList = columnList
+                self.sections = sections
+                self.section2Isbns = section2Isbns
                 self.tableView.reloadData()
             }
         }
@@ -43,7 +45,7 @@ class LibraryViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return columnList.count
+        return section2Isbns.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -51,8 +53,8 @@ class LibraryViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LibraryIdentifier", for: indexPath)
 
         if let libraryCell = cell as? LibraryTableViewCell {
-            libraryCell.category?.text = columnList[indexPath.row]
-            libraryCell.bookListInCell = DataService.getBookISBNList(forColumnName: columnList[indexPath.row])
+            libraryCell.category?.text = sections[indexPath.row]
+            libraryCell.bookListInCell = section2Isbns[sections[indexPath.row]]!
             for isbn in libraryCell.bookListInCell {
                 libraryCell.isbn2BookInCell[isbn] = nil
             }
