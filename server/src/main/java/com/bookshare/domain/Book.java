@@ -1,4 +1,3 @@
-
 package com.bookshare.domain;
 
 import java.io.Serializable;
