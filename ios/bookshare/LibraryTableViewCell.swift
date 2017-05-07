@@ -54,7 +54,7 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
                 fill(bookCell: bookCell, withBook: book)
             }
         }
-        
+
         return cell
     }
 
@@ -69,5 +69,5 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
         bookCell.ibBookTitle.text = withBook.title
         bookCell.ibBookAuthor.text = withBook.author
     }
-
+    
 }

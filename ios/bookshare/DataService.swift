@@ -44,7 +44,7 @@ class DataService {
     }
 
     static public func getSection2Isbn(for sheetName: SheetName,
-                                callback: @escaping (_ sections: [String], _ section2Isbns: [String: [String]]) -> Void = {_ in }) -> ([String], [String: [String]]) {
+                                       callback: @escaping (_ sections: [String], _ section2Isbns: [String: [String]]) -> Void = {_ in }) -> ([String], [String: [String]]) {
         if sectionsCache == [] {
             let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/sheet/" + sheetName.rawValue)
             let task = session.dataTask(with: url!) { data, response, error in
@@ -77,7 +77,7 @@ class DataService {
         }
         return (sectionsCache, section2IsbnCache)
     }
-    
+
     static private func getIsbns(for sectionName: String, group: DispatchGroup) {
         //let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/section/" + sectionName)
         let url = getUrl(for: "/bookshare/app/section/" + sectionName)
@@ -207,7 +207,7 @@ class DataService {
         } catch let error as NSError {
             print("Error parsing results: \(error.localizedDescription)")
         }
-        
+
         return book
     }
 

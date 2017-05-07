@@ -13,5 +13,5 @@ class BookCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var ibBookCover: UIImageView!
     @IBOutlet weak var ibBookTitle: UILabel!
     @IBOutlet weak var ibBookAuthor: UILabel!
-
+    
 }
