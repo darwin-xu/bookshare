@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27DB460BA05B8EC22AC5FF70 /* Pods_bookshare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADAB500DFB13BBA53B143FFA /* Pods_bookshare.framework */; };
 		D62EFCAF1DE5F4A300D30527 /* LibraryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62EFCAE1DE5F4A300D30527 /* LibraryTableViewCell.swift */; };
 		D6408C891DF85EC5009625E7 /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6408C881DF85EC5009625E7 /* MyViewController.swift */; };
 		D691C3D51DE73B59002381EF /* BookCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D691C3D41DE73B59002381EF /* BookCollectionViewCell.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		ADAB500DFB13BBA53B143FFA /* Pods_bookshare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bookshare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D62EFCAE1DE5F4A300D30527 /* LibraryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewCell.swift; sourceTree = "<group>"; };
 		D6408C881DF85EC5009625E7 /* MyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyViewController.swift; sourceTree = "<group>"; };
 		D691C3D41DE73B59002381EF /* BookCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -42,6 +44,8 @@
 		D6DE3B9E1DDCB82B00653AB1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		D6DE3BA21DDCBFD200653AB1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		D6DE3BA41DDDF9D500653AB1 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
+		EFC9BC172DAEBCB1674E1C8F /* Pods-bookshare.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bookshare.release.xcconfig"; path = "Pods/Target Support Files/Pods-bookshare/Pods-bookshare.release.xcconfig"; sourceTree = "<group>"; };
+		FC25DE02FC79D8BA959A1E89 /* Pods-bookshare.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-bookshare.debug.xcconfig"; path = "Pods/Target Support Files/Pods-bookshare/Pods-bookshare.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,17 +53,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DB460BA05B8EC22AC5FF70 /* Pods_bookshare.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9F68C2410673585586399F76 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ADAB500DFB13BBA53B143FFA /* Pods_bookshare.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		D6DE3B791DDCA5F900653AB1 = {
 			isa = PBXGroup;
 			children = (
 				D6DE3B841DDCA5F900653AB1 /* bookshare */,
 				D6DE3B831DDCA5F900653AB1 /* Products */,
+				EDD47E1258CF5DC702074A4C /* Pods */,
+				9F68C2410673585586399F76 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +107,15 @@
 			path = bookshare;
 			sourceTree = "<group>";
 		};
+		EDD47E1258CF5DC702074A4C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FC25DE02FC79D8BA959A1E89 /* Pods-bookshare.debug.xcconfig */,
+				EFC9BC172DAEBCB1674E1C8F /* Pods-bookshare.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,9 +123,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D6DE3B941DDCA5F900653AB1 /* Build configuration list for PBXNativeTarget "bookshare" */;
 			buildPhases = (
+				2F91C2D43E873CCE2BCACA06 /* [CP] Check Pods Manifest.lock */,
 				D6DE3B7E1DDCA5F900653AB1 /* Sources */,
 				D6DE3B7F1DDCA5F900653AB1 /* Frameworks */,
 				D6DE3B801DDCA5F900653AB1 /* Resources */,
+				E7D99165153A46F529D3B4AB /* [CP] Embed Pods Frameworks */,
+				FCC500CF9C31A49D55B1D401 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -160,6 +187,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2F91C2D43E873CCE2BCACA06 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		E7D99165153A46F529D3B4AB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-bookshare/Pods-bookshare-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FCC500CF9C31A49D55B1D401 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-bookshare/Pods-bookshare-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D6DE3B7E1DDCA5F900653AB1 /* Sources */ = {
@@ -309,6 +384,7 @@
 		};
 		D6DE3B951DDCA5F900653AB1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FC25DE02FC79D8BA959A1E89 /* Pods-bookshare.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 33FK55TZEL;
@@ -322,6 +398,7 @@
 		};
 		D6DE3B961DDCA5F900653AB1 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFC9BC172DAEBCB1674E1C8F /* Pods-bookshare.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 33FK55TZEL;

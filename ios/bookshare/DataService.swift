@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import UIKit
+import SwiftyBeaver
 
 class DataService {
 
@@ -38,18 +39,13 @@ class DataService {
         return URL(string: urlPath.addingPercentEncoding(withAllowedCharacters: .urlFragmentAllowed)!)!
     }
 
-    static func currentThread() -> String {
-        let name = __dispatch_queue_get_label(nil)
-        return String(cString: name, encoding: .utf8)! + "___" + Thread.current.description
-    }
-
     static public func getSection2Isbn(for sheetName: SheetName,
                                        callback: @escaping (_ sections: [String], _ section2Isbns: [String: [String]]) -> Void = {_ in }) -> ([String], [String: [String]]) {
         if sectionsCache == [] {
-            let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/sheet/" + sheetName.rawValue)
-            let task = session.dataTask(with: url!) { data, response, error in
+            let url = getUrl(for: "/bookshare/app/sheet/" + sheetName.rawValue)
+            let task = session.dataTask(with: url) { data, response, error in
                 if let error = error {
-                    print(error.localizedDescription)
+                    SwiftyBeaver.error(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         do {
@@ -58,17 +54,17 @@ class DataService {
                             // It may have problem when main thread and background thread access the
                             // same variable at the same time.
                             sectionsCache = json["sections"] as! [String]
+                            SwiftyBeaver.verbose("Get isbns for section: \(sectionsCache)")
                             DispatchQueue.global(qos: .background).async {
                                 for section: String in sectionsCache {
                                     getIsbns(for: section, group: group)
                                 }
                                 group.wait()
-                                print("sectionsCache \(sectionsCache)")
-                                print("= section2IsbnCache \(section2IsbnCache)")
+                                SwiftyBeaver.verbose("Isbns for section: \(sectionsCache) is ready.")
                                 callback(sectionsCache, section2IsbnCache)
                             }
                         } catch let error as NSError {
-                            print("Could not fetch \(error), \(error.userInfo)")
+                            SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
                         }
                     }
                 }
@@ -79,29 +75,24 @@ class DataService {
     }
 
     static private func getIsbns(for sectionName: String, group: DispatchGroup) {
-        //let url = URL(string: "http://" + host + ":" + port + "/bookshare/app/section/" + sectionName)
         let url = getUrl(for: "/bookshare/app/section/" + sectionName)
-        print("getIsbns: \(url)")
-        print("getIsbns:"+currentThread())
+        SwiftyBeaver.verbose("Send the request to get [\(sectionName)].")
         group.enter()
         let task = session.dataTask(with: url) { data, response, error in
-            print("---")
-            group.leave()
             if let error = error {
-                print(error.localizedDescription)
+                SwiftyBeaver.error(error.localizedDescription)
             } else if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
                     do {
-                        print("getIsbns return:"+currentThread())
                         let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
                         let isbns = json["isbns"] as! [String]
-                        //print("getIsbns return: \(isbns)")
                         serialQueue.async(group: group) {
+                            group.leave()
                             section2IsbnCache[sectionName] = isbns
-                            print("* section2IsbnCache \(section2IsbnCache)")
+                            SwiftyBeaver.verbose("Data for [\(sectionName)] is returned.")
                         }
                     } catch let error as NSError {
-                        print("Could not fetch \(error), \(error.userInfo)")
+                        SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
                     }
                 }
             }
@@ -113,11 +104,11 @@ class DataService {
         if let book = isbn2BookCache[forISBN] {
             return book
         } else {
-            NSLog("fetch data for " + forISBN)
+            SwiftyBeaver.verbose("fetch data for " + forISBN)
             let url = URL(string: "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=" + forISBN)
             let task = session.dataTask(with: url! as URL) { data, response, error in
                 if let error = error {
-                    print(error.localizedDescription)
+                    SwiftyBeaver.error(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         DispatchQueue.main.async {
@@ -135,13 +126,13 @@ class DataService {
     }
 
     static func getCoverImage(forISBN: String, notify: @escaping (_ image: UIImage) -> Void = {_ in }) {
-        NSLog("Get cover image for %@", forISBN)
+        SwiftyBeaver.verbose("Get cover image for \(forISBN)")
         if let book = isbn2BookCache[forISBN] {
             if book.coverURL != nil {
                 let url = URL(string: book.coverURL!)
                 let task = session.dataTask(with: url! as URL) { data, response, error in
                     if let error = error {
-                        print(error.localizedDescription)
+                        SwiftyBeaver.error(error.localizedDescription)
                     } else if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 200 {
                             DispatchQueue.main.async {
@@ -151,7 +142,7 @@ class DataService {
                                 do {
                                     try uiContext!.save()
                                 } catch let error as NSError {
-                                    print("Could not fetch \(error), \(error.userInfo)")
+                                    SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
                                 }
 
                                 notify(UIImage(data: book.cover! as Data)!)
@@ -197,7 +188,7 @@ class DataService {
                                 do {
                                     try uiContext!.save()
                                 } catch let error as NSError  {
-                                    print("Could not save \(error), \(error.userInfo)")
+                                    SwiftyBeaver.error("Could not save \(error), \(error.userInfo)")
                                 }
                             }
                         }
@@ -205,7 +196,7 @@ class DataService {
                 }
             }
         } catch let error as NSError {
-            print("Error parsing results: \(error.localizedDescription)")
+            SwiftyBeaver.error("Error parsing results: \(error.localizedDescription)")
         }
 
         return book
@@ -218,11 +209,11 @@ class DataService {
         do {
             let results = try context.fetch(fetchRequest)
             for b in results as! [Book] {
-                NSLog("title: %@", b.title!)
+                SwiftyBeaver.verbose("title: \(b.title!)")
                 isbn2BookCache[b.isbn13!] = b
             }
         } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
+            SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
         }
     }
     

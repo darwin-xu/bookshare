@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyBeaver
 
 class MyViewController: UITableViewController {
 
@@ -42,12 +43,10 @@ class MyViewController: UITableViewController {
 
         switch indexPath.row {
         case 0:
-            NSLog("LoginIdentifier")
             let cell = tableView.dequeueReusableCell(withIdentifier: "LoginIdentifier", for: indexPath)
             cell.selectionStyle = UITableViewCellSelectionStyle.none
             return cell
         default:
-            NSLog("ConfigIdentifier")
             let cell = tableView.dequeueReusableCell(withIdentifier: "ConfigIdentifier", for: indexPath)
 
             switch indexPath.row {

@@ -1,0 +1,6 @@
+framework module Pods_bookshare {
+  umbrella header "Pods-bookshare-umbrella.h"
+
+  export *
+  module * { export * }
+}

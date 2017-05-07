@@ -8,15 +8,21 @@
 
 import UIKit
 import CoreData
+import SwiftyBeaver
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
+    func setupSwiftyBeaverLogging() {
+        let console = ConsoleDestination()
+        SwiftyBeaver.addDestination(console)
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        setupSwiftyBeaverLogging()
         DataService.loadData(context: persistentContainer.viewContext)
         return true
     }

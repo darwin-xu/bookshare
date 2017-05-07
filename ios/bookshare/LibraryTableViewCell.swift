@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyBeaver
 
 class LibraryTableViewCell: UITableViewCell {
 
@@ -37,12 +38,12 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "bookCell", for: indexPath)
 
         if let bookCell = cell as? BookCollectionViewCell {
-            NSLog("collection: %d", indexPath.row)
+            SwiftyBeaver.verbose("collection: \(indexPath.row)")
             let isbn = bookListInCell[indexPath.row]
 
             if (isbn2BookInCell[isbn] == nil) {
                 isbn2BookInCell[isbn] = DataService.getBook(forISBN: isbn) { book in
-                    NSLog("Data from data service: %@", book.title!)
+                    SwiftyBeaver.verbose("Data from data service: \(book.title!)")
                     self.isbn2BookInCell[isbn] = book
                     self.fill(bookCell: bookCell, withBook: book)
                     //collectionView.reloadData()
@@ -50,7 +51,7 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
             }
 
             if let book = isbn2BookInCell[isbn] {
-                NSLog("Data in cache: %@", book.title!)
+                SwiftyBeaver.verbose("Data in cache: \(book.title!)")
                 fill(bookCell: bookCell, withBook: book)
             }
         }
