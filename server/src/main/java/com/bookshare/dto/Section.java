@@ -6,7 +6,7 @@ public class Section {
 
     private String name;
 
-    private String isbns[];
+    private String isbns[] = new String[0];
 
     @Override
     public String toString() {

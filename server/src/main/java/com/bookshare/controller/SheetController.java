@@ -4,6 +4,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Vector;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ public class SheetController {
 
     @RequestMapping(value = "{sheetName}", method = RequestMethod.GET, produces = "application/json")
     public com.bookshare.dto.Sheet getByName(@PathVariable(value = "sheetName") String sheetName) {
-        logger.debug("SheetName: " + sheetName);
+        logger.debug("getByName-> SheetName: " + sheetName);
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         Vector<String> sectionVector = new Vector<String>();
         for (Sheet s : sheets) {
@@ -48,20 +50,48 @@ public class SheetController {
     @Transactional
     @RequestMapping(value = "{sheetName}", method = RequestMethod.POST)
     public void postByName(@PathVariable(value = "sheetName") String sheetName,
-            @RequestBody com.bookshare.dto.Sheet sheet) {
-        logger.debug("SheetName: " + sheetName);
+            @RequestBody com.bookshare.dto.Sheet sheet, HttpServletResponse response) {
+        logger.debug("postByName-> SheetName: " + sheetName);
+        // 1. Check if the old data exists.
+        Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
+        if (sheets.length == 0) {
+            // 2. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
+            Vector<Sheet> sheetVector = new Vector<Sheet>();
+            for (String section : sheet.getSections()) {
+                Sheet s = new Sheet();
+                s.setSheetName(sheetName);
+                s.setSectionName(section);
+                sheetVector.add(s);
+            }
+            // 3. Save it into repository
+            sheetRepository.save(sheetVector);
+        } else {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
+    }
+
+    @Transactional
+    @RequestMapping(value = "{sheetName}", method = RequestMethod.PATCH)
+    public void patchByName(@PathVariable(value = "sheetName") String sheetName,
+            @RequestBody com.bookshare.dto.Sheet sheet, HttpServletResponse response) {
+        logger.debug("patchByName-> SheetName: " + sheetName);
         // 1. Remove the old data.
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
-        sheetRepository.delete(Arrays.asList(sheets));
-        // 2. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
-        Vector<Sheet> sheetVector = new Vector<Sheet>();
-        for (String section : sheet.getSections()) {
-            Sheet s = new Sheet();
-            s.setSheetName(sheetName);
-            s.setSectionName(section);
-            sheetVector.add(s);
+        if (sheets.length != 0) {
+            sheetRepository.delete(Arrays.asList(sheets));
+            // 2. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
+            Vector<Sheet> sheetVector = new Vector<Sheet>();
+            for (String section : sheet.getSections()) {
+                Sheet s = new Sheet();
+                s.setSheetName(sheetName);
+                s.setSectionName(section);
+                sheetVector.add(s);
+            }
+            // 3. Save it into repository
+            sheetRepository.save(sheetVector);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
-        // 3. Save it into repository
-        sheetRepository.save(sheetVector);
     }
+
 }

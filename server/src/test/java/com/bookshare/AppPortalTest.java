@@ -40,7 +40,7 @@ public class AppPortalTest {
     }
 
     @Test
-    public void postSheet() throws Exception {
+    public void postExistingSheet() throws Exception {
         com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
         sheet.setName("Library");
         String sections[] = { "Science fiction", "Drama", "古典", "Health", "Religion, Spirituality & New Age", "Science",
@@ -48,11 +48,46 @@ public class AppPortalTest {
         sheet.setSections(sections);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/Library").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sheet))).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void postNonexistentSheet() throws Exception {
+        com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
+        sheet.setName("推荐");
+        String sections[] = { "Science fiction", "Drama", "古典", "Health", "Religion, Spirituality & New Age", "Science",
+                "History", "Guide" };
+        sheet.setSections(sections);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/推荐").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
         com.bookshare.dto.Sheet sheetActual = mapper.readValue(
-                mockMvc.perform(MockMvcRequestBuilders.get("/app/sheet/Library").accept(MediaType.APPLICATION_JSON))
+                mockMvc.perform(MockMvcRequestBuilders.get("/app/sheet/推荐").accept(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                com.bookshare.dto.Sheet.class);
+        assertEquals(sheet, sheetActual);
+    }
+
+    @Test
+    public void patchExistingSheet() throws Exception {
+        String sheetName = "Library库";
+
+        com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
+        sheet.setName(sheetName);
+        String sections1[] = { "xxx" };
+        sheet.setSections(sections1);
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
+
+        String sections2[] = { "1. 法学", "2. 医学", "天文学书籍‎", "旅游指南‎", "軍事書籍‎ Military" };
+        sheet.setSections(sections2);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
+
+        com.bookshare.dto.Sheet sheetActual = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/app/sheet/" + sheetName).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Sheet.class);
         assertEquals(sheet, sheetActual);
     }

@@ -6,7 +6,7 @@ public class Sheet {
 
     private String name;
 
-    private String sections[];
+    private String sections[] = new String[0];
 
     @Override
     public String toString() {
