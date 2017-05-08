@@ -30,7 +30,7 @@ public class User implements Serializable {
     @Id
     @GeneratedValue
     @JsonIgnore
-    private String id;
+    private Long id;
 
     private String username;
 
@@ -111,11 +111,6 @@ public class User implements Serializable {
                 return false;
         } else if (!bookList.equals(other.bookList))
             return false;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
         if (oldPassword == null) {
             if (other.oldPassword != null)
                 return false;
@@ -151,7 +146,6 @@ public class User implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((bookList == null) ? 0 : bookList.hashCode());
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((oldPassword == null) ? 0 : oldPassword.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + ((session == null) ? 0 : session.hashCode());
@@ -163,8 +157,9 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id='" + id + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
-                + ", bookList=" + bookList + '}';
+        return "User [username=" + username + ", oldPassword=" + oldPassword + ", password=" + password
+                + ", verifyCode=" + verifyCode + ", verifyCodeValidty=" + verifyCodeValidty + ", session=" + session
+                + ", bookList=" + bookList + "]";
     }
 
     public void generateVerifyCode() {
