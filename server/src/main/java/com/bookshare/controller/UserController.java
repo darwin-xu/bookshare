@@ -46,6 +46,7 @@ public class UserController {
             u.generateVerifyCode();
             // TODO: Send to SMS center.
             userRepository.save(u);
+            response.setStatus(HttpServletResponse.SC_CREATED);
         } else
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }

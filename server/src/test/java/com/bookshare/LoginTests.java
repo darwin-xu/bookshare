@@ -47,7 +47,7 @@ public class LoginTests {
         user.setUsername("TestNo1");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Use modify to set a password for user.
         user = new User();
@@ -100,7 +100,7 @@ public class LoginTests {
         user.setUsername("TestNo2");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Try to use a wrong verifyCode to modify.
         user = new User();
@@ -121,7 +121,7 @@ public class LoginTests {
         user.setUsername("TestNo3");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Use modify to set a password for user.
         user = new User();
@@ -151,7 +151,7 @@ public class LoginTests {
         user.setUsername("TestNo4");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         // Use modify to set a password for user.
         user = new User();
