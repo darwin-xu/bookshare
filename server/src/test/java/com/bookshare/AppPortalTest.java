@@ -33,7 +33,6 @@ public class AppPortalTest {
                 com.bookshare.dto.Sheet.class);
 
         com.bookshare.dto.Sheet sheetExpect = new com.bookshare.dto.Sheet();
-
         sheetExpect.setName("Library");
         String sections[] = { "热门", "经典", "流行", "青春" };
         sheetExpect.setSections(sections);
@@ -43,11 +42,11 @@ public class AppPortalTest {
     @Test
     public void postSheet() throws Exception {
         com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
-
         sheet.setName("Library");
         String sections[] = { "Science fiction", "Drama", "古典", "Health", "Religion, Spirituality & New Age", "Science",
                 "History", "Guide" };
         sheet.setSections(sections);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/Library").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
@@ -66,12 +65,28 @@ public class AppPortalTest {
                 com.bookshare.dto.Section.class);
 
         com.bookshare.dto.Section sectionExpect = new com.bookshare.dto.Section();
-
         sectionExpect.setName("经典");
         String isbns[] = { "9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450",
                 "9787301268711" };
         sectionExpect.setIsbns(isbns);
         assertEquals(sectionExpect, sectionActual);
+    }
+
+    @Test
+    public void postSection() throws Exception {
+        com.bookshare.dto.Section section = new com.bookshare.dto.Section();
+        section.setName("Drama");
+        String isbns[] = { "1", "2", "3", "4", "5", "6" };
+        section.setIsbns(isbns);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/section/Drama").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(section))).andExpect(status().isOk());
+
+        com.bookshare.dto.Section sectionActual = mapper.readValue(
+                mockMvc.perform(MockMvcRequestBuilders.get("/app/section/Drama").accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                com.bookshare.dto.Section.class);
+        assertEquals(section, sectionActual);
     }
 
 }
