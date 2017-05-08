@@ -41,6 +41,24 @@ public class AppPortalTest {
     }
 
     @Test
+    public void postSheet() throws Exception {
+        com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
+
+        sheet.setName("Library");
+        String sections[] = { "Science fiction", "Drama", "古典", "Health", "Religion, Spirituality & New Age", "Science",
+                "History", "Guide" };
+        sheet.setSections(sections);
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/Library").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
+
+        com.bookshare.dto.Sheet sheetActual = mapper.readValue(
+                mockMvc.perform(MockMvcRequestBuilders.get("/app/sheet/Library").accept(MediaType.APPLICATION_JSON))
+                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                com.bookshare.dto.Sheet.class);
+        assertEquals(sheet, sheetActual);
+    }
+
+    @Test
     public void getSection() throws Exception {
         com.bookshare.dto.Section sectionActual = mapper.readValue(
                 mockMvc.perform(MockMvcRequestBuilders.get("/app/section/经典").accept(MediaType.APPLICATION_JSON))
