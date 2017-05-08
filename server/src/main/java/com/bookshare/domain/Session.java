@@ -17,7 +17,7 @@ public class Session implements Serializable {
     @Id
     @GeneratedValue
     @JsonIgnore
-    private String id;
+    private Long id;
 
     private String sessionID;
 
@@ -28,8 +28,8 @@ public class Session implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((sessionID == null) ? 0 : sessionID.hashCode());
+        result = prime * result + ((user == null) ? 0 : user.hashCode());
         return result;
     }
 
@@ -42,15 +42,15 @@ public class Session implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         Session other = (Session) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
         if (sessionID == null) {
             if (other.sessionID != null)
                 return false;
         } else if (!sessionID.equals(other.sessionID))
+            return false;
+        if (user == null) {
+            if (other.user != null)
+                return false;
+        } else if (!user.equals(other.user))
             return false;
         return true;
     }
