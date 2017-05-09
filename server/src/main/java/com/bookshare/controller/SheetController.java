@@ -75,11 +75,12 @@ public class SheetController {
     public void patchByName(@PathVariable(value = "sheetName") String sheetName,
             @RequestBody com.bookshare.dto.Sheet sheet, HttpServletResponse response) {
         logger.debug("patchByName-> SheetName: " + sheetName);
-        // 1. Remove the old data.
+        // 1. Check if the old data exists.
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         if (sheets.length != 0) {
+            // 2. Remove the old data.
             sheetRepository.delete(Arrays.asList(sheets));
-            // 2. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
+            // 3. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
             Vector<Sheet> sheetVector = new Vector<Sheet>();
             for (String section : sheet.getSections()) {
                 Sheet s = new Sheet();
@@ -87,7 +88,7 @@ public class SheetController {
                 s.setSectionName(section);
                 sheetVector.add(s);
             }
-            // 3. Save it into repository
+            // 4. Save it into repository
             sheetRepository.save(sheetVector);
         } else {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

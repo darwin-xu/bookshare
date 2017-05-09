@@ -4,6 +4,8 @@ import java.lang.invoke.MethodHandles;
 import java.util.Arrays;
 import java.util.Vector;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,21 +50,49 @@ public class SectionController {
     @Transactional
     @RequestMapping(value = "{sectionName}", method = RequestMethod.POST)
     public void postByName(@PathVariable(value = "sectionName") String sectionName,
-            @RequestBody com.bookshare.dto.Section section) {
+            @RequestBody com.bookshare.dto.Section section, HttpServletResponse response) {
         logger.debug("SectionName: " + sectionName);
-        // 1. Remove the old data.
+        // 1. Check if the old data exists.
         Section sections[] = sectionRepository.findBySectionName(sectionName);
-        sectionRepository.delete(Arrays.asList(sections));
-        // 2. Convert com.bookshare.dto.Section into com.bookshare.domain.app.Section
-        Vector<Section> sectionVector = new Vector<Section>();
-        for (String isbn : section.getIsbns()) {
-            Section s = new Section();
-            s.setSectionName(sectionName);
-            s.setIsbn(isbn);
-            sectionVector.add(s);
+        if (sections.length == 0) {
+            // 2. Convert com.bookshare.dto.Section into com.bookshare.domain.app.Section
+            Vector<Section> sectionVector = new Vector<Section>();
+            for (String isbn : section.getIsbns()) {
+                Section s = new Section();
+                s.setSectionName(sectionName);
+                s.setIsbn(isbn);
+                sectionVector.add(s);
+            }
+            // 3. Save it into repository
+            sectionRepository.save(sectionVector);
+        } else {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
         }
-        // 3. Save it into repository
-        sectionRepository.save(sectionVector);
+    }
+
+    @Transactional
+    @RequestMapping(value = "{sectionName}", method = RequestMethod.PATCH)
+    public void patchByName(@PathVariable(value = "sectionName") String sectionName,
+            @RequestBody com.bookshare.dto.Section section, HttpServletResponse response) {
+        logger.debug("SectionName: " + sectionName);
+        // 1. Check if the old data exists.
+        Section sections[] = sectionRepository.findBySectionName(sectionName);
+        if (sections.length != 0) {
+            // 2. Remove the old data.
+            sectionRepository.delete(Arrays.asList(sections));
+            // 3. Convert com.bookshare.dto.Section into com.bookshare.domain.app.Section
+            Vector<Section> sectionVector = new Vector<Section>();
+            for (String isbn : section.getIsbns()) {
+                Section s = new Section();
+                s.setSectionName(sectionName);
+                s.setIsbn(isbn);
+                sectionVector.add(s);
+            }
+            // 4. Save it into repository
+            sectionRepository.save(sectionVector);
+        } else {
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
+        }
     }
 
 }
