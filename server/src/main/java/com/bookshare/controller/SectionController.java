@@ -91,7 +91,7 @@ public class SectionController {
             // 4. Save it into repository
             sectionRepository.save(sectionVector);
         } else {
-            response.setStatus(HttpServletResponse.SC_CONFLICT);
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 

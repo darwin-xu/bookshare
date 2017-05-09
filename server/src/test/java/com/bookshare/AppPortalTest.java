@@ -27,13 +27,15 @@ public class AppPortalTest {
 
     @Test
     public void getSheet() throws Exception {
-        com.bookshare.dto.Sheet sheetActual = mapper.readValue(
-                mockMvc.perform(MockMvcRequestBuilders.get("/app/sheet/Library").accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+        String sheetName = "Library";
+
+        com.bookshare.dto.Sheet sheetActual = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/app/sheet/" + sheetName).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Sheet.class);
 
         com.bookshare.dto.Sheet sheetExpect = new com.bookshare.dto.Sheet();
-        sheetExpect.setName("Library");
+        sheetExpect.setName(sheetName);
         String sections[] = { "热门", "经典", "流行", "青春" };
         sheetExpect.setSections(sections);
         assertEquals(sheetExpect, sheetActual);
@@ -41,30 +43,34 @@ public class AppPortalTest {
 
     @Test
     public void postExistingSheet() throws Exception {
+        String sheetName = "Library";
+
         com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
-        sheet.setName("Library");
+        sheet.setName(sheetName);
         String sections[] = { "Science fiction", "Drama", "古典", "Health", "Religion, Spirituality & New Age", "Science",
                 "History", "Guide" };
         sheet.setSections(sections);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/Library").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isConflict());
     }
 
     @Test
     public void postNonexistentSheet() throws Exception {
+        String sheetName = "推荐";
+
         com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
-        sheet.setName("推荐");
+        sheet.setName(sheetName);
         String sections[] = { "Science fiction", "Drama", "古典", "Health", "Religion, Spirituality & New Age", "Science",
                 "History", "Guide" };
         sheet.setSections(sections);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/推荐").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
-        com.bookshare.dto.Sheet sheetActual = mapper.readValue(
-                mockMvc.perform(MockMvcRequestBuilders.get("/app/sheet/推荐").accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+        com.bookshare.dto.Sheet sheetActual = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/app/sheet/" + sheetName).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Sheet.class);
         assertEquals(sheet, sheetActual);
     }
@@ -93,14 +99,28 @@ public class AppPortalTest {
     }
 
     @Test
+    public void patchNonexistentSheet() throws Exception {
+        String sheetName = "Nonexistent";
+
+        com.bookshare.dto.Sheet sheet = new com.bookshare.dto.Sheet();
+        sheet.setName(sheetName);
+        String sections1[] = { "xxx" };
+        sheet.setSections(sections1);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(sheet))).andExpect(status().isNotFound());
+    }
+
+    @Test
     public void getSection() throws Exception {
-        com.bookshare.dto.Section sectionActual = mapper.readValue(
-                mockMvc.perform(MockMvcRequestBuilders.get("/app/section/经典").accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+        String sectionName = "经典";
+
+        com.bookshare.dto.Section sectionActual = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/app/section/" + sectionName).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Section.class);
 
         com.bookshare.dto.Section sectionExpect = new com.bookshare.dto.Section();
-        sectionExpect.setName("经典");
+        sectionExpect.setName(sectionName);
         String isbns[] = { "9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450",
                 "9787301268711" };
         sectionExpect.setIsbns(isbns);
@@ -108,20 +128,69 @@ public class AppPortalTest {
     }
 
     @Test
-    public void postSection() throws Exception {
+    public void postExistingSection() throws Exception {
+        String sectionName = "热门";
+
         com.bookshare.dto.Section section = new com.bookshare.dto.Section();
-        section.setName("Drama");
+        section.setName(sectionName);
         String isbns[] = { "1", "2", "3", "4", "5", "6" };
         section.setIsbns(isbns);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/section/Drama").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(section))).andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/section/" + sectionName)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
+                .andExpect(status().isConflict());
+    }
 
-        com.bookshare.dto.Section sectionActual = mapper.readValue(
-                mockMvc.perform(MockMvcRequestBuilders.get("/app/section/Drama").accept(MediaType.APPLICATION_JSON))
-                        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+    @Test
+    public void postNonexistentSection() throws Exception {
+        String sectionName = "New section";
+
+        com.bookshare.dto.Section section = new com.bookshare.dto.Section();
+        section.setName(sectionName);
+        String isbns[] = { "5", "4", "3", "2", "1" };
+        section.setIsbns(isbns);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/section/" + sectionName)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
+                .andExpect(status().isOk());
+
+        com.bookshare.dto.Section sectionActual = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/app/section/" + sectionName).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Section.class);
         assertEquals(section, sectionActual);
+    }
+
+    @Test
+    public void patchExistingSection() throws Exception {
+        String sectionName = "热门";
+
+        com.bookshare.dto.Section section = new com.bookshare.dto.Section();
+        section.setName(sectionName);
+        String isbns[] = { "11", "22", "33", "44", "55", "66" };
+        section.setIsbns(isbns);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/section/" + sectionName)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
+                .andExpect(status().isOk());
+
+        com.bookshare.dto.Section sectionActual = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/app/section/" + sectionName).accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                com.bookshare.dto.Section.class);
+        assertEquals(section, sectionActual);
+    }
+
+    @Test
+    public void patchNonexistentSection() throws Exception {
+        String sectionName = "不存在";
+
+        com.bookshare.dto.Section section = new com.bookshare.dto.Section();
+        section.setName(sectionName);
+        String isbns[] = { "11", "22", "33", "44", "55", "66" };
+        section.setIsbns(isbns);
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/section/" + sectionName)
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
+                .andExpect(status().isNotFound());
     }
 
 }
