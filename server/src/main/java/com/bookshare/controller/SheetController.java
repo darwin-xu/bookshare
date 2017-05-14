@@ -20,7 +20,7 @@ import com.bookshare.dao.SheetRepository;
 import com.bookshare.domain.app.Sheet;
 
 @RestController
-@RequestMapping(value = "app/sheet")
+@RequestMapping(value = "app/sheets")
 public class SheetController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

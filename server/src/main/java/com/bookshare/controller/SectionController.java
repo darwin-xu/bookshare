@@ -20,7 +20,7 @@ import com.bookshare.dao.SectionRepository;
 import com.bookshare.domain.app.Section;
 
 @RestController
-@RequestMapping(value = "app/section")
+@RequestMapping(value = "app/sections")
 public class SectionController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());

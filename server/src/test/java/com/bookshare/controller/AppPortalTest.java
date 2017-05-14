@@ -30,7 +30,7 @@ public class AppPortalTest {
         String sheetName = "Library";
 
         com.bookshare.dto.Sheet sheetActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sheet/" + sheetName).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get("/app/sheets/" + sheetName).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Sheet.class);
 
@@ -51,7 +51,7 @@ public class AppPortalTest {
                 "History", "Guide" };
         sheet.setSections(sections);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isConflict());
     }
 
@@ -65,11 +65,11 @@ public class AppPortalTest {
                 "History", "Guide" };
         sheet.setSections(sections);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
         com.bookshare.dto.Sheet sheetActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sheet/" + sheetName).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get("/app/sheets/" + sheetName).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Sheet.class);
         assertEquals(sheet, sheetActual);
@@ -83,16 +83,16 @@ public class AppPortalTest {
         sheet.setName(sheetName);
         String sections1[] = { "xxx" };
         sheet.setSections(sections1);
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
         String sections2[] = { "1. 法学", "2. 医学", "天文学书籍‎", "旅游指南‎", "軍事書籍‎ Military" };
         sheet.setSections(sections2);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
         com.bookshare.dto.Sheet sheetActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sheet/" + sheetName).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get("/app/sheets/" + sheetName).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Sheet.class);
         assertEquals(sheet, sheetActual);
@@ -106,7 +106,7 @@ public class AppPortalTest {
         sheet.setName(sheetName);
         String sections1[] = { "xxx" };
         sheet.setSections(sections1);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheet/" + sheetName).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isNotFound());
     }
 
@@ -115,7 +115,7 @@ public class AppPortalTest {
         String sectionName = "经典";
 
         com.bookshare.dto.Section sectionActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/section/" + sectionName).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get("/app/sections/" + sectionName).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Section.class);
 
@@ -136,7 +136,7 @@ public class AppPortalTest {
         String isbns[] = { "1", "2", "3", "4", "5", "6" };
         section.setIsbns(isbns);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/section/" + sectionName)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sections/" + sectionName)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
                 .andExpect(status().isConflict());
     }
@@ -150,12 +150,12 @@ public class AppPortalTest {
         String isbns[] = { "5", "4", "3", "2", "1" };
         section.setIsbns(isbns);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/section/" + sectionName)
+        mockMvc.perform(MockMvcRequestBuilders.post("/app/sections/" + sectionName)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
                 .andExpect(status().isOk());
 
         com.bookshare.dto.Section sectionActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/section/" + sectionName).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get("/app/sections/" + sectionName).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Section.class);
         assertEquals(section, sectionActual);
@@ -169,12 +169,12 @@ public class AppPortalTest {
         section.setName(sectionName);
         String isbns[] = { "11", "22", "33", "44", "55", "66" };
         section.setIsbns(isbns);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/section/" + sectionName)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sections/" + sectionName)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
                 .andExpect(status().isOk());
 
         com.bookshare.dto.Section sectionActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/section/" + sectionName).accept(MediaType.APPLICATION_JSON))
+                .perform(MockMvcRequestBuilders.get("/app/sections/" + sectionName).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                 com.bookshare.dto.Section.class);
         assertEquals(section, sectionActual);
@@ -188,7 +188,7 @@ public class AppPortalTest {
         section.setName(sectionName);
         String isbns[] = { "11", "22", "33", "44", "55", "66" };
         section.setIsbns(isbns);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/section/" + sectionName)
+        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sections/" + sectionName)
                 .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
                 .andExpect(status().isNotFound());
     }
