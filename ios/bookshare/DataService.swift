@@ -42,7 +42,7 @@ class DataService {
     static public func getSection2Isbn(for sheetName: SheetName,
                                        callback: @escaping (_ sections: [String], _ section2Isbns: [String: [String]]) -> Void = {_ in }) -> ([String], [String: [String]]) {
         if sectionsCache == [] {
-            let url = getUrl(for: "/bookshare/app/sheet/" + sheetName.rawValue)
+            let url = getUrl(for: "/bookshare/app/sheets/" + sheetName.rawValue)
             let task = session.dataTask(with: url) { data, response, error in
                 if let error = error {
                     SwiftyBeaver.error(error.localizedDescription)
@@ -76,7 +76,7 @@ class DataService {
     }
 
     static private func getIsbns(for sectionName: String, group: DispatchGroup) {
-        let url = getUrl(for: "/bookshare/app/section/" + sectionName)
+        let url = getUrl(for: "/bookshare/app/sections/" + sectionName)
         SwiftyBeaver.verbose("Send the request to get [\(sectionName)].")
         group.enter()
         let task = session.dataTask(with: url) { data, response, error in
