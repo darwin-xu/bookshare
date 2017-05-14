@@ -77,7 +77,7 @@ public class BookController {
 
                 if (null != book) {
                     System.out.println("Save book");
-                    Path coverPath = RandomUtil.genRandomFilePath(coverImageRoot, ".jpg");
+                    Path coverPath = RandomUtil.genRandomFilePath(coverImageRoot, book.getImageMedium());
                     downloadImage(book.getImageMedium(), coverPath);
                     book.setImageMedium(coverImageRoot.relativize(coverPath).toString());
                     book = bookRepository.save(book);
@@ -154,6 +154,5 @@ public class BookController {
         }
 
         return result;
-
     }
 }

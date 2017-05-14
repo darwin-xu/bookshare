@@ -24,12 +24,10 @@ public class RandomUtil {
         return path;
     }
 
-    public static Path genRandomFilePath(Path root, String suffix) {
-
+    public static Path genRandomFilePath(Path root, String sourceUrl) {
         Path path;
-
         do {
-            path = genFilePathHelper(root, suffix);
+            path = genFilePathHelper(root, FileUtil.getSuffix(sourceUrl));
         } while (path.toFile().exists());
 
         return path;
