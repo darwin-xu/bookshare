@@ -6,10 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +25,7 @@ import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
 import com.bookshare.dto.BookDto;
 import com.bookshare.utility.RandomUtil;
+import com.bookshare.utility.StringUtil;
 
 /**
  * Created by kevinzhong on 09/12/2016.
@@ -30,11 +34,11 @@ import com.bookshare.utility.RandomUtil;
 @RequestMapping("/books")
 public class BookController {
 
+    private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private Path coverImageRoot = Paths.get(BookshareApplication.prop.getProperty("bookshare.book.cover.path"));
     private BookRepository bookRepository;
 
-    // private static final String ISBN_URL =
-    // "http://localhost:8080/bookshare/books/";
     private static final String ISBN_URL = "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
 
     @Autowired
@@ -135,7 +139,7 @@ public class BookController {
             result = true;
         } catch (IOException e) {
             result = false;
-            e.printStackTrace();
+            logger.warn(StringUtil.toString(e));
         } finally {
             try {
                 if (null != imageReader) {
@@ -145,7 +149,7 @@ public class BookController {
                     imageWriter.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.warn(StringUtil.toString(e));
             }
         }
 

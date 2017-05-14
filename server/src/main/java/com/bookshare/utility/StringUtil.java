@@ -1,5 +1,8 @@
 package com.bookshare.utility;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Created by Darwin on 19/3/2017.
  */
@@ -10,6 +13,13 @@ public class StringUtil {
             return true;
         else
             return false;
+    }
+
+    public static String toString(Throwable e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        return sw.toString();
     }
 
 }

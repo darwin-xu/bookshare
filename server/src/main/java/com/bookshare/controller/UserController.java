@@ -61,27 +61,13 @@ public class UserController {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
-    // @RequestMapping(value = "logout/{username}", method = RequestMethod.GET,
-    // produces = "application/json")
-    // public User logout(@PathVariable String username) {
-    // System.out.println(">>>>>>>>>>>>>> logout");
-    // return userRepository.findByUsername(username);
-    // }
-    //
-    // @RequestMapping(value = "unregister/{username}", method =
-    // RequestMethod.DELETE, produces = "application/json")
-    // public boolean unregister(@PathVariable String username) {
-    // return false;
-    // }
-
     /**
      * Get a authorized user either from sessionID or from verifyCode.
      * 
      * @param sessionID
      *            If sessionID is not null, use sessionID to do authenticate.
      * @param user
-     *            If sessionID is null, use user.verifyCode to do authenticate
-     *            for just once.
+     *            If sessionID is null, use user.verifyCode to do authenticate for just once.
      * @return A authorized user.
      */
     private User getAuthUser(User user) {

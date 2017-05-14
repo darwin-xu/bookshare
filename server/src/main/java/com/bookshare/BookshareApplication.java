@@ -14,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.bookshare.utility.StringUtil;
+
 @SpringBootApplication
 public class BookshareApplication extends WebMvcConfigurerAdapter {
 
@@ -25,7 +27,7 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
         try {
             (prop = new Properties()).load(BookshareApplication.class.getResourceAsStream("/application.properties"));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(StringUtil.toString(e));
         }
     }
 
