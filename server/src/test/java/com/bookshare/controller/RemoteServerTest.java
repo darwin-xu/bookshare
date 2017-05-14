@@ -1,4 +1,4 @@
-package com.bookshare;
+package com.bookshare.controller;
 
 import org.junit.Test;
 import org.springframework.web.client.RestTemplate;

@@ -1,4 +1,4 @@
-package com.bookshare;
+package com.bookshare.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
