@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.SectionRepository;
 import com.bookshare.domain.app.Section;
+import com.bookshare.dto.SectionDto;
 
 @RestController
 @RequestMapping(value = "app/sections")
@@ -33,7 +34,7 @@ public class SectionController {
     }
 
     @RequestMapping(value = "{sectionName}", method = RequestMethod.GET, produces = "application/json")
-    public com.bookshare.dto.Section getByName(@PathVariable(value = "sectionName") String sectionName) {
+    public SectionDto getByName(@PathVariable(value = "sectionName") String sectionName) {
         logger.debug("SectionName: " + sectionName);
         Section sections[] = sectionRepository.findBySectionName(sectionName);
         Vector<String> sectionVector = new Vector<String>();
@@ -41,7 +42,7 @@ public class SectionController {
             logger.debug("    " + s.getIsbn());
             sectionVector.add(s.getIsbn());
         }
-        com.bookshare.dto.Section returnSection = new com.bookshare.dto.Section();
+        SectionDto returnSection = new SectionDto();
         returnSection.setName(sectionName);
         returnSection.setIsbns(sectionVector.toArray(new String[sectionVector.size()]));
         return returnSection;
@@ -49,13 +50,13 @@ public class SectionController {
 
     @Transactional
     @RequestMapping(value = "{sectionName}", method = RequestMethod.POST)
-    public void postByName(@PathVariable(value = "sectionName") String sectionName,
-            @RequestBody com.bookshare.dto.Section section, HttpServletResponse response) {
+    public void postByName(@PathVariable(value = "sectionName") String sectionName, @RequestBody SectionDto section,
+            HttpServletResponse response) {
         logger.debug("SectionName: " + sectionName);
         // 1. Check if the old data exists.
         Section sections[] = sectionRepository.findBySectionName(sectionName);
         if (sections.length == 0) {
-            // 2. Convert com.bookshare.dto.Section into com.bookshare.domain.app.Section
+            // 2. Convert Section into com.bookshare.domain.app.Section
             Vector<Section> sectionVector = new Vector<Section>();
             for (String isbn : section.getIsbns()) {
                 Section s = new Section();
@@ -72,15 +73,15 @@ public class SectionController {
 
     @Transactional
     @RequestMapping(value = "{sectionName}", method = RequestMethod.PATCH)
-    public void patchByName(@PathVariable(value = "sectionName") String sectionName,
-            @RequestBody com.bookshare.dto.Section section, HttpServletResponse response) {
+    public void patchByName(@PathVariable(value = "sectionName") String sectionName, @RequestBody SectionDto section,
+            HttpServletResponse response) {
         logger.debug("SectionName: " + sectionName);
         // 1. Check if the old data exists.
         Section sections[] = sectionRepository.findBySectionName(sectionName);
         if (sections.length != 0) {
             // 2. Remove the old data.
             sectionRepository.delete(Arrays.asList(sections));
-            // 3. Convert com.bookshare.dto.Section into com.bookshare.domain.app.Section
+            // 3. Convert Section into com.bookshare.domain.app.Section
             Vector<Section> sectionVector = new Vector<Section>();
             for (String isbn : section.getIsbns()) {
                 Section s = new Section();

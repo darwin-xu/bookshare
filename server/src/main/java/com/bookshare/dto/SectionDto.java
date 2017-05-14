@@ -2,22 +2,22 @@ package com.bookshare.dto;
 
 import java.util.Arrays;
 
-public class Sheet {
+public class SectionDto {
 
     private String name;
 
-    private String sections[] = new String[0];
+    private String isbns[] = new String[0];
 
     @Override
     public String toString() {
-        return "Sheet [name=" + name + ", sections=" + Arrays.toString(sections) + "]";
+        return "Section [name=" + name + ", isbns=" + Arrays.toString(isbns) + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + Arrays.hashCode(sections);
+        result = prime * result + Arrays.hashCode(isbns);
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }
@@ -30,8 +30,8 @@ public class Sheet {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Sheet other = (Sheet) obj;
-        if (!Arrays.equals(sections, other.sections))
+        SectionDto other = (SectionDto) obj;
+        if (!Arrays.equals(isbns, other.isbns))
             return false;
         if (name == null) {
             if (other.name != null)
@@ -49,12 +49,12 @@ public class Sheet {
         this.name = name;
     }
 
-    public String[] getSections() {
-        return sections;
+    public String[] getIsbns() {
+        return isbns;
     }
 
-    public void setSections(String[] sections) {
-        this.sections = sections;
+    public void setIsbns(String[] isbns) {
+        this.isbns = isbns;
     }
 
 }

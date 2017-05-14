@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.SheetRepository;
 import com.bookshare.domain.app.Sheet;
+import com.bookshare.dto.SheetDto;
 
 @RestController
 @RequestMapping(value = "app/sheets")
@@ -33,7 +34,7 @@ public class SheetController {
     }
 
     @RequestMapping(value = "{sheetName}", method = RequestMethod.GET, produces = "application/json")
-    public com.bookshare.dto.Sheet getByName(@PathVariable(value = "sheetName") String sheetName) {
+    public SheetDto getByName(@PathVariable(value = "sheetName") String sheetName) {
         logger.debug("getByName-> SheetName: " + sheetName);
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         Vector<String> sectionVector = new Vector<String>();
@@ -41,7 +42,7 @@ public class SheetController {
             logger.debug("    " + s.getSectionName());
             sectionVector.add(s.getSectionName());
         }
-        com.bookshare.dto.Sheet returnSheet = new com.bookshare.dto.Sheet();
+        SheetDto returnSheet = new SheetDto();
         returnSheet.setName(sheetName);
         returnSheet.setSections(sectionVector.toArray(new String[sectionVector.size()]));
         return returnSheet;
@@ -49,13 +50,13 @@ public class SheetController {
 
     @Transactional
     @RequestMapping(value = "{sheetName}", method = RequestMethod.POST)
-    public void postByName(@PathVariable(value = "sheetName") String sheetName,
-            @RequestBody com.bookshare.dto.Sheet sheet, HttpServletResponse response) {
+    public void postByName(@PathVariable(value = "sheetName") String sheetName, @RequestBody SheetDto sheet,
+            HttpServletResponse response) {
         logger.debug("postByName-> SheetName: " + sheetName);
         // 1. Check if the old data exists.
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         if (sheets.length == 0) {
-            // 2. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
+            // 2. Convert Sheet into com.bookshare.domain.app.Sheet
             Vector<Sheet> sheetVector = new Vector<Sheet>();
             for (String section : sheet.getSections()) {
                 Sheet s = new Sheet();
@@ -72,15 +73,15 @@ public class SheetController {
 
     @Transactional
     @RequestMapping(value = "{sheetName}", method = RequestMethod.PATCH)
-    public void patchByName(@PathVariable(value = "sheetName") String sheetName,
-            @RequestBody com.bookshare.dto.Sheet sheet, HttpServletResponse response) {
+    public void patchByName(@PathVariable(value = "sheetName") String sheetName, @RequestBody SheetDto sheet,
+            HttpServletResponse response) {
         logger.debug("patchByName-> SheetName: " + sheetName);
         // 1. Check if the old data exists.
         Sheet sheets[] = sheetRepository.findBySheetName(sheetName);
         if (sheets.length != 0) {
             // 2. Remove the old data.
             sheetRepository.delete(Arrays.asList(sheets));
-            // 3. Convert com.bookshare.dto.Sheet into com.bookshare.domain.app.Sheet
+            // 3. Convert Sheet into com.bookshare.domain.app.Sheet
             Vector<Sheet> sheetVector = new Vector<Sheet>();
             for (String section : sheet.getSections()) {
                 Sheet s = new Sheet();
