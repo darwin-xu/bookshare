@@ -50,7 +50,7 @@ class DataService {
                     if httpResponse.statusCode == 200 {
                         do {
                             let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
-                            // TODO: this update occurs at OperationQueue and background thread.
+                            // TODO: This update occurs at OperationQueue and background thread.
                             // It may have problem when main thread and background thread access the
                             // same variable at the same time.
                             sectionsCache = json["sections"] as! [String]
@@ -71,6 +71,7 @@ class DataService {
             }
             task.resume()
         }
+        // TODO: This may have conflict with the completion handler.
         return (sectionsCache, section2IsbnCache)
     }
 
@@ -100,7 +101,7 @@ class DataService {
         task.resume()
     }
 
-    static func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book? {
+    static public func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book? {
         if let book = isbn2BookCache[forISBN] {
             return book
         } else {
@@ -125,7 +126,7 @@ class DataService {
         }
     }
 
-    static func getCoverImage(forISBN: String, notify: @escaping (_ image: UIImage) -> Void = {_ in }) {
+    static public func getCoverImage(forISBN: String, notify: @escaping (_ image: UIImage) -> Void = {_ in }) {
         SwiftyBeaver.verbose("Get cover image for \(forISBN)")
         if let book = isbn2BookCache[forISBN] {
             if book.coverURL != nil {
@@ -156,7 +157,7 @@ class DataService {
     }
 
     // Parse JSON data of book detail information.
-    static func parseData(forBook: Data?) -> Book? {
+    static private func parseData(forBook: Data?) -> Book? {
         var book: Book? = nil
 
         do {
@@ -202,7 +203,7 @@ class DataService {
         return book
     }
 
-    static func loadData(context: NSManagedObjectContext) {
+    static public func loadData(context: NSManagedObjectContext) {
         uiContext = context
         // TODO: try to put this into background to improve performance.
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Book")
