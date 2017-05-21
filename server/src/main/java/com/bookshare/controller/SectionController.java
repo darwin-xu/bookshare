@@ -26,12 +26,8 @@ public class SectionController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private SectionRepository sectionRepository;
-
     @Autowired
-    public void setUserRepository(SectionRepository sectionRepository) {
-        this.sectionRepository = sectionRepository;
-    }
+    private SectionRepository sectionRepository;
 
     @RequestMapping(value = "{sectionName}", method = RequestMethod.GET, produces = "application/json")
     public SectionDto getByName(@PathVariable(value = "sectionName") String sectionName) {

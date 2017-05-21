@@ -26,12 +26,8 @@ public class SheetController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private SheetRepository sheetRepository;
-
     @Autowired
-    public void setUserRepository(SheetRepository sheetRepository) {
-        this.sheetRepository = sheetRepository;
-    }
+    private SheetRepository sheetRepository;
 
     @RequestMapping(value = "{sheetName}", method = RequestMethod.GET, produces = "application/json")
     public SheetDto getByName(@PathVariable(value = "sheetName") String sheetName) {

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Created by ezhonke on 12/19/2016.
  */
-public class BookDto {
+public class JuheBookDto {
     private String reason;
 
     @JsonProperty("result")
@@ -14,7 +14,6 @@ public class BookDto {
 
     @JsonProperty("error_code")
     private int errorCode;
-
 
     public String getReason() {
         return reason;
@@ -45,7 +44,7 @@ public class BookDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        BookDto bookDto = (BookDto) o;
+        JuheBookDto bookDto = (JuheBookDto) o;
 
         if (errorCode != bookDto.errorCode) return false;
         if (!reason.equals(bookDto.reason)) return false;

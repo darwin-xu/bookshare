@@ -25,19 +25,11 @@ public class SessionController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Autowired
     private SessionRepository sessionRepository;
 
+    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    public void setSessionRepository(SessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
-    }
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json")
     public void login(@RequestBody User user, HttpServletResponse response) {

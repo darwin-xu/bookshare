@@ -25,12 +25,8 @@ public class UserController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private UserRepository userRepository;
-
     @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
     @RequestMapping(value = "getVerifyCode", method = RequestMethod.POST)
     public void getVerifyCode(@RequestBody User user, HttpServletResponse response) {

@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.bookshare.BookshareApplication;
+import com.bookshare.business.AuditManager;
 import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
-import com.bookshare.dto.BookDto;
+import com.bookshare.dto.JuheBookDto;
 import com.bookshare.utility.RandomUtil;
 import com.bookshare.utility.StringUtil;
 
@@ -31,76 +32,53 @@ import com.bookshare.utility.StringUtil;
  * Created by kevinzhong on 09/12/2016.
  */
 @RestController
-@RequestMapping("/books")
+@RequestMapping("books")
 public class BookController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private Path coverImageRoot = Paths.get(BookshareApplication.prop.getProperty("bookshare.book.cover.path"));
+
+    @Autowired
     private BookRepository bookRepository;
+
+    @Autowired
+    private AuditManager auditManager;
 
     private static final String ISBN_URL = "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
 
-    @Autowired
-    public void setBookRepository(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
-
     @RequestMapping(value = "{isbn13}", method = RequestMethod.GET, produces = "application/json")
     public Book getBook(@PathVariable String isbn13) {
+        logger.debug("getBook: " + isbn13);
         // Step 1. Check system cache
         // Step 2. Check database
         // Step 3. Request to ISBN service
         // - persist to system database
 
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("Get isbn from request :[" + isbn13 + "]");
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("----------------------------------------------------------------------------");
         Book book = bookRepository.findBookByIsbn13(isbn13);
 
         if (null == book) {
             // Get the book info from 3rd party service
             RestTemplate restTemplate = new RestTemplate();
-            BookDto bookDto = restTemplate.getForObject(ISBN_URL + isbn13, BookDto.class);
+            JuheBookDto bookDto = restTemplate.getForObject(ISBN_URL + isbn13, JuheBookDto.class);
+            logger.debug("request URL: " + ISBN_URL + isbn13);
             if (0 == bookDto.getErrorCode()) {
-
-                System.out.println("request URL : " + ISBN_URL + isbn13);
-
-                System.out.println("---------------------------------");
-                System.out.println(bookDto.toString());
-                System.out.println("---------------------------------");
+                auditManager.isbnQueryCountIncrease();
                 book = bookDto.getBook();
 
                 if (null != book) {
-                    System.out.println("Save book");
                     Path coverPath = RandomUtil.genRandomFilePath(coverImageRoot, book.getImageMedium());
                     downloadImage(book.getImageMedium(), coverPath);
                     book.setImageMedium(coverImageRoot.relativize(coverPath).toString());
                     book = bookRepository.save(book);
 
-                    // Get image_url and save to database;
-                    // if (null != book.getImageMedium()) {
-                    // downloadImage(book.getImageMedium(),
-                    // RandomFile.genFilePath(coverImagePath, "*.jpg"));
-                    // }
-                    // if (null != book.getImageLarge()) {
-                    // downloadImage(book.getImageLarge(),
-                    // RandomFile.genFilePath(coverImagePath, "*.jpg"));
-                    // }
                 } else {
-                    // Throw out an exception
-                    // Set HttpStatus 404 NOT_FOUND
-                    System.out.println("This book doesn't exist!!!");
+                    logger.error("Book [" + isbn13 + "] returns nothing!");
                 }
             } else {
-                System.out.println("Get book from 3rd Party Failure, error code : [" + bookDto.getErrorCode() + "]");
+                logger.error("Get book from ISBN library failed, error code [" + bookDto.getErrorCode() + "]");
             }
         }
-        // TODO: set HTTP status for client check
         return book;
     }
 
@@ -108,17 +86,6 @@ public class BookController {
     public Iterable<Book> getAllBooks() {
         return bookRepository.findAll();
     }
-
-    // @RequestMapping(method = RequestMethod.POST, produces =
-    // "application/json")
-    // public Book addBook(@RequestBody Book book) {
-    // downloadImage(book.getImageLarge(), "C://Kevin/", book.getIsbn13() +
-    // "_large");
-    // downloadImage(book.getImageMedium(), "C://Kevin/", book.getIsbn13() +
-    // "_medium");
-    //
-    // return bookRepository.save(book);
-    // }
 
     private boolean downloadImage(String sourceUrl, Path targetFileName) {
         boolean result;
