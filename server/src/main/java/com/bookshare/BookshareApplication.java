@@ -1,34 +1,28 @@
 package com.bookshare;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.charset.Charset;
 import java.util.Map;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.bookshare.utility.StringUtil;
-
+@ConfigurationProperties("bookshare.book")
 @SpringBootApplication
 public class BookshareApplication extends WebMvcConfigurerAdapter {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static Properties prop;
+    private String rootCoverPath;
 
-    static {
-        try {
-            (prop = new Properties()).load(BookshareApplication.class.getResourceAsStream("/application.properties"));
-        } catch (IOException e) {
-            logger.error(StringUtil.toString(e));
-        }
+    public void setRootCoverPath(String rootCoverPath) {
+        this.rootCoverPath = rootCoverPath;
     }
 
     public static void main(String[] args) {
@@ -43,8 +37,7 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/files/**")
-                .addResourceLocations("file:" + prop.getProperty("bookshare.book.cover.path") + "/");
+        registry.addResourceHandler("/files/**").addResourceLocations("file:" + rootCoverPath + "/");
     }
 
     @Override

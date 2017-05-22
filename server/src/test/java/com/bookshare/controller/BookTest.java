@@ -29,21 +29,29 @@ public class BookTest {
 
     @Test
     public void getBook() throws Exception {
+        // 1. Get the ISBNQueryCount for the first time.
         Audit audit = mapper.readValue(mockMvc
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
-
         assertEquals(0, audit.getCount());
 
+        // 2. Get the ISBNQueryCount after GET books/{isbn}.
         mockMvc.perform(MockMvcRequestBuilders.get("/books/9787500648192").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-
         audit = mapper.readValue(mockMvc
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
+        assertEquals(1, audit.getCount());
 
+        // 3. Get the ISBNQueryCount again after GET books/{isbn}.
+        mockMvc.perform(MockMvcRequestBuilders.get("/books/9787500648192").accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        audit = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
         assertEquals(1, audit.getCount());
     }
 

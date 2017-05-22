@@ -44,7 +44,7 @@ public class Book implements Serializable {
     @Column(nullable = false)
     private String price;
 
-    @Column(nullable = false, length = 64000)
+    @Column(nullable = false, length = 10000)
     private String summary;
 
     @Column

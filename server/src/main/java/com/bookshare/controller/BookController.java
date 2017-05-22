@@ -14,13 +14,13 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.bookshare.BookshareApplication;
 import com.bookshare.business.AuditManager;
 import com.bookshare.dao.BookRepository;
 import com.bookshare.domain.Book;
@@ -31,19 +31,24 @@ import com.bookshare.utility.StringUtil;
 /**
  * Created by kevinzhong on 09/12/2016.
  */
+@ConfigurationProperties("bookshare.book")
 @RestController
 @RequestMapping("books")
 public class BookController {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private Path coverImageRoot = Paths.get(BookshareApplication.prop.getProperty("bookshare.book.cover.path"));
-
     @Autowired
     private BookRepository bookRepository;
 
     @Autowired
     private AuditManager auditManager;
+
+    private String rootCoverPath;
+
+    public void setRootCoverPath(String rootCoverPath) {
+        this.rootCoverPath = rootCoverPath;
+    }
 
     private static final String ISBN_URL = "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=";
 
@@ -67,9 +72,9 @@ public class BookController {
                 book = bookDto.getBook();
 
                 if (null != book) {
-                    Path coverPath = RandomUtil.genRandomFilePath(coverImageRoot, book.getImageMedium());
+                    Path coverPath = RandomUtil.genRandomFilePath(Paths.get(rootCoverPath), book.getImageMedium());
                     downloadImage(book.getImageMedium(), coverPath);
-                    book.setImageMedium(coverImageRoot.relativize(coverPath).toString());
+                    book.setImageMedium(Paths.get(rootCoverPath).relativize(coverPath).toString());
                     book = bookRepository.save(book);
 
                 } else {
