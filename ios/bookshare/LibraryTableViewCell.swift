@@ -70,5 +70,5 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
         bookCell.ibBookTitle.text = withBook.title
         bookCell.ibBookAuthor.text = withBook.author
     }
-    
+
 }

@@ -106,8 +106,8 @@ class DataService {
             return book
         } else {
             SwiftyBeaver.verbose("fetch data for " + forISBN)
-            let url = URL(string: "http://feedback.api.juhe.cn/ISBN?key=c00c86633d0b3a7d13a850cbe87d1a98&sub=" + forISBN)
-            let task = session.dataTask(with: url! as URL) { data, response, error in
+            let url = getUrl(for: "/bookshare/books/" + forISBN)
+            let task = session.dataTask(with: url) { data, response, error in
                 if let error = error {
                     SwiftyBeaver.error(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
@@ -130,8 +130,8 @@ class DataService {
         SwiftyBeaver.verbose("Get cover image for \(forISBN)")
         if let book = isbn2BookCache[forISBN] {
             if book.coverURL != nil {
-                let url = URL(string: book.coverURL!)
-                let task = session.dataTask(with: url! as URL) { data, response, error in
+                let url = getUrl(for: "/bookshare/files/" + book.coverURL!)
+                let task = session.dataTask(with: url) { data, response, error in
                     if let error = error {
                         SwiftyBeaver.error(error.localizedDescription)
                     } else if let httpResponse = response as? HTTPURLResponse {
@@ -165,34 +165,28 @@ class DataService {
                 let response = try JSONSerialization.jsonObject(with: data,
                                                                 options: JSONSerialization.ReadingOptions(rawValue: 0))
                     as? [String: AnyObject] {
-                if let errorCode = response["error_code"] as? Int {
-                    if errorCode == 0 {
-                        if let result  = response["result"] {
-                            let isbn13 = result["isbn13"] as! String
-                            if isbn2BookCache[isbn13] == nil {
-                                let entity = NSEntityDescription.entity(forEntityName: "Book", in: uiContext!)
-                                book = (NSManagedObject(entity: entity!, insertInto: uiContext!) as! Book)
-                                book?.title = result["title"] as? String
-                                book?.subtitle = result["subtitle"] as? String
-                                book?.author = result["author"] as? String
-                                book?.translator = result["translator"] as? String
-                                //book?.publicationDate = result["publicationDate"] as? String
-                                book?.publisher = result["publisher"] as? String
-                                book?.price = ((result["price"] as? NSString)?.floatValue)!
-                                book?.summary = result["summary"] as? String
-                                book?.coverURL = result["images_medium"] as? String
-                                book?.isbn10 = result["isbn10"] as? String
-                                book?.isbn13 = result["isbn13"] as? String
+                let isbn13 = response["isbn13"] as! String
+                if isbn2BookCache[isbn13] == nil {
+                    let entity = NSEntityDescription.entity(forEntityName: "Book", in: uiContext!)
+                    book = (NSManagedObject(entity: entity!, insertInto: uiContext!) as! Book)
+                    book?.isbn13 = response["isbn13"] as? String
+                    book?.isbn10 = response["isbn10"] as? String
+                    book?.title = response["title"] as? String
+                    book?.subtitle = response["subtitle"] as? String
+                    book?.author = response["author"] as? String
+                    book?.translator = response["translator"] as? String
+                    //book?.publicationDate = result["publicationDate"] as? String
+                    book?.publisher = response["publisher"] as? String
+                    book?.price = ((response["price"] as? NSString)?.floatValue)!
+                    book?.summary = response["summary"] as? String
+                    book?.coverURL = response["images_medium"] as? String
 
-                                isbn2BookCache[isbn13] = book
+                    isbn2BookCache[isbn13] = book
 
-                                do {
-                                    try uiContext!.save()
-                                } catch let error as NSError  {
-                                    SwiftyBeaver.error("Could not save \(error), \(error.userInfo)")
-                                }
-                            }
-                        }
+                    do {
+                        try uiContext!.save()
+                    } catch let error as NSError  {
+                        SwiftyBeaver.error("Could not save \(error), \(error.userInfo)")
                     }
                 }
             }
@@ -217,5 +211,5 @@ class DataService {
             SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
         }
     }
-    
+
 }
