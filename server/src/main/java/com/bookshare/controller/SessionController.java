@@ -38,6 +38,8 @@ public class SessionController {
         Session newSession = null;
         if (userInRepo != null && userInRepo.authenticate(user)) {
             // Invalidate old session.
+            userInRepo.setSession(null);
+            userRepository.save(userInRepo);
             Session oldSession = userInRepo.getSession();
             if (oldSession != null)
                 sessionRepository.delete(oldSession);
@@ -45,9 +47,10 @@ public class SessionController {
             // Create new session.
             newSession = Session.createNewSession();
             logger.debug("Create new session:" + newSession.getSessionID());
-            userInRepo.setSession(newSession);
             newSession.setUser(userInRepo);
             sessionRepository.save(newSession);
+            userInRepo.setSession(newSession);
+            userRepository.save(userInRepo);
 
             // Set cookie for HTTP.
             response.addCookie(new Cookie("session", newSession.getSessionID()));
