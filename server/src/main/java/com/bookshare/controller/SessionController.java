@@ -31,7 +31,7 @@ public class SessionController {
     @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "login", method = RequestMethod.POST)
     public void login(@RequestBody User user, HttpServletResponse response) {
         // Search the user in repository
         User userInRepo = userRepository.findByUsername(user.getUsername());
@@ -55,7 +55,7 @@ public class SessionController {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
-    @RequestMapping(value = "logout", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "logout", method = RequestMethod.POST)
     public void logout(@CookieValue("session") String sessionID) {
         logger.debug("Delete session:" + sessionID);
         Session session = sessionRepository.findBySessionID(sessionID);

@@ -156,6 +156,73 @@ class DataService {
         }
     }
 
+    static public func getVerifyCode(for user: String, callback: @escaping (_ result: Bool) -> Void ) {
+        var request = URLRequest(url: getUrl(for: "/bookshare/users/getVerifyCode"))
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["username": user])
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                SwiftyBeaver.error(error.localizedDescription)
+                callback(false)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 201 {
+                    callback(true)
+                } else {
+                    callback(false)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    static public func changePassword(for user: String, verifyCode: String, password: String, callback: @escaping (_ result: Bool) -> Void) {
+        var request = URLRequest(url: getUrl(for: "/bookshare/users/changePassword"))
+        request.httpMethod = "PATCH"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["username": user,
+                                                                        "verifyCode": verifyCode,
+                                                                        "password": password])
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                SwiftyBeaver.error(error.localizedDescription)
+                callback(false)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    callback(true)
+                } else {
+                    callback(false)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    static public func login(for user: String, password: String, callback: @escaping (_ cookie: HTTPCookie?) -> Void) {
+        var request = URLRequest(url: getUrl(for: "/bookshare/sessions/login"))
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["username": user,
+                                                                        "password": password])
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                SwiftyBeaver.error(error.localizedDescription)
+                callback(nil)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+                if httpResponse.statusCode == 200 {
+                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String : String],
+                                                     for: httpResponse.url!)
+                    callback(cookies[0])
+                } else {
+                    callback(nil)
+                }
+            }
+        }
+        task.resume()
+
+    }
+
     // Parse JSON data of book detail information.
     static private func parseData(forBook: Data?) -> Book? {
         var book: Book? = nil

@@ -47,7 +47,7 @@ public class UserController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    @RequestMapping(value = "changePassword", method = RequestMethod.PATCH, produces = "application/json")
+    @RequestMapping(value = "changePassword", method = RequestMethod.PATCH)
     public void changePassword(@RequestBody User user, HttpServletResponse response) {
         User authUser = getAuthUser(user);
         if (authUser != null) {
