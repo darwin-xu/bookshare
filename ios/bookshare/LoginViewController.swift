@@ -17,8 +17,11 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var verifyCodeLabel: UILabel!
     @IBOutlet weak var constraintPhoneVerifyCode: NSLayoutConstraint!
     @IBOutlet weak var constraintVerifyCodeHeight: NSLayoutConstraint!
+    @IBOutlet weak var signUpButton: UIButton!
 
+    var timeout = 0
     var changePassword = false
+    var timer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +91,22 @@ class LoginViewController: UIViewController {
             DataService.getVerifyCode(for: self.phoneNumber.text!) { result in
                 if result {
                     DispatchQueue.main.async {
+                        self.timeout = 30
+                        self.signUpButton.isEnabled = false
+                        self.timer = Timer.scheduledTimer(withTimeInterval: 1,
+                                                          repeats: true) {_ in
+                                                            DispatchQueue.main.async {
+                                                                self.signUpButton.setTitle(String(self.timeout) + "S",
+                                                                                           for: .disabled)
+                                                            }
+                                                            self.timeout -= 1
+                                                            if self.timeout == 0 {
+                                                                DispatchQueue.main.async {
+                                                                    self.signUpButton.isEnabled = true
+                                                                }
+                                                                self.timer!.invalidate()
+                                                            }
+                        }
                         self.phoneNumber.isEnabled = false
                         self.changePassword = true
                         UIView.animate(withDuration: 0.3,

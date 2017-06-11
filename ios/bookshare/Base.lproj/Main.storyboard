@@ -305,6 +305,7 @@
                         <outlet property="constraintVerifyCodeHeight" destination="lOw-Oa-dJW" id="lVf-TT-hRa"/>
                         <outlet property="password" destination="Bol-SG-hSp" id="aaj-hK-UDt"/>
                         <outlet property="phoneNumber" destination="N9i-XW-hqI" id="Unh-rq-BdN"/>
+                        <outlet property="signUpButton" destination="czf-5m-HcY" id="tl6-Jh-MYl"/>
                         <outlet property="verifyCode" destination="v8w-zR-yj8" id="5pG-Sf-zrL"/>
                         <outlet property="verifyCodeLabel" destination="bCW-uv-GIX" id="8bf-MM-gng"/>
                     </connections>
