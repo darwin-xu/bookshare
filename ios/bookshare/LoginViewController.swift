@@ -36,49 +36,51 @@ class LoginViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
+    func login() {
+        DataService.login(for: self.phoneNumber.text!,
+                          password: self.password.text!,
+                          callback: {cookie in
+                            guard let cookie = cookie else {
+                                DispatchQueue.main.async {
+                                    let alert = UIAlertController(title: "Login error",
+                                                                  message: "Please check your username or password.",
+                                                                  preferredStyle: .alert)
+                                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                                return
+                            }
+                            print("login ok: ")
+                            print(cookie)
+                            DispatchQueue.main.async {
+                                self.navigationController!.popViewController(animated: true)
+                            }
+        })
+    }
+
     @IBAction func signIn(_ sender: Any) {
         SwiftyBeaver.debug(phoneNumber.text! + ":" +  verifyCode.text! + ":" + password.text!)
-
         if changePassword {
             DataService.changePassword(for: phoneNumber.text!,
                                        verifyCode: verifyCode.text!,
                                        password: password.text!,
                                        callback: {result in
                                         if result {
-                                            DataService.login(for: self.phoneNumber.text!,
-                                                              password: self.password.text!,
-                                                              callback: {cookie in
-                                                                guard let cookie = cookie else {
-                                                                    return
-                                                                }
-                                                                print("login ok: ")
-                                                                print(cookie)
-                                            })
+                                            self.login()
                                         } else {
-                                            let alert = UIAlertController(title: "Error",
-                                                                          message: "Change password error, please check your verify code",
-                                                                          preferredStyle: .alert)
-                                            alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                                            self.present(alert, animated: true, completion: nil)
+                                            DispatchQueue.main.async {
+                                                let alert = UIAlertController(title: "Change password error",
+                                                                              message: "Please check your verify code.",
+                                                                              preferredStyle: .alert)
+                                                alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                                                self.present(alert, animated: true, completion: nil)
+                                            }
                                         }
             })
         } else {
-            DataService.login(for: self.phoneNumber.text!,
-                              password: self.password.text!,
-                              callback: {cookie in
-                                guard let cookie = cookie else {
-                                    let alert = UIAlertController(title: "Error",
-                                                                  message: "Login error, phone number or password is wrong.",
-                                                                  preferredStyle: .alert)
-                                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                                    return
-                                }
-                                print("login ok: ")
-                                print(cookie)
-            })
+            self.login()
         }
-
     }
 
     @IBAction func signUp(_ sender: Any) {
