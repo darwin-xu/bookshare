@@ -18,6 +18,7 @@ class DataService {
     static let port = "8080"
     static let serialQueue = DispatchQueue(label: "serial.DataService")
     static let group = DispatchGroup()
+    static var cookie: HTTPCookie?
 
     enum PageName : String {
         case Library
@@ -198,7 +199,7 @@ class DataService {
         task.resume()
     }
 
-    static public func login(for user: String, password: String, callback: @escaping (_ cookie: HTTPCookie?) -> Void) {
+    static public func login(for user: String, password: String, callback: @escaping (_ result: Bool) -> Void) {
         var request = URLRequest(url: getUrl(for: "/bookshare/sessions/login"))
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
@@ -207,15 +208,16 @@ class DataService {
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
                 SwiftyBeaver.error(error.localizedDescription)
-                callback(nil)
+                callback(false)
             } else if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)
                 if httpResponse.statusCode == 200 {
                     let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String : String],
                                                      for: httpResponse.url!)
-                    callback(cookies[0])
+                    cookie = cookies[0]
+                    callback(true)
                 } else {
-                    callback(nil)
+                    callback(false)
                 }
             }
         }

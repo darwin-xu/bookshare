@@ -40,8 +40,12 @@ class LoginViewController: UIViewController {
     func login() {
         DataService.login(for: self.phoneNumber.text!,
                           password: self.password.text!,
-                          callback: {cookie in
-                            guard let cookie = cookie else {
+                          callback: {result in
+                            if result {
+                                DispatchQueue.main.async {
+                                    self.navigationController!.popViewController(animated: true)
+                                }
+                            } else {
                                 DispatchQueue.main.async {
                                     let alert = UIAlertController(title: "Login error",
                                                                   message: "Please check your username or password.",
@@ -49,12 +53,6 @@ class LoginViewController: UIViewController {
                                     alert.addAction(UIAlertAction(title: "Ok", style: .default))
                                     self.present(alert, animated: true, completion: nil)
                                 }
-                                return
-                            }
-                            print("login ok: ")
-                            print(cookie)
-                            DispatchQueue.main.async {
-                                self.navigationController!.popViewController(animated: true)
                             }
         })
     }
