@@ -1,6 +1,10 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -8,12 +12,17 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookshare.backend.BookBackend;
+import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
+import com.bookshare.domain.Book;
+import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
 /**
@@ -27,6 +36,12 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SessionRepository sessionRepository;
+
+    @Autowired
+    BookBackend bookBackend;
 
     @RequestMapping(value = "getVerifyCode", method = RequestMethod.POST)
     public void getVerifyCode(@RequestBody User user, HttpServletResponse response) {
@@ -55,6 +70,67 @@ public class UserController {
             userRepository.save(authUser);
         } else
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
+
+    @RequestMapping(value = "getBooks", method = RequestMethod.GET, produces = "application/json")
+    public String[] getBooks(@CookieValue("session") String sessionID, HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        String isbns[] = null;
+        if (session != null) {
+            User user = session.getUser();
+            List<Book> books = user.getBookList();
+            isbns = new String[books.size()];
+            for (int i = 0; i < books.size(); ++i) {
+                isbns[i] = books.get(i).getIsbn13();
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return isbns;
+    }
+
+    @RequestMapping(value = "postBooks", method = RequestMethod.POST)
+    public void postBooks(@CookieValue("session") String sessionID, @RequestBody String isbns[],
+            HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            User user = session.getUser();
+
+            // Get user original book list.
+            List<Book> userBooks = user.getBookList();
+            Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
+
+            // Get new book list.
+            Set<Book> userNewBooks = new HashSet<Book>();
+            for (String isbn : isbns) {
+                Book book = bookBackend.getBook(isbn);
+                if (book != null)
+                    userNewBooks.add(book);
+            }
+
+            // Combine them together.
+            userOriginBooks.addAll(userNewBooks);
+
+            // Save it to database.
+            user.setBookList(new ArrayList<Book>(userOriginBooks));
+            userRepository.save(user);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "deleteBook", method = RequestMethod.DELETE)
+    public void deleteBook(@CookieValue("session") String sessionID, HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            User user = session.getUser();
+            user.getBookList();
+            // 1. get list from request
+            // 2. combine list
+            // 3. save it
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
     }
 
     /**

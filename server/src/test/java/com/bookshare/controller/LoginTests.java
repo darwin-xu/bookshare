@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,8 +35,7 @@ public class LoginTests {
 
         // This will generate a random verifycode and send it to user by SMS.
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isBadRequest());
     }
 
     @Test
@@ -46,8 +46,7 @@ public class LoginTests {
         user = new User();
         user.setUsername("TestNo1");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isCreated());
 
         // Use modify to set a password for user.
         user = new User();
@@ -55,16 +54,14 @@ public class LoginTests {
         user.setVerifyCode("112233");
         user.setPassword("papawfwf");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
 
         // Use username and password to login.
         user = new User();
         user.setUsername("TestNo1");
         user.setPassword("papawfwf");
         mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
 
         // Use oldPassword to change the password.
         user = new User();
@@ -72,23 +69,19 @@ public class LoginTests {
         user.setOldPassword("papawfwf");
         user.setPassword("qtqtqt");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
 
         // Use username and password to login.
         user = new User();
         user.setUsername("TestNo1");
         user.setPassword("qtqtqt");
-        MvcResult result = mockMvc
-                .perform(MockMvcRequestBuilders.post("/sessions/login").contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login")
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
                 .andExpect(status().isOk()).andReturn();
 
         // Get Cookie from response.
         Cookie cookie = result.getResponse().getCookies()[0];
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/sessions/logout").cookie(cookie).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.post("/sessions/logout").cookie(cookie)).andExpect(status().isOk());
     }
 
     @Test
@@ -99,8 +92,7 @@ public class LoginTests {
         user = new User();
         user.setUsername("TestNo2");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isCreated());
 
         // Try to use a wrong verifyCode to modify.
         user = new User();
@@ -108,8 +100,7 @@ public class LoginTests {
         user.setVerifyCode("11xx33");
         user.setPassword("papawfwf");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isForbidden());
     }
 
     @Test
@@ -120,8 +111,7 @@ public class LoginTests {
         user = new User();
         user.setUsername("TestNo3");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isCreated());
 
         // Use modify to set a password for user.
         user = new User();
@@ -129,16 +119,14 @@ public class LoginTests {
         user.setVerifyCode("112233");
         user.setPassword("papawfwf");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
 
         // Use username and a wrong password to login.
         user = new User();
         user.setUsername("TestNo3");
         user.setPassword("hahah");
         mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isForbidden());
     }
 
     @Test
@@ -150,8 +138,7 @@ public class LoginTests {
         user = new User();
         user.setUsername("TestNo4");
         mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isCreated());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isCreated());
 
         // Use modify to set a password for user.
         user = new User();
@@ -159,16 +146,14 @@ public class LoginTests {
         user.setVerifyCode("112233");
         user.setPassword("papawfwf");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
 
         // Use username and password to login.
         user = new User();
         user.setUsername("TestNo4");
         user.setPassword("papawfwf");
         mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
 
         // Use wrong oldPassword to change the password.
         user = new User();
@@ -176,8 +161,17 @@ public class LoginTests {
         user.setOldPassword("papawfwft");
         user.setPassword("qtqtqt");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user)).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isForbidden());
+                .content(mapper.writeValueAsString(user))).andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void logoutWithWrongCookie() throws Exception {
+        // Create a nonexistent cookie
+        Cookie cookie = new Cookie("session", Session.createNewSession().getSessionID());
+
+        // Logout for nonexistent cookie should be failed.
+        mockMvc.perform(MockMvcRequestBuilders.post("/sessions/logout").cookie(cookie))
+                .andExpect(status().isUnauthorized());
     }
 
 }

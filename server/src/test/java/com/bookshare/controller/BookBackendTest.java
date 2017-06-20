@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class BookTest {
+public class BookBackendTest {
 
     ObjectMapper mapper = new ObjectMapper();
 

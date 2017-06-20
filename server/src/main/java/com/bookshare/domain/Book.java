@@ -74,6 +74,10 @@ public class Book implements Serializable {
     public Book() {
     }
 
+    public Book(String isbn13) {
+        this.isbn13 = isbn13;
+    }
+
     public Book(Long id, String title, String subtitle, String isbn10, String isbn13, String author, int pages,
             String publisher, String price) {
         this.id = id;
@@ -88,69 +92,27 @@ public class Book implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o)
+    public boolean equals(Object obj) {
+        if (this == obj)
             return true;
-        if (o == null || getClass() != o.getClass())
+        if (obj == null)
             return false;
-
-        Book book = (Book) o;
-
-        if (pages != book.pages)
+        if (getClass() != obj.getClass())
             return false;
-        if (price != null ? !price.equals(book.price) : book.price != null)
+        Book other = (Book) obj;
+        if (isbn13 == null) {
+            if (other.isbn13 != null)
+                return false;
+        } else if (!isbn13.equals(other.isbn13))
             return false;
-        if (id != null ? !id.equals(book.id) : book.id != null)
-            return false;
-        if (title != null ? !title.equals(book.title) : book.title != null)
-            return false;
-        if (subtitle != null ? !subtitle.equals(book.subtitle) : book.subtitle != null)
-            return false;
-        if (isbn10 != null ? !isbn10.equals(book.isbn10) : book.isbn10 != null)
-            return false;
-        if (isbn13 != null ? !isbn13.equals(book.isbn13) : book.isbn13 != null)
-            return false;
-        if (author != null ? !author.equals(book.author) : book.author != null)
-            return false;
-        if (publisher != null ? !publisher.equals(book.publisher) : book.publisher != null)
-            return false;
-        if (summary != null ? !summary.equals(book.summary) : book.summary != null)
-            return false;
-        if (pubDate != null ? !pubDate.equals(book.pubDate) : book.pubDate != null)
-            return false;
-        if (originTitle != null ? !originTitle.equals(book.originTitle) : book.originTitle != null)
-            return false;
-        if (binding != null ? !binding.equals(book.binding) : book.binding != null)
-            return false;
-        if (translator != null ? !translator.equals(book.translator) : book.translator != null)
-            return false;
-        if (imageMedium != null ? !imageMedium.equals(book.imageMedium) : book.imageMedium != null)
-            return false;
-        if (imageLarge != null ? !imageLarge.equals(book.imageLarge) : book.imageLarge != null)
-            return false;
-        return levelNum != null ? levelNum.equals(book.levelNum) : book.levelNum == null;
-
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + (subtitle != null ? subtitle.hashCode() : 0);
-        result = 31 * result + (isbn10 != null ? isbn10.hashCode() : 0);
-        result = 31 * result + (isbn13 != null ? isbn13.hashCode() : 0);
-        result = 31 * result + (author != null ? author.hashCode() : 0);
-        result = 31 * result + pages;
-        result = 31 * result + (publisher != null ? publisher.hashCode() : 0);
-        result = 31 * result + (price != null ? price.hashCode() : 0);
-        result = 31 * result + (summary != null ? summary.hashCode() : 0);
-        result = 31 * result + (pubDate != null ? pubDate.hashCode() : 0);
-        result = 31 * result + (originTitle != null ? originTitle.hashCode() : 0);
-        result = 31 * result + (binding != null ? binding.hashCode() : 0);
-        result = 31 * result + (translator != null ? translator.hashCode() : 0);
-        result = 31 * result + (imageMedium != null ? imageMedium.hashCode() : 0);
-        result = 31 * result + (imageLarge != null ? imageLarge.hashCode() : 0);
-        result = 31 * result + (levelNum != null ? levelNum.hashCode() : 0);
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((isbn13 == null) ? 0 : isbn13.hashCode());
         return result;
     }
 

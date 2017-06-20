@@ -59,7 +59,7 @@ public class SessionController {
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
-    public void logout(@CookieValue("session") String sessionID) {
+    public void logout(@CookieValue("session") String sessionID, HttpServletResponse response) {
         logger.debug("Delete session:" + sessionID);
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
@@ -67,6 +67,8 @@ public class SessionController {
             user.setSession(null);
             userRepository.save(user);
             sessionRepository.delete(session);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
