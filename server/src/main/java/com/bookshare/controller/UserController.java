@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -72,8 +73,8 @@ public class UserController {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
-    @RequestMapping(value = "getBooks", method = RequestMethod.GET, produces = "application/json")
-    public String[] getBooks(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    @RequestMapping(value = "bookshelf", method = RequestMethod.GET, produces = "application/json")
+    public String[] getBookshelf(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         String isbns[] = null;
         if (session != null) {
@@ -89,8 +90,8 @@ public class UserController {
         return isbns;
     }
 
-    @RequestMapping(value = "postBooks", method = RequestMethod.POST)
-    public void postBooks(@CookieValue("session") String sessionID, @RequestBody String isbns[],
+    @RequestMapping(value = "bookshelf/{isbn}", method = RequestMethod.POST)
+    public void postBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
@@ -100,34 +101,38 @@ public class UserController {
             List<Book> userBooks = user.getBookList();
             Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
 
-            // Get new book list.
-            Set<Book> userNewBooks = new HashSet<Book>();
-            for (String isbn : isbns) {
-                Book book = bookBackend.getBook(isbn);
-                if (book != null)
-                    userNewBooks.add(book);
+            Book book = bookBackend.getBook(isbn);
+            if (book != null && userOriginBooks.add(book)) {
+                // Save it to database.
+                user.setBookList(new ArrayList<Book>(userOriginBooks));
+                userRepository.save(user);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
             }
-
-            // Combine them together.
-            userOriginBooks.addAll(userNewBooks);
-
-            // Save it to database.
-            user.setBookList(new ArrayList<Book>(userOriginBooks));
-            userRepository.save(user);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
-    @RequestMapping(value = "deleteBook", method = RequestMethod.DELETE)
-    public void deleteBook(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    @RequestMapping(value = "bookshelf/{isbn}", method = RequestMethod.DELETE)
+    public void deleteBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+            HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-            user.getBookList();
-            // 1. get list from request
-            // 2. combine list
-            // 3. save it
+
+            // Get user original book list.
+            List<Book> userBooks = user.getBookList();
+            Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
+
+            Book book = bookBackend.getBook(isbn);
+            if (book != null && userOriginBooks.remove(book)) {
+                // Save it to database.
+                user.setBookList(new ArrayList<Book>(userOriginBooks));
+                userRepository.save(user);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }

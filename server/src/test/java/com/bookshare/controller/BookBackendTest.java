@@ -38,7 +38,7 @@ public class BookBackendTest {
 
         // 2. Get the ISBNQueryCount after GET books/{isbn}.
         mockMvc.perform(MockMvcRequestBuilders.get("/books/9787500648192").accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk());
         audit = mapper.readValue(mockMvc
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
@@ -47,7 +47,7 @@ public class BookBackendTest {
 
         // 3. Get the ISBNQueryCount again after GET books/{isbn}.
         mockMvc.perform(MockMvcRequestBuilders.get("/books/9787500648192").accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk());
         audit = mapper.readValue(mockMvc
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))

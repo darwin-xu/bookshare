@@ -1,6 +1,11 @@
 package com.bookshare.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
@@ -57,11 +62,41 @@ public class UserShelfTest {
         // Get the cookie from response.
         Cookie cookie = result.getResponse().getCookies()[0];
 
-        // Post the new book for this user.
-        String books[] = { "9787514610307", "9787550284340", "9787550217454", "9787030324672", "9787569914061" };
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/postBooks").cookie(cookie)
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(books)))
+        // Post the new books to this user's shelf.
+        String isbns[] = { "9787514610307", "9787550284340", "9787550217454", "9787030324672", "9787569914061" };
+        Set<String> booksISBN = new HashSet<String>(Arrays.asList(isbns));
+        for (String isbn : booksISBN) {
+            mockMvc.perform(MockMvcRequestBuilders.post("/users/bookshelf/" + isbn).cookie(cookie))
+                    .andExpect(status().isOk());
+        }
+
+        // Post again.
+        for (String isbn : booksISBN) {
+            mockMvc.perform(MockMvcRequestBuilders.post("/users/bookshelf/" + isbn).cookie(cookie))
+                    .andExpect(status().isNotAcceptable());
+        }
+
+        // Get the books from user's shelf.
+        String booksISBNActual1[] = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/users/bookshelf").cookie(cookie)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+
+        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual1)));
+
+        // Remove some books from user's shelf.
+        String toRemove = "9787550217454";
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/bookshelf/" + toRemove).cookie(cookie))
                 .andExpect(status().isOk());
+
+        // Get the books from user's shelf.
+        String booksISBNActual2[] = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/users/bookshelf").cookie(cookie)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+
+        booksISBN.remove(toRemove);
+        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual2)));
     }
 
 }
