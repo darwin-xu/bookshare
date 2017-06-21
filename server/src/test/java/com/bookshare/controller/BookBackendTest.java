@@ -34,7 +34,8 @@ public class BookBackendTest {
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
-        assertEquals(0, audit.getCount());
+
+        int baseCount = audit.getCount();
 
         // 2. Get the ISBNQueryCount after GET books/{isbn}.
         mockMvc.perform(MockMvcRequestBuilders.get("/books/9787500648192").accept(MediaType.APPLICATION_JSON))
@@ -43,7 +44,7 @@ public class BookBackendTest {
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
-        assertEquals(1, audit.getCount());
+        assertEquals(baseCount + 1, audit.getCount());
 
         // 3. Get the ISBNQueryCount again after GET books/{isbn}.
         mockMvc.perform(MockMvcRequestBuilders.get("/books/9787500648192").accept(MediaType.APPLICATION_JSON))
@@ -52,7 +53,7 @@ public class BookBackendTest {
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
-        assertEquals(1, audit.getCount());
+        assertEquals(baseCount + 1, audit.getCount());
     }
 
 }
