@@ -8,6 +8,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -195,12 +196,71 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Bookshelf" id="00r-SX-wdN">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="pgi-ss-XPt"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="pgi-ss-XPt">
+                            <connections>
+                                <segue destination="nt8-ab-c3l" kind="show" id="aaQ-Et-f0B"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ytQ-P5-0MJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1434.375" y="3000"/>
+        </scene>
+        <!--Barcode Controller-->
+        <scene sceneID="xVe-7u-FHY">
+            <objects>
+                <viewController id="nt8-ab-c3l" customClass="BarcodeController" customModule="bookshare" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="EYl-YK-DmK"/>
+                        <viewControllerLayoutGuide type="bottom" id="GUO-FO-oEP"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="AFh-ox-qaR">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <segue destination="zmg-yo-NOq" kind="show" identifier="showBookInfo" id="vWU-qe-7ha"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XO4-b4-Qqy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2482" y="3000"/>
+        </scene>
+        <!--Book Info Controller-->
+        <scene sceneID="mhP-Xo-9bS">
+            <objects>
+                <viewController storyboardIdentifier="BookInfo" id="zmg-yo-NOq" customClass="BookInfoController" customModule="bookshare" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="SGm-pf-cWM"/>
+                        <viewControllerLayoutGuide type="bottom" id="eT5-ZZ-igt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wtb-Qk-8Vc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V26-Wh-fze">
+                                <rect key="frame" x="75" y="104" width="225" height="305.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="V26-Wh-fze" secondAttribute="height" multiplier="225:307" id="Dhf-py-one"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="V26-Wh-fze" firstAttribute="centerX" secondItem="wtb-Qk-8Vc" secondAttribute="centerX" id="FTv-MJ-5al"/>
+                            <constraint firstItem="V26-Wh-fze" firstAttribute="width" secondItem="wtb-Qk-8Vc" secondAttribute="width" multiplier="0.6" id="aaX-Da-gPU"/>
+                            <constraint firstItem="V26-Wh-fze" firstAttribute="top" secondItem="SGm-pf-cWM" secondAttribute="bottom" constant="40" id="hZa-Sk-JC3"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="bookCover" destination="V26-Wh-fze" id="0k2-pr-EZa"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="brR-AX-6am" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3480.8000000000002" y="2999.5502248875564"/>
         </scene>
         <!--Login-->
         <scene sceneID="g9G-w5-iim">

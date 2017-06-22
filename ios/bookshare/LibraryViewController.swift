@@ -74,7 +74,6 @@ class LibraryViewController: UITableViewController {
                     bookDetail.bookAuthor = libraryCell.ibBookAuthor.text
                 }
             }
-
         }
     }
 

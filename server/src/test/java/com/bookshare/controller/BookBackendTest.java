@@ -34,7 +34,6 @@ public class BookBackendTest {
                 .perform(MockMvcRequestBuilders.get("/audit/" + AuditManager.isbnQueryCount)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Audit.class);
-
         int baseCount = audit.getCount();
 
         // 2. Get the ISBNQueryCount after GET books/{isbn}.
