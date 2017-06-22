@@ -23,19 +23,11 @@ class BookInfoController: UIViewController {
         let book = DataService.getBook(forISBN: bookISBN!) { book in
             if let cover = book.cover {
                 self.bookCover.image = UIImage(data: cover as Data)
-            } else {
-                DataService.getCoverImage(forISBN: self.bookISBN!) { image in
-                    self.bookCover.image = image
-                }
             }
         }
         if let book = book {
             if let cover = book.cover {
                 self.bookCover.image = UIImage(data: cover as Data)
-            } else {
-                DataService.getCoverImage(forISBN: self.bookISBN!) { image in
-                    self.bookCover.image = image
-                }
             }
         }
     }

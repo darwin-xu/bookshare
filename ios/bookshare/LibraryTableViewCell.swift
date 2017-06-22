@@ -62,10 +62,6 @@ extension LibraryTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
     func fill(bookCell: BookCollectionViewCell, withBook: Book) {
         if withBook.cover != nil {
             bookCell.ibBookCover.image = UIImage(data: withBook.cover! as Data)
-        } else {
-            DataService.getCoverImage(forISBN: withBook.isbn13!) { image in
-                bookCell.ibBookCover.image = image
-            }
         }
         bookCell.ibBookTitle.text = withBook.title
         bookCell.ibBookAuthor.text = withBook.author

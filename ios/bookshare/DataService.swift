@@ -16,7 +16,7 @@ class DataService {
     static let session = URLSession(configuration: URLSessionConfiguration.default)
     static let host = "112.213.117.196"
     static let port = "8080"
-    static let serialQueue = DispatchQueue(label: "serial.DataService")
+    static let serialQueueSection = DispatchQueue(label: "serial.DataService.section")
     static let group = DispatchGroup()
     static var cookie: HTTPCookie?
 
@@ -88,7 +88,7 @@ class DataService {
                     do {
                         let json = try JSONSerialization.jsonObject(with: data!) as! [String: Any]
                         let isbns = json["isbns"] as! [String]
-                        serialQueue.async(group: group) {
+                        serialQueueSection.async(group: group) {
                             group.leave()
                             section2IsbnCache[sectionName] = isbns
                             SwiftyBeaver.verbose("Data for [\(sectionName)] is returned.")
@@ -102,7 +102,7 @@ class DataService {
         task.resume()
     }
 
-    static public func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void = {_ in }) -> Book? {
+    static public func getBook(forISBN: String, notify: @escaping (_ book: Book) -> Void) -> Book? {
         if let book = isbn2BookCache[forISBN] {
             return book
         } else {
@@ -113,11 +113,8 @@ class DataService {
                     SwiftyBeaver.error(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
-                        DispatchQueue.main.async {
-                            let book = parseData(forBook: data)
-                            if (book != nil) {
-                                notify(book!)
-                            }
+                        if let book = parseData(forBook: data) {
+                            getCoverImage(for: book, callback: notify)
                         }
                     }
                 }
@@ -127,32 +124,31 @@ class DataService {
         }
     }
 
-    static public func getCoverImage(forISBN: String, notify: @escaping (_ image: UIImage) -> Void = {_ in }) {
-        SwiftyBeaver.verbose("Get cover image for \(forISBN)")
-        if let book = isbn2BookCache[forISBN] {
-            if book.coverURL != nil {
-                let url = getUrl(for: "/bookshare/files/" + book.coverURL!)
-                let task = session.dataTask(with: url) { data, response, error in
-                    if let error = error {
-                        SwiftyBeaver.error(error.localizedDescription)
-                    } else if let httpResponse = response as? HTTPURLResponse {
-                        if httpResponse.statusCode == 200 {
-                            DispatchQueue.main.async {
-                                // Update local cache
-                                book.cover = data as NSData?
-
-                                do {
-                                    try uiContext!.save()
-                                } catch let error as NSError {
-                                    SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
-                                }
-
-                                notify(UIImage(data: book.cover! as Data)!)
-                            }
+    static private func getCoverImage(for book: Book, callback notify: @escaping (_ book: Book) -> Void) {
+        if let coverUrl = book.coverURL {
+            let url = getUrl(for: "/bookshare/files/" + coverUrl)
+            let task = session.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    SwiftyBeaver.error(error.localizedDescription)
+                } else if let httpResponse = response as? HTTPURLResponse {
+                    if httpResponse.statusCode == 200 {
+                        // Update local cache
+                        book.cover = data as NSData?
+                        do {
+                            try uiContext!.save()
+                        } catch let error as NSError {
+                            SwiftyBeaver.error("Could not save \(error), \(error.userInfo)")
                         }
                     }
                 }
-                task.resume()
+                DispatchQueue.main.async {
+                    notify(book)
+                }
+            }
+            task.resume()
+        } else {
+            DispatchQueue.main.async {
+                notify(book)
             }
         }
     }
@@ -272,9 +268,9 @@ class DataService {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Book")
         do {
             let results = try context.fetch(fetchRequest)
-            for b in results as! [Book] {
-                SwiftyBeaver.verbose("title: \(b.title!)")
-                isbn2BookCache[b.isbn13!] = b
+            for book in results as! [Book] {
+                SwiftyBeaver.verbose("title: \(book.title!)")
+                isbn2BookCache[book.isbn13!] = book
             }
         } catch let error as NSError {
             SwiftyBeaver.error("Could not fetch \(error), \(error.userInfo)")
