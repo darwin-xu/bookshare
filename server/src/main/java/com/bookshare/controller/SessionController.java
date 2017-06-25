@@ -53,7 +53,9 @@ public class SessionController {
             userRepository.save(userInRepo);
 
             // Set cookie for HTTP.
-            response.addCookie(new Cookie("session", newSession.getSessionID()));
+            Cookie cookie = new Cookie("session", newSession.getSessionID());
+            cookie.setPath("/bookshare");
+            response.addCookie(cookie);
         } else
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
