@@ -22,11 +22,17 @@ class MyBookshelfViewController: UITableViewController {
             self.isbns = isbns
             self.tableView.reloadData()
         }
+
+        self.tableView.allowsMultipleSelectionDuringEditing = false
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        self.tableView.reloadData()
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -46,6 +52,7 @@ class MyBookshelfViewController: UITableViewController {
 
         if let cell = cell as? MyBookshelfViewCell {
             let book = DataService.getBook(forISBN: isbns[indexPath.row]) { book in
+                // TODO: this part maybe never called.
                 cell.name.text = book.title
                 cell.author.text = book.author
                 if book.cover != nil {
@@ -63,6 +70,19 @@ class MyBookshelfViewController: UITableViewController {
         }
 
         return cell
+    }
+
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            DataService.deleteBookShelf(isbn: isbns[indexPath.row]) { result in
+                if result == true {
+                    DispatchQueue.main.async {
+                        self.isbns.remove(at: indexPath.row)
+                        tableView.deleteRows(at: [indexPath], with: .fade)
+                    }
+                }
+            }
+        }
     }
 
 }

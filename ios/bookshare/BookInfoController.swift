@@ -42,6 +42,12 @@ class BookInfoController: UIViewController {
     @IBAction func addToLibrary(_ sender: Any) {
         DataService.postBookShelf(isbn: bookISBN!) { result in
             SwiftyBeaver.info("Post book [" + self.bookISBN! + "] to library " + (result ? "success" : "fail"))
+            if result == true {
+                let idx = (self.navigationController?.viewControllers.count)! - 2
+                if let myBookshelf = self.navigationController?.viewControllers[idx] as? MyBookshelfViewController {
+                    myBookshelf.isbns.insert(self.bookISBN!, at: 0)
+                }
+            }
             DispatchQueue.main.async {
                 self.navigationController!.popViewController(animated: true)
             }
