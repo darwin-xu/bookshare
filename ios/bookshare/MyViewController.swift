@@ -72,18 +72,6 @@ class MyViewController: UITableViewController {
             return 44
         }
     }
-
-    @IBAction func test(_ sender: Any) {
-        DataService.postBookShelf(isbn: "9787500788515") { result in
-            SwiftyBeaver.info("Post book [9787500788515] to library " + (result ? "success" : "fail"))
-        }
-    }
-
-    @IBAction func test1(_ sender: Any) {
-        DataService.deleteBookShelf(isbn: "9787500788515") { result in
-            SwiftyBeaver.info("Delete book [9787500788515] to library " + (result ? "success" : "fail"))
-        }
-    }
     
     /*
     // Override to support conditional editing of the table view.

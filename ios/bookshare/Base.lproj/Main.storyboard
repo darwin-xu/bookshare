@@ -131,22 +131,6 @@
                                                 <segue destination="s60-V7-jjT" kind="show" id="ObX-B1-05k"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H3J-fZ-GlM">
-                                            <rect key="frame" x="183" y="92" width="46" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Button"/>
-                                            <connections>
-                                                <action selector="test:" destination="KkI-tk-d3p" eventType="touchUpInside" id="XaU-Mr-r7Y"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iAq-zx-ePp">
-                                            <rect key="frame" x="262" y="92" width="46" height="30"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" title="Button"/>
-                                            <connections>
-                                                <action selector="test1:" destination="KkI-tk-d3p" eventType="touchUpInside" id="qxd-Qq-iec"/>
-                                            </connections>
-                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="7rE-DT-E3j" secondAttribute="bottom" constant="10" id="AF8-a4-HQ9"/>

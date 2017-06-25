@@ -217,9 +217,10 @@ class DataService {
                 callback(false)
             } else if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
-//                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String : String],
-//                                                     for: httpResponse.url!)
-//                    cookie = cookies[0]
+                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String : String],
+                                                     for: httpResponse.url!)
+                    let cookie = cookies[0]
+                    UserDefaults.standard.set(cookie.properties, forKey: "cookie")
                     callback(true)
                 } else {
                     callback(false)
@@ -335,6 +336,10 @@ class DataService {
     }
 
     static public func loadData(context: NSManagedObjectContext) {
+        if let cookieProperties = UserDefaults.standard.object(forKey: "cookie") as? [HTTPCookiePropertyKey : Any] {
+            HTTPCookieStorage.shared.setCookie(HTTPCookie(properties: cookieProperties)!)
+        }
+
         uiContext = context
         // TODO: try to put this into background to improve performance.
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Book")
