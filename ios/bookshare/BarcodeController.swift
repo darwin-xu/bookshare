@@ -66,7 +66,6 @@ class BarcodeController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
 
         } catch {
             // If any error occurs, simply print it out and don't continue any more.
-            print(error)
             return
         }
     }
@@ -109,7 +108,7 @@ class BarcodeController: UIViewController, AVCaptureMetadataOutputObjectsDelegat
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showBookInfo" {
             if let bookInfo = segue.destination as? BookInfoController {
-                bookInfo.bookISBN = sender as! String
+                bookInfo.bookISBN = sender as? String
             }
         }
     }

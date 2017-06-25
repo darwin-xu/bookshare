@@ -13,12 +13,11 @@ import SwiftyBeaver
 
 class DataService {
 
-    static let session = URLSession(configuration: URLSessionConfiguration.default)
+    static let session = URLSession(configuration: .default)
     static let host = "112.213.117.196"
     static let port = "8080"
     static let serialQueueSection = DispatchQueue(label: "serial.DataService.section")
     static let group = DispatchGroup()
-    static var cookie: HTTPCookie?
 
     enum PageName : String {
         case Library
@@ -43,7 +42,9 @@ class DataService {
     static public func getSection2Isbn(for sheetName: SheetName,
                                        callback: @escaping (_ sections: [String], _ section2Isbns: [String: [String]]) -> Void = {_ in }) -> ([String], [String: [String]]) {
         if sectionsCache == [] {
-            let url = getUrl(for: "/bookshare/app/sheets/" + sheetName.rawValue)
+            let urlString = "/bookshare/app/sheets/" + sheetName.rawValue
+            SwiftyBeaver.info("Backend: " + urlString)
+            let url = getUrl(for: urlString)
             let task = session.dataTask(with: url) { data, response, error in
                 if let error = error {
                     SwiftyBeaver.error(error.localizedDescription)
@@ -77,7 +78,9 @@ class DataService {
     }
 
     static private func getIsbns(for sectionName: String, group: DispatchGroup) {
-        let url = getUrl(for: "/bookshare/app/sections/" + sectionName)
+        let urlString = "/bookshare/app/sections/" + sectionName
+        SwiftyBeaver.info("Backend: " + urlString)
+        let url = getUrl(for: urlString)
         SwiftyBeaver.verbose("Send the request to get [\(sectionName)].")
         group.enter()
         let task = session.dataTask(with: url) { data, response, error in
@@ -106,8 +109,9 @@ class DataService {
         if let book = isbn2BookCache[forISBN] {
             return book
         } else {
-            SwiftyBeaver.verbose("fetch data for " + forISBN)
-            let url = getUrl(for: "/bookshare/books/" + forISBN)
+            let urlString = "/bookshare/books/" + forISBN
+            SwiftyBeaver.info("Backend: " + urlString)
+            let url = getUrl(for: urlString)
             let task = session.dataTask(with: url) { data, response, error in
                 if let error = error {
                     SwiftyBeaver.error(error.localizedDescription)
@@ -154,7 +158,9 @@ class DataService {
     }
 
     static public func getVerifyCode(for user: String, callback: @escaping (_ result: Bool) -> Void ) {
-        var request = URLRequest(url: getUrl(for: "/bookshare/users/getVerifyCode"))
+        let urlString = "/bookshare/users/getVerifyCode"
+        SwiftyBeaver.info("Backend: " + urlString)
+        var request = URLRequest(url: getUrl(for: urlString))
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["username": user])
@@ -174,7 +180,9 @@ class DataService {
     }
 
     static public func changePassword(for user: String, verifyCode: String, password: String, callback: @escaping (_ result: Bool) -> Void) {
-        var request = URLRequest(url: getUrl(for: "/bookshare/users/changePassword"))
+        let urlString = "/bookshare/users/changePassword"
+        SwiftyBeaver.info("Backend: " + urlString)
+        var request = URLRequest(url: getUrl(for: urlString))
         request.httpMethod = "PATCH"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["username": user,
@@ -196,7 +204,9 @@ class DataService {
     }
 
     static public func login(for user: String, password: String, callback: @escaping (_ result: Bool) -> Void) {
-        var request = URLRequest(url: getUrl(for: "/bookshare/sessions/login"))
+        let urlString = "/bookshare/sessions/login"
+        SwiftyBeaver.info("Backend: " + urlString)
+        var request = URLRequest(url: getUrl(for: urlString))
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["username": user,
@@ -206,11 +216,10 @@ class DataService {
                 SwiftyBeaver.error(error.localizedDescription)
                 callback(false)
             } else if let httpResponse = response as? HTTPURLResponse {
-                print(httpResponse.statusCode)
                 if httpResponse.statusCode == 200 {
-                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String : String],
-                                                     for: httpResponse.url!)
-                    cookie = cookies[0]
+//                    let cookies = HTTPCookie.cookies(withResponseHeaderFields: httpResponse.allHeaderFields as! [String : String],
+//                                                     for: httpResponse.url!)
+//                    cookie = cookies[0]
                     callback(true)
                 } else {
                     callback(false)
@@ -260,6 +269,69 @@ class DataService {
         }
 
         return book
+    }
+
+    static public func getBookShelf(callback notify: @escaping (_ books: [String]) -> Void) {
+        let urlString = "/bookshare/users/bookshelf"
+        SwiftyBeaver.info("Backend: " + urlString)
+        let url = getUrl(for: urlString)
+        let task = session.dataTask(with: url) { data, response, error in
+            if let error = error {
+                SwiftyBeaver.error(error.localizedDescription)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    do {
+                        let result = try JSONSerialization.jsonObject(with: data!,
+                                                                      options: JSONSerialization.ReadingOptions(rawValue: 0))
+                        notify(result as! [String])
+                    } catch let error as NSError {
+                        SwiftyBeaver.error("Error parsing results: \(error.localizedDescription)")
+                    }
+                }
+            }
+        }
+        task.resume()
+    }
+
+    static public func postBookShelf(isbn: String, callback notify: @escaping (_ result: Bool) -> Void) {
+        let urlString = "/bookshare/users/bookshelf/" + isbn
+        SwiftyBeaver.info("Backend: " + urlString)
+        var request = URLRequest(url: getUrl(for: urlString))
+        request.httpMethod = "POST"
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                notify(false)
+                SwiftyBeaver.error(error.localizedDescription)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    notify(true)
+                } else {
+                    SwiftyBeaver.error("Status code: " + String(httpResponse.statusCode))
+                    notify(false)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    static public func deleteBookShelf(isbn: String, callback notify: @escaping (_ result: Bool) -> Void) {
+        let urlString = "/bookshare/users/bookshelf/" + isbn
+        SwiftyBeaver.info("Backend: " + urlString)
+        var request = URLRequest(url: getUrl(for: urlString))
+        request.httpMethod = "DELETE"
+        let task = session.dataTask(with: request) { data, response, error in
+            if let error = error {
+                notify(false)
+                SwiftyBeaver.error(error.localizedDescription)
+            } else if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    notify(true)
+                } else {
+                    notify(false)
+                }
+            }
+        }
+        task.resume()
     }
 
     static public func loadData(context: NSManagedObjectContext) {

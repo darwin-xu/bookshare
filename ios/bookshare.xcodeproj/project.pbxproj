@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		27DB460BA05B8EC22AC5FF70 /* Pods_bookshare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADAB500DFB13BBA53B143FFA /* Pods_bookshare.framework */; };
+		D61EC1C81EFF735B00998A3D /* MyBookshelfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61EC1C71EFF735B00998A3D /* MyBookshelfViewController.swift */; };
+		D61EC1CA1EFF8EC100998A3D /* MyBookshelfViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61EC1C91EFF8EC100998A3D /* MyBookshelfViewCell.swift */; };
 		D62EFCAF1DE5F4A300D30527 /* LibraryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62EFCAE1DE5F4A300D30527 /* LibraryTableViewCell.swift */; };
 		D6408C891DF85EC5009625E7 /* MyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6408C881DF85EC5009625E7 /* MyViewController.swift */; };
 		D653FAEA1ED73366007A2A26 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D653FAE91ED73366007A2A26 /* LoginViewController.swift */; };
@@ -28,6 +30,8 @@
 
 /* Begin PBXFileReference section */
 		ADAB500DFB13BBA53B143FFA /* Pods_bookshare.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_bookshare.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D61EC1C71EFF735B00998A3D /* MyBookshelfViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyBookshelfViewController.swift; sourceTree = "<group>"; };
+		D61EC1C91EFF8EC100998A3D /* MyBookshelfViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyBookshelfViewCell.swift; sourceTree = "<group>"; };
 		D62EFCAE1DE5F4A300D30527 /* LibraryTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableViewCell.swift; sourceTree = "<group>"; };
 		D6408C881DF85EC5009625E7 /* MyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyViewController.swift; sourceTree = "<group>"; };
 		D653FAE91ED73366007A2A26 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -112,6 +116,8 @@
 				D653FAE91ED73366007A2A26 /* LoginViewController.swift */,
 				D6C69C511EFAC71F0060EF74 /* BarcodeController.swift */,
 				D6C69C531EFAD3270060EF74 /* BookInfoController.swift */,
+				D61EC1C71EFF735B00998A3D /* MyBookshelfViewController.swift */,
+				D61EC1C91EFF8EC100998A3D /* MyBookshelfViewCell.swift */,
 			);
 			path = bookshare;
 			sourceTree = "<group>";
@@ -259,6 +265,8 @@
 				D6DE3BA51DDDF9D500653AB1 /* LibraryViewController.swift in Sources */,
 				D691C3D51DE73B59002381EF /* BookCollectionViewCell.swift in Sources */,
 				D6C4BAB41DF31C0C003454A1 /* bookshare.xcdatamodeld in Sources */,
+				D61EC1C81EFF735B00998A3D /* MyBookshelfViewController.swift in Sources */,
+				D61EC1CA1EFF8EC100998A3D /* MyBookshelfViewCell.swift in Sources */,
 				D6408C891DF85EC5009625E7 /* MyViewController.swift in Sources */,
 				D653FAEA1ED73366007A2A26 /* LoginViewController.swift in Sources */,
 				D6DE3B861DDCA5F900653AB1 /* AppDelegate.swift in Sources */,

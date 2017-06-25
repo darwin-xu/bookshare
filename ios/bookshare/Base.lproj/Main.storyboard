@@ -124,11 +124,27 @@
                                             </constraints>
                                         </imageView>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LVH-C2-ZX0">
-                                            <rect key="frame" x="160" y="52" width="125" height="30"/>
+                                            <rect key="frame" x="183" y="54" width="125" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <state key="normal" title="Login/Register"/>
                                             <connections>
                                                 <segue destination="s60-V7-jjT" kind="show" id="ObX-B1-05k"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H3J-fZ-GlM">
+                                            <rect key="frame" x="183" y="92" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button"/>
+                                            <connections>
+                                                <action selector="test:" destination="KkI-tk-d3p" eventType="touchUpInside" id="XaU-Mr-r7Y"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iAq-zx-ePp">
+                                            <rect key="frame" x="262" y="92" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button"/>
+                                            <connections>
+                                                <action selector="test1:" destination="KkI-tk-d3p" eventType="touchUpInside" id="qxd-Qq-iec"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -175,19 +191,44 @@
         <!--My Bookshelf-->
         <scene sceneID="mY4-hu-uxG">
             <objects>
-                <tableViewController id="1F5-Ut-mlS" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="116" sectionHeaderHeight="28" sectionFooterHeight="28" id="AI9-NH-wHf">
+                <tableViewController storyboardIdentifier="MyBookshelf" id="1F5-Ut-mlS" customClass="MyBookshelfViewController" customModule="bookshare" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="236" sectionHeaderHeight="28" sectionFooterHeight="28" id="AI9-NH-wHf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BookshelfIdentifer" rowHeight="116" id="kDe-Qb-A0d">
-                                <rect key="frame" x="0.0" y="28" width="375" height="116"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="BookshelfIdentifer" rowHeight="236" id="kDe-Qb-A0d" customClass="MyBookshelfViewCell" customModule="bookshare" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="375" height="236"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kDe-Qb-A0d" id="0gi-tC-rrK">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="115.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="235.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iCd-QL-Ge7">
+                                            <rect key="frame" x="33" y="29" width="139" height="176"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jvB-Do-lRS" userLabel="Author">
+                                            <rect key="frame" x="197" y="60" width="159" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sD4-1w-Vax" userLabel="Name">
+                                            <rect key="frame" x="197" y="107" width="159" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="author" destination="jvB-Do-lRS" id="yT4-wU-hFg"/>
+                                    <outlet property="cover" destination="iCd-QL-Ge7" id="3sA-Ov-FLv"/>
+                                    <outlet property="name" destination="sD4-1w-Vax" id="IRT-WB-6IQ"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -205,7 +246,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ytQ-P5-0MJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1434.375" y="3000"/>
+            <point key="canvasLocation" x="1432.8" y="2999.5502248875564"/>
         </scene>
         <!--Barcode Controller-->
         <scene sceneID="xVe-7u-FHY">
@@ -241,15 +282,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V26-Wh-fze">
-                                <rect key="frame" x="75" y="104" width="225" height="305.5"/>
+                                <rect key="frame" x="75" y="104" width="225" height="306"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="V26-Wh-fze" secondAttribute="height" multiplier="225:307" id="Dhf-py-one"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kXd-wf-rZd" userLabel="Add">
+                                <rect key="frame" x="138.5" y="532" width="98" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <state key="normal" title="Add to library"/>
+                                <connections>
+                                    <action selector="addToLibrary:" destination="zmg-yo-NOq" eventType="touchUpInside" id="8MP-R2-FBY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="V26-Wh-fze" firstAttribute="centerX" secondItem="wtb-Qk-8Vc" secondAttribute="centerX" id="FTv-MJ-5al"/>
+                            <constraint firstItem="eT5-ZZ-igt" firstAttribute="top" secondItem="kXd-wf-rZd" secondAttribute="bottom" constant="54" id="Gp7-9y-YpW"/>
+                            <constraint firstItem="kXd-wf-rZd" firstAttribute="centerX" secondItem="wtb-Qk-8Vc" secondAttribute="centerX" id="NvL-YB-irG"/>
                             <constraint firstItem="V26-Wh-fze" firstAttribute="width" secondItem="wtb-Qk-8Vc" secondAttribute="width" multiplier="0.6" id="aaX-Da-gPU"/>
                             <constraint firstItem="V26-Wh-fze" firstAttribute="top" secondItem="SGm-pf-cWM" secondAttribute="bottom" constant="40" id="hZa-Sk-JC3"/>
                         </constraints>
