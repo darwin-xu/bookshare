@@ -174,4 +174,58 @@ public class LoginTests {
                 .andExpect(status().isUnauthorized());
     }
 
+    @Test
+    public void checkSession() throws Exception {
+        // Check session without cookie.
+        mockMvc.perform(MockMvcRequestBuilders.post("/sessions/check")).andExpect(status().is4xxClientError());
+
+        User user;
+
+        // This will generate a random verifycode and send it to user by SMS.
+        user = new User();
+        user.setUsername("checkSessionUser1");
+        mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(user))).andExpect(status().isCreated());
+
+        // Use modify to set a password for user.
+        user = new User();
+        user.setUsername("checkSessionUser1");
+        user.setVerifyCode("112233");
+        user.setPassword("papawfwf");
+        mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
+
+        // Use username and password to login.
+        user = new User();
+        user.setUsername("checkSessionUser1");
+        user.setPassword("papawfwf");
+        MvcResult result1 = mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login")
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
+                .andExpect(status().isOk()).andReturn();
+
+        // Get Cookie from response.
+        Cookie cookie1 = result1.getResponse().getCookies()[0];
+
+        // Check this cookie, it should valid.
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/check").cookie(cookie1)).andExpect(status().isOk());
+
+        // Use username and password to login again
+        user = new User();
+        user.setUsername("checkSessionUser1");
+        user.setPassword("papawfwf");
+        MvcResult result2 = mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login")
+                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
+                .andExpect(status().isOk()).andReturn();
+
+        // Get Cookie from response.
+        Cookie cookie2 = result2.getResponse().getCookies()[0];
+
+        // Check this cookie2, it should be valid.
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/check").cookie(cookie2)).andExpect(status().isOk());
+
+        // Check this cookie1, it should be invalid.
+        mockMvc.perform(MockMvcRequestBuilders.get("/sessions/check").cookie(cookie1))
+                .andExpect(status().isUnauthorized());
+    }
+
 }

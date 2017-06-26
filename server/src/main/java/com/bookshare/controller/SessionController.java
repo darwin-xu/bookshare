@@ -38,9 +38,9 @@ public class SessionController {
         Session newSession = null;
         if (userInRepo != null && userInRepo.authenticate(user)) {
             // Invalidate old session.
+            Session oldSession = userInRepo.getSession();
             userInRepo.setSession(null);
             userRepository.save(userInRepo);
-            Session oldSession = userInRepo.getSession();
             if (oldSession != null)
                 sessionRepository.delete(oldSession);
 
@@ -58,6 +58,15 @@ public class SessionController {
             response.addCookie(cookie);
         } else
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    }
+    
+    @RequestMapping(value = "check", method = RequestMethod.GET)
+    public void check(@CookieValue("session") String sessionID, HttpServletResponse response) {
+        logger.debug("Check session:" + sessionID);
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
     }
 
     @RequestMapping(value = "logout", method = RequestMethod.POST)
