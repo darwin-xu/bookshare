@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,14 @@ public class User implements Serializable {
 
     @OneToMany
     private List<Book> bookList;
+
+    @OneToMany
+    @OrderBy("createDate")
+    private List<Claim> claims;
+
+    @OneToMany
+    @OrderBy("createDate")
+    private List<Enjoy> enjoys;
 
     public String getUsername() {
         return username;

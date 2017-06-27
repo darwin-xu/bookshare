@@ -59,7 +59,7 @@ public class SessionController {
         } else
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
-    
+
     @RequestMapping(value = "check", method = RequestMethod.GET)
     public void check(@CookieValue("session") String sessionID, HttpServletResponse response) {
         logger.debug("Check session:" + sessionID);
