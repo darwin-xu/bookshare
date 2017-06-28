@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 public class LoginTests {
 
-    ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     private MockMvc mockMvc;
@@ -157,7 +157,7 @@ public class LoginTests {
 
         // Use wrong oldPassword to change the password.
         user = new User();
-        user.setUsername("TestNo1");
+        user.setUsername("TestNo4");
         user.setOldPassword("papawfwft");
         user.setPassword("qtqtqt");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)

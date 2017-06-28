@@ -38,7 +38,7 @@ public class Book implements Serializable {
     @Column(nullable = false)
     private int pages;
 
-    @Column(nullable = false)
+    @Column
     private String publisher;
 
     @Column(nullable = false)

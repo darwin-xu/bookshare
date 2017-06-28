@@ -1,6 +1,7 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.SessionRepository;
+import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Session;
+import com.bookshare.domain.User;
 
 @RestController
 @RequestMapping(value = "sharing")
@@ -24,6 +27,18 @@ public class SharingController {
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @RequestMapping(value = "{isbn}", method = RequestMethod.GET)
+    public void test(@PathVariable String isbn, HttpServletResponse response) {
+        List<User> users = userRepository.findBybookList_isbn13(isbn);
+
+        for (User user : users) {
+            System.out.println(user.getUsername());
+        }
+    }
 
     @RequestMapping(value = "{isbn}", method = RequestMethod.POST)
     public void claim(@CookieValue("session") String sessionID, @PathVariable String isbn,
