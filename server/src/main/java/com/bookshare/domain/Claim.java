@@ -29,4 +29,24 @@ public class Claim implements Serializable {
     @Column(nullable = false)
     private Date createDate;
 
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public Boolean getCancalled() {
+        return cancalled;
+    }
+
+    public void setCancalled(Boolean cancalled) {
+        this.cancalled = cancalled;
+    }
+
+    public Claim() {
+        createDate = new Date(new java.util.Date().getTime());
+    }
+
 }

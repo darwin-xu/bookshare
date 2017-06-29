@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
+import com.bookshare.domain.Claim;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
@@ -45,7 +46,13 @@ public class SharingController {
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-
+            User user = session.getUser();
+            List<Claim> claims = user.getClaims();
+            Claim claim = new Claim();
+            claim.setIsbn(isbn);
+            claims.add(claim);
+            user.setClaims(claims);
+            userRepository.save(user);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }

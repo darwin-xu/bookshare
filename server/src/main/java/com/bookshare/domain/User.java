@@ -24,11 +24,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class User implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private final static long serialVersionUID = 1L;
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final long validityLimit = 60 * 1000;
+    private final static long validityLimit = 60 * 1000;
 
     @Id
     @GeneratedValue
@@ -109,6 +109,30 @@ public class User implements Serializable {
         this.session = session;
     }
 
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
+    public List<Claim> getClaims() {
+        return claims;
+    }
+
+    public void setClaims(List<Claim> claims) {
+        this.claims = claims;
+    }
+
+    public List<Enjoy> getEnjoys() {
+        return enjoys;
+    }
+
+    public void setEnjoys(List<Enjoy> enjoys) {
+        this.enjoys = enjoys;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -118,37 +142,10 @@ public class User implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         User other = (User) obj;
-        if (bookList == null) {
-            if (other.bookList != null)
-                return false;
-        } else if (!bookList.equals(other.bookList))
-            return false;
-        if (oldPassword == null) {
-            if (other.oldPassword != null)
-                return false;
-        } else if (!oldPassword.equals(other.oldPassword))
-            return false;
-        if (password == null) {
-            if (other.password != null)
-                return false;
-        } else if (!password.equals(other.password))
-            return false;
-        if (session == null) {
-            if (other.session != null)
-                return false;
-        } else if (!session.equals(other.session))
-            return false;
         if (username == null) {
             if (other.username != null)
                 return false;
         } else if (!username.equals(other.username))
-            return false;
-        if (verifyCode == null) {
-            if (other.verifyCode != null)
-                return false;
-        } else if (!verifyCode.equals(other.verifyCode))
-            return false;
-        if (verifyCodeValidty != other.verifyCodeValidty)
             return false;
         return true;
     }
@@ -157,13 +154,7 @@ public class User implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((bookList == null) ? 0 : bookList.hashCode());
-        result = prime * result + ((oldPassword == null) ? 0 : oldPassword.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((session == null) ? 0 : session.hashCode());
         result = prime * result + ((username == null) ? 0 : username.hashCode());
-        result = prime * result + ((verifyCode == null) ? 0 : verifyCode.hashCode());
-        result = prime * result + (int) (verifyCodeValidty ^ (verifyCodeValidty >>> 32));
         return result;
     }
 
@@ -210,14 +201,6 @@ public class User implements Serializable {
             logger.debug("false");
             return false;
         }
-    }
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
     }
 
 }

@@ -121,6 +121,9 @@ public class SharingTest {
         System.out.println("======");
         mockMvc.perform(MockMvcRequestBuilders.get("/sharing/9787544270472")).andExpect(status().isOk());
         System.out.println("======\n");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/sharing/9787544270472").cookie(cookie1))
+                .andExpect(status().isOk());
     }
 
 }
