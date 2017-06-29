@@ -55,11 +55,11 @@ public class User implements Serializable {
 
     @OneToMany
     @OrderBy("createDate")
-    private List<Claim> claims;
+    private List<Demand> demands;
 
     @OneToMany
     @OrderBy("createDate")
-    private List<Enjoy> enjoys;
+    private List<Respond> responds;
 
     public String getUsername() {
         return username;
@@ -117,20 +117,20 @@ public class User implements Serializable {
         this.oldPassword = oldPassword;
     }
 
-    public List<Claim> getClaims() {
-        return claims;
+    public List<Demand> getDemands() {
+        return demands;
     }
 
-    public void setClaims(List<Claim> claims) {
-        this.claims = claims;
+    public void setDemands(List<Demand> demands) {
+        this.demands = demands;
     }
 
-    public List<Enjoy> getEnjoys() {
-        return enjoys;
+    public List<Respond> getResponds() {
+        return responds;
     }
 
-    public void setEnjoys(List<Enjoy> enjoys) {
-        this.enjoys = enjoys;
+    public void setResponds(List<Respond> responds) {
+        this.responds = responds;
     }
 
     @Override

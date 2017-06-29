@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-public class Claim implements Serializable {
+public class Demand implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,8 @@ public class Claim implements Serializable {
         this.cancalled = cancalled;
     }
 
-    public Claim() {
+    public Demand() {
+        cancalled = false;
         createDate = new Date(new java.util.Date().getTime());
     }
 

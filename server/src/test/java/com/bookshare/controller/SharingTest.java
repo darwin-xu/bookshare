@@ -1,6 +1,10 @@
 package com.bookshare.controller;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 import javax.servlet.http.Cookie;
 
@@ -107,23 +111,47 @@ public class SharingTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testDemand() throws Exception {
         prepareUsershelf();
 
-        System.out.println("======");
-        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/9787535491657")).andExpect(status().isOk());
-        System.out.println("======\n");
-
-        System.out.println("======");
-        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/9787514122756")).andExpect(status().isOk());
-        System.out.println("======\n");
-
-        System.out.println("======");
-        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/9787544270472")).andExpect(status().isOk());
-        System.out.println("======\n");
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/sharing/9787544270472").cookie(cookie1))
+        mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demand/9787535491657").cookie(cookie1))
                 .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demand/9787544270472").cookie(cookie2))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demand/9787514122756").cookie(cookie3))
+                .andExpect(status().isOk());
+
+        // Get responds for the first session.
+        String isbnsActual1[] = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/sharing/getResponds").cookie(cookie1)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+
+        String isbnsExpect1[] = { "9787535491657" };
+        assertEquals(new HashSet<String>(Arrays.asList(isbnsExpect1)),
+                new HashSet<String>(Arrays.asList(isbnsActual1)));
+
+        // Get responds for the second session.
+        String isbnsActual2[] = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/sharing/getResponds").cookie(cookie2)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+
+        String isbnsExpect2[] = { "9787535491657", "9787544270472" };
+        assertEquals(new HashSet<String>(Arrays.asList(isbnsExpect2)),
+                new HashSet<String>(Arrays.asList(isbnsActual2)));
+
+        // Get responds for the third session.
+        String isbnsActual3[] = mapper.readValue(mockMvc
+                .perform(MockMvcRequestBuilders.get("/sharing/getResponds").cookie(cookie3)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+
+        String isbnsExpect3[] = { "9787535491657", "9787544270472", "9787514122756" };
+        assertEquals(new HashSet<String>(Arrays.asList(isbnsExpect3)),
+                new HashSet<String>(Arrays.asList(isbnsActual3)));
     }
 
 }
