@@ -9,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 
 import org.slf4j.Logger;
@@ -45,10 +44,6 @@ public class User implements Serializable {
 
     @JsonIgnore
     private long verifyCodeValidty;
-
-    @JsonIgnore
-    @OneToOne
-    private Session session;
 
     @ManyToMany
     private List<Book> bookList;
@@ -99,14 +94,6 @@ public class User implements Serializable {
 
     public long getVerifyCodeValidty() {
         return verifyCodeValidty;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
     }
 
     public String getOldPassword() {
@@ -160,9 +147,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User [username=" + username + ", oldPassword=" + oldPassword + ", password=" + password
-                + ", verifyCode=" + verifyCode + ", verifyCodeValidty=" + verifyCodeValidty + ", session=" + session
-                + ", bookList=" + bookList + "]";
+        return "User [id=" + id + ", username=" + username + "]";
     }
 
     public void generateVerifyCode() {

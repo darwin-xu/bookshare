@@ -167,7 +167,7 @@ public class LoginTests {
     @Test
     public void logoutWithWrongCookie() throws Exception {
         // Create a nonexistent cookie
-        Cookie cookie = new Cookie("session", Session.createNewSession().getSessionID());
+        Cookie cookie = new Cookie("session", new Session().getSessionID());
 
         // Logout for nonexistent cookie should be failed.
         mockMvc.perform(MockMvcRequestBuilders.post("/sessions/logout").cookie(cookie))

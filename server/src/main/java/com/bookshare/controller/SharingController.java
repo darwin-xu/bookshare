@@ -1,7 +1,6 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,8 +42,8 @@ public class SharingController {
     @Autowired
     private RespondRepository respondRepository;
 
-    @RequestMapping(value = "demand/{isbn}", method = RequestMethod.POST)
-    public void demand(@CookieValue("session") String sessionID, @PathVariable String isbn,
+    @RequestMapping(value = "demands/{isbn}", method = RequestMethod.POST)
+    public void postDemand(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
@@ -69,27 +69,61 @@ public class SharingController {
                 userHasTheBook.setResponds(responds);
                 userRepository.save(userHasTheBook);
             }
+            response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
-    @RequestMapping(value = "getResponds", method = RequestMethod.GET, produces = "application/json")
-    public String[] getResponds(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    @RequestMapping(value = "demands", method = RequestMethod.GET, produces = "application/json")
+    public List<Demand> getDemands(@CookieValue("session") String sessionID, HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            User user = session.getUser();
+            return user.getDemands();
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
+    }
+
+    @RequestMapping(value = "demands/{id}", method = RequestMethod.PUT)
+    public void putDemand(@CookieValue("session") String sessionID, @PathVariable String id, @RequestBody Demand demand,
+            HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            Demand oldDemand = demandRepository.findById(id);
+            oldDemand.setCancalled(demand.getCancalled());
+            demandRepository.save(oldDemand);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "responds", method = RequestMethod.GET, produces = "application/json")
+    public List<Respond> getResponds(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
 
-            // Get all responds from the user.
-            List<Respond> responds = user.getResponds();
-            List<String> isbns = new ArrayList<String>();
-            for (Respond respond : responds) {
-                isbns.add(respond.getDemand().getIsbn());
-            }
-            return isbns.toArray(new String[isbns.size()]);
+            // Get the responds of the user.
+            return user.getResponds();
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
+        }
+    }
+
+    @RequestMapping(value = "responds/{id}", method = RequestMethod.PUT)
+    public void putResponds(@CookieValue("session") String sessionID, @PathVariable String id,
+            @RequestBody Respond respond, HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            Respond oldRespond = respondRepository.findById(id);
+            oldRespond.setAgree(respond.getAgree());
+            respondRepository.save(oldRespond);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 

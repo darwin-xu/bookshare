@@ -38,19 +38,20 @@ public class SessionController {
         Session newSession = null;
         if (userInRepo != null && userInRepo.authenticate(user)) {
             // Invalidate old session.
-            Session oldSession = userInRepo.getSession();
-            userInRepo.setSession(null);
-            userRepository.save(userInRepo);
+            // Session oldSession = userInRepo.getSession();
+            // userInRepo.setSession(null);
+            // userRepository.save(userInRepo);
+            Session oldSession = sessionRepository.findByUser_username(user.getUsername());
             if (oldSession != null)
                 sessionRepository.delete(oldSession);
 
             // Create new session.
-            newSession = Session.createNewSession();
+            newSession = new Session();
             logger.debug("Create new session:" + newSession.getSessionID());
             newSession.setUser(userInRepo);
             sessionRepository.save(newSession);
-            userInRepo.setSession(newSession);
-            userRepository.save(userInRepo);
+            // userInRepo.setSession(newSession);
+            // userRepository.save(userInRepo);
 
             // Set cookie for HTTP.
             Cookie cookie = new Cookie("session", newSession.getSessionID());
@@ -74,9 +75,6 @@ public class SessionController {
         logger.debug("Delete session:" + sessionID);
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            User user = session.getUser();
-            user.setSession(null);
-            userRepository.save(user);
             sessionRepository.delete(session);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

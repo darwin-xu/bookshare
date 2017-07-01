@@ -1,14 +1,14 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Session implements Serializable {
@@ -17,21 +17,21 @@ public class Session implements Serializable {
 
     @Id
     @GeneratedValue
-    @JsonIgnore
     private Long id;
 
-    private String sessionID;
+    private final String sessionID;
 
-    @JsonIgnore
     @OneToOne
     private User user;
+
+    @Column(nullable = false)
+    private final Date createDate;
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((sessionID == null) ? 0 : sessionID.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
         return result;
     }
 
@@ -49,20 +49,7 @@ public class Session implements Serializable {
                 return false;
         } else if (!sessionID.equals(other.sessionID))
             return false;
-        if (user == null) {
-            if (other.user != null)
-                return false;
-        } else if (!user.equals(other.user))
-            return false;
         return true;
-    }
-
-    public String getSessionID() {
-        return sessionID;
-    }
-
-    public void setSessionID(String sessionID) {
-        this.sessionID = sessionID;
     }
 
     public User getUser() {
@@ -73,10 +60,17 @@ public class Session implements Serializable {
         this.user = user;
     }
 
-    public static Session createNewSession() {
-        Session newSession = new Session();
-        newSession.setSessionID(UUID.randomUUID().toString());
-        return newSession;
+    public Session() {
+        sessionID = UUID.randomUUID().toString();
+        createDate = new Date(new java.util.Date().getTime());
+    }
+
+    public String getSessionID() {
+        return sessionID;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
     }
 
 }
