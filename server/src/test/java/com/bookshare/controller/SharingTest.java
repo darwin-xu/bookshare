@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.bookshare.domain.Demand;
 import com.bookshare.domain.Respond;
 import com.bookshare.domain.User;
 import com.bookshare.utility.TestCaseUtil;
@@ -120,6 +121,14 @@ public class SharingTest {
         return isbns;
     }
 
+    private List<String> getIsbns(Demand demands[]) {
+        List<String> isbns = new ArrayList<String>();
+        for (Demand d : demands) {
+            isbns.add(d.getIsbn());
+        }
+        return isbns;
+    }
+
     @Test
     public void testDemandAndRespond() throws Exception {
         prepareUsershelf();
@@ -141,9 +150,8 @@ public class SharingTest {
                 .perform(MockMvcRequestBuilders.get("/sharing/responds").cookie(cookie1)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
-
-        String isbnsExpect1[] = { "9787535491657", "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsExpect1),
+        String isbnsRespondExpect1[] = { "9787535491657", "9787535491657" };
+        assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect1),
                 TestCaseUtil.sortedStringList(getIsbns(respondActual1)));
 
         // Get responds for the second session.
@@ -151,9 +159,8 @@ public class SharingTest {
                 .perform(MockMvcRequestBuilders.get("/sharing/responds").cookie(cookie2)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
-
-        String isbnsExpect2[] = { "9787535491657", "9787544270472", "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsExpect2),
+        String isbnsRespondExpect2[] = { "9787535491657", "9787544270472", "9787535491657" };
+        assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect2),
                 TestCaseUtil.sortedStringList(getIsbns(respondActual2)));
 
         // Get responds for the third session.
@@ -161,10 +168,39 @@ public class SharingTest {
                 .perform(MockMvcRequestBuilders.get("/sharing/responds").cookie(cookie3)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
-
-        String isbnsExpect3[] = { "9787535491657", "9787544270472", "9787514122756", "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsExpect3),
+        String isbnsRespondExpect3[] = { "9787535491657", "9787544270472", "9787514122756", "9787535491657" };
+        assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect3),
                 TestCaseUtil.sortedStringList(getIsbns(respondActual3)));
+
+        // Get demands for the first session.
+        Demand demandActual1[] = mapper
+                .readValue(
+                        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/demands").cookie(cookie1))
+                                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                        Demand[].class);
+        String isbnsDemandExpect1[] = { "9787535491657" };
+        assertEquals(TestCaseUtil.sortedStringList(isbnsDemandExpect1),
+                TestCaseUtil.sortedStringList(getIsbns(demandActual1)));
+
+        // Get demands for the first session.
+        Demand demandActual2[] = mapper
+                .readValue(
+                        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/demands").cookie(cookie2))
+                                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                        Demand[].class);
+        String isbnsDemandExpect2[] = { "9787535491657", "9787544270472" };
+        assertEquals(TestCaseUtil.sortedStringList(isbnsDemandExpect2),
+                TestCaseUtil.sortedStringList(getIsbns(demandActual2)));
+
+        // Get demands for the first session.
+        Demand demandActual3[] = mapper
+                .readValue(
+                        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/demands").cookie(cookie3))
+                                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
+                        Demand[].class);
+        String isbnsDemandExpect3[] = { "9787514122756" };
+        assertEquals(TestCaseUtil.sortedStringList(isbnsDemandExpect3),
+                TestCaseUtil.sortedStringList(getIsbns(demandActual3)));
     }
 
 }
