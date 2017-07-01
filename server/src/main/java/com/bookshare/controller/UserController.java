@@ -153,7 +153,7 @@ public class UserController {
             if (u.verify(user)) {
                 // Invalidate VerifyCode after use.
                 u.setVerifyCode("");
-                u.setVerifyCodeValidty(0);
+                u.setVerifyCodeValidity(0);
                 userRepository.save(u);
                 return u;
             } else if (u.authenticate(user)) {

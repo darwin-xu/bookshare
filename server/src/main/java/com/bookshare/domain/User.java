@@ -43,7 +43,7 @@ public class User implements Serializable {
     private String verifyCode;
 
     @JsonIgnore
-    private long verifyCodeValidty;
+    private long verifyCodeValidity;
 
     @ManyToMany
     private List<Book> bookList;
@@ -88,12 +88,12 @@ public class User implements Serializable {
         this.verifyCode = verifyCode;
     }
 
-    public void setVerifyCodeValidty(long verifyCodeValidty) {
-        this.verifyCodeValidty = verifyCodeValidty;
+    public void setVerifyCodeValidity(long verifyCodeValidity) {
+        this.verifyCodeValidity = verifyCodeValidity;
     }
 
-    public long getVerifyCodeValidty() {
-        return verifyCodeValidty;
+    public long getVerifyCodeValidity() {
+        return verifyCodeValidity;
     }
 
     public String getOldPassword() {
@@ -154,17 +154,18 @@ public class User implements Serializable {
         // TODO: Change to RandomUtil.genDigitals(6); in real system.
         // verifyCode = RandomUtil.genDigitals(6);
         verifyCode = "112233";
-        verifyCodeValidty = System.currentTimeMillis();
-        logger.debug("Username:" + username + " verifyCode:" + verifyCode + " verifyCodeValidty:" + verifyCodeValidty);
+        verifyCodeValidity = System.currentTimeMillis();
+        logger.debug(
+                "Username:" + username + " verifyCode:" + verifyCode + " verifyCodeValidity:" + verifyCodeValidity);
     }
 
     public boolean verify(User user) {
         long currentTimeMillis = System.currentTimeMillis();
         logger.debug("(this.verifyCode:" + verifyCode + " == user.verifyCode:" + user.getVerifyCode()
-                + ") && (currentTimeMillis:" + currentTimeMillis + " - verifyCodeValidty:" + verifyCodeValidty
+                + ") && (currentTimeMillis:" + currentTimeMillis + " - verifyCodeValidity:" + verifyCodeValidity
                 + " < validityLimit:" + validityLimit + ")");
         if (StringUtil.equalsWithoutNull(verifyCode, user.getVerifyCode())
-                && (currentTimeMillis - verifyCodeValidty < validityLimit)) {
+                && (currentTimeMillis - verifyCodeValidity < validityLimit)) {
             logger.debug("true");
             return true;
         } else {
