@@ -127,6 +127,9 @@ public class SharingTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demands/9787535491657").cookie(cookie1))
                 .andExpect(status().isCreated());
 
+        mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demands/9787535491657").cookie(cookie2))
+                .andExpect(status().isCreated());
+
         mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demands/9787544270472").cookie(cookie2))
                 .andExpect(status().isCreated());
 
@@ -139,7 +142,7 @@ public class SharingTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
 
-        String isbnsExpect1[] = { "9787535491657" };
+        String isbnsExpect1[] = { "9787535491657", "9787535491657" };
         assertEquals(TestCaseUtil.sortedStringList(isbnsExpect1),
                 TestCaseUtil.sortedStringList(getIsbns(respondActual1)));
 
@@ -149,7 +152,7 @@ public class SharingTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
 
-        String isbnsExpect2[] = { "9787535491657", "9787544270472" };
+        String isbnsExpect2[] = { "9787535491657", "9787544270472", "9787535491657" };
         assertEquals(TestCaseUtil.sortedStringList(isbnsExpect2),
                 TestCaseUtil.sortedStringList(getIsbns(respondActual2)));
 
@@ -159,7 +162,7 @@ public class SharingTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
 
-        String isbnsExpect3[] = { "9787535491657", "9787544270472", "9787514122756" };
+        String isbnsExpect3[] = { "9787535491657", "9787544270472", "9787514122756", "9787535491657" };
         assertEquals(TestCaseUtil.sortedStringList(isbnsExpect3),
                 TestCaseUtil.sortedStringList(getIsbns(respondActual3)));
     }
