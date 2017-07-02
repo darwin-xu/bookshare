@@ -1,12 +1,12 @@
 package com.bookshare.controller;
 
-import org.junit.Test;
 import org.springframework.web.client.RestTemplate;
+import org.testng.annotations.Test;
 
 import com.bookshare.domain.User;
 
 public class RemoteServerTest {
-    
+
     @Test
     public void userWithName() {
         User user = new User();

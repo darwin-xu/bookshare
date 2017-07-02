@@ -1,7 +1,9 @@
 package com.bookshare.controller;
 
-import static org.junit.Assert.assertEquals;
+import org.testng.annotations.Test;
+import org.testng.AssertJUnit;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testng.AssertJUnit.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -9,24 +11,22 @@ import java.util.Set;
 
 import javax.servlet.http.Cookie;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testng.annotations.Test;
 
 import com.bookshare.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserShelfTest {
+public class UserShelfTest extends AbstractTestNGSpringContextTests {
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -82,7 +82,7 @@ public class UserShelfTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
 
-        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual1)));
+        AssertJUnit.assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual1)));
 
         // Remove some books from user's shelf.
         String toRemove = "9787550217454";
@@ -96,7 +96,7 @@ public class UserShelfTest {
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
 
         booksISBN.remove(toRemove);
-        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual2)));
+        AssertJUnit.assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual2)));
     }
 
 }

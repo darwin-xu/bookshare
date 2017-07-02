@@ -4,25 +4,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import javax.servlet.http.Cookie;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testng.annotations.Test;
 
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LoginTests {
+public class LoginTests extends AbstractTestNGSpringContextTests {
 
     private ObjectMapper mapper = new ObjectMapper();
 
