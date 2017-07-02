@@ -42,7 +42,7 @@ public class SharingController {
     @Autowired
     private RespondRepository respondRepository;
 
-    @RequestMapping(value = "demands/{isbn}", method = RequestMethod.POST)
+    @RequestMapping(value = "demands/book/{isbn}", method = RequestMethod.POST)
     public void postDemand(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
@@ -92,9 +92,13 @@ public class SharingController {
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            Demand oldDemand = demandRepository.findById(id);
-            oldDemand.setCancalled(demand.getCancalled());
-            demandRepository.save(oldDemand);
+            Demand oldDemand = demandRepository.findById(Long.valueOf(id));
+            if (oldDemand != null) {
+                oldDemand.setCancalled(demand.getCancalled());
+                demandRepository.save(oldDemand);
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -105,7 +109,6 @@ public class SharingController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-
             // Get the responds of the user.
             return user.getResponds();
         } else {
@@ -119,9 +122,13 @@ public class SharingController {
             @RequestBody Respond respond, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            Respond oldRespond = respondRepository.findById(id);
-            oldRespond.setAgree(respond.getAgree());
-            respondRepository.save(oldRespond);
+            Respond oldRespond = respondRepository.findById(Long.valueOf(id));
+            if (oldRespond != null) {
+                oldRespond.setAgreed(respond.getAgreed());
+                respondRepository.save(oldRespond);
+            } else {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }

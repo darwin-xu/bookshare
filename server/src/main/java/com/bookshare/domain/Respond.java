@@ -24,7 +24,7 @@ public class Respond implements Serializable {
     private Demand demand;
 
     @Column(nullable = false)
-    private Boolean agree;
+    private Boolean agreed;
 
     @Column(nullable = false)
     private Boolean selected;
@@ -36,6 +36,10 @@ public class Respond implements Serializable {
     @Column(nullable = false)
     private Date createDate;
 
+    public Long getId() {
+        return id;
+    }
+
     public Demand getDemand() {
         return demand;
     }
@@ -44,12 +48,12 @@ public class Respond implements Serializable {
         this.demand = demand;
     }
 
-    public Boolean getAgree() {
-        return agree;
+    public Boolean getAgreed() {
+        return agreed;
     }
 
-    public void setAgree(Boolean agree) {
-        this.agree = agree;
+    public void setAgreed(Boolean agreed) {
+        this.agreed = agreed;
     }
 
     public Boolean getSelected() {
@@ -69,7 +73,7 @@ public class Respond implements Serializable {
     }
 
     public Respond() {
-        agree = false;
+        agreed = false;
         selected = false;
         priority = 0;
         createDate = new Date(new java.util.Date().getTime());

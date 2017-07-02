@@ -29,6 +29,10 @@ public class Demand implements Serializable {
     @Column(nullable = false)
     private final Date createDate;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getIsbn() {
         return isbn;
     }

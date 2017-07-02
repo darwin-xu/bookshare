@@ -7,6 +7,6 @@ import com.bookshare.domain.Demand;
 
 public interface DemandRepository extends PagingAndSortingRepository<Demand, Long> {
 
-    Demand findById(@Param("id") String id);
+    Demand findById(@Param("id") Long id);
 
 }

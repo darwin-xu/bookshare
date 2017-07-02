@@ -7,6 +7,6 @@ import com.bookshare.domain.Respond;
 
 public interface RespondRepository extends PagingAndSortingRepository<Respond, Long> {
 
-    Respond findById(@Param("id") String id);
+    Respond findById(@Param("id") Long id);
 
 }
