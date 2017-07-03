@@ -129,7 +129,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         return isbns;
     }
 
-    @Test
+    @Test(groups = "create")
     public void createDemands() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/sharing/demands/book/9787535491657").cookie(cookie1))
                 .andExpect(status().isCreated());
@@ -144,7 +144,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                 .andExpect(status().isCreated());
     }
 
-    @Test(dependsOnMethods = { "createDemands" })
+    @Test(groups = "check", dependsOnGroups = "create")
     public void checkDemands() throws Exception {
         // Get demands for the first session.
         Demand demandsActual1[] = mapper
@@ -177,7 +177,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                 TestCaseUtil.sortedStringList(getIsbns(demandsActual3)));
     }
 
-    @Test(dependsOnMethods = { "createDemands" })
+    @Test(groups = "check", dependsOnGroups = "create")
     public void checkResponds() throws Exception {
         // Get responds for the first session.
         Respond respondsActual1[] = mapper.readValue(mockMvc
@@ -187,6 +187,9 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         String isbnsRespondExpect1[] = { "9787535491657", "9787535491657" };
         assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect1),
                 TestCaseUtil.sortedStringList(getIsbns(respondsActual1)));
+        for (Respond r : respondsActual1) {
+            assertEquals(Boolean.FALSE, r.getCancalled());
+        }
 
         // Get responds for the second session.
         Respond respondsActual2[] = mapper.readValue(mockMvc
@@ -196,6 +199,9 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         String isbnsRespondExpect2[] = { "9787535491657", "9787544270472", "9787535491657" };
         assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect2),
                 TestCaseUtil.sortedStringList(getIsbns(respondsActual2)));
+        for (Respond r : respondsActual2) {
+            assertEquals(Boolean.FALSE, r.getCancalled());
+        }
 
         // Get responds for the third session.
         Respond respondsActual3[] = mapper.readValue(mockMvc
@@ -205,9 +211,12 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         String isbnsRespondExpect3[] = { "9787535491657", "9787544270472", "9787514122756", "9787535491657" };
         assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect3),
                 TestCaseUtil.sortedStringList(getIsbns(respondsActual3)));
+        for (Respond r : respondsActual3) {
+            assertEquals(Boolean.FALSE, r.getCancalled());
+        }
     }
 
-    @Test(dependsOnMethods = { "checkDemands" })
+    @Test(groups = "change", dependsOnGroups = "check")
     public void changeDemands() throws Exception {
         // Get and change the demands for the first session.
         Demand demand1old[] = mapper
@@ -274,7 +283,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         assertEquals(true, match2);
     }
 
-    @Test(dependsOnMethods = { "checkResponds" })
+    @Test(groups = "change", dependsOnGroups = "check")
     public void changeResponds() throws Exception {
         // Get responds for the second session.
         Respond respondsOld[] = mapper.readValue(mockMvc
