@@ -27,7 +27,7 @@ public class Demand implements Serializable {
 
     @JsonIgnoreProperties
     @Column(nullable = false)
-    private final Date createDate;
+    private final Date creationDate;
 
     public Long getId() {
         return id;
@@ -51,7 +51,7 @@ public class Demand implements Serializable {
 
     public Demand() {
         cancalled = false;
-        createDate = new Date(new java.util.Date().getTime());
+        creationDate = new Date(new java.util.Date().getTime());
     }
 
     @Override

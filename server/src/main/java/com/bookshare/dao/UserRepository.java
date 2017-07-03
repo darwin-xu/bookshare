@@ -14,6 +14,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     User findByUsername(@Param("username") String username);
 
-    List<User> findBybookList_isbn13(String isbn);
+    List<User> findByBookList_Isbn13(String isbn);
 
 }

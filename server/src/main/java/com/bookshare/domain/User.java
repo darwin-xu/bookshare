@@ -49,11 +49,11 @@ public class User implements Serializable {
     private List<Book> bookList;
 
     @OneToMany
-    @OrderBy("createDate")
+    @OrderBy("creationDate")
     private List<Demand> demands;
 
     @OneToMany
-    @OrderBy("createDate")
+    @OrderBy("creationDate")
     private List<Respond> responds;
 
     public String getUsername() {

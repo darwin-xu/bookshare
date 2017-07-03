@@ -26,15 +26,23 @@ public class Respond implements Serializable {
     @Column(nullable = false)
     private Boolean agreed;
 
+    @JsonIgnoreProperties
+    @Column
+    private Date agreementDate;
+
+    @Column(nullable = false)
+    private Boolean cancalled;
+
     @Column(nullable = false)
     private Boolean selected;
 
+    @JsonIgnoreProperties
     @Column(nullable = false)
     private Integer priority;
 
     @JsonIgnoreProperties
     @Column(nullable = false)
-    private Date createDate;
+    private Date creationDate;
 
     public Long getId() {
         return id;
@@ -54,6 +62,15 @@ public class Respond implements Serializable {
 
     public void setAgreed(Boolean agreed) {
         this.agreed = agreed;
+        agreementDate = new Date(new java.util.Date().getTime());
+    }
+
+    public Boolean getCancalled() {
+        return cancalled;
+    }
+
+    public void setCancalled(Boolean cancalled) {
+        this.cancalled = cancalled;
     }
 
     public Boolean getSelected() {
@@ -74,9 +91,10 @@ public class Respond implements Serializable {
 
     public Respond() {
         agreed = false;
+        cancalled = false;
         selected = false;
         priority = 0;
-        createDate = new Date(new java.util.Date().getTime());
+        creationDate = new Date(new java.util.Date().getTime());
     }
 
     @Override

@@ -25,7 +25,7 @@ public class Session implements Serializable {
     private User user;
 
     @Column(nullable = false)
-    private final Date createDate;
+    private final Date creationDate;
 
     @Override
     public int hashCode() {
@@ -62,15 +62,15 @@ public class Session implements Serializable {
 
     public Session() {
         sessionID = UUID.randomUUID().toString();
-        createDate = new Date(new java.util.Date().getTime());
+        creationDate = new Date(new java.util.Date().getTime());
     }
 
     public String getSessionID() {
         return sessionID;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
 }

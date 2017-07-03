@@ -59,7 +59,7 @@ public class SharingController {
             userRepository.save(user);
 
             // Find the user who has this book.
-            List<User> users = userRepository.findBybookList_isbn13(isbn);
+            List<User> users = userRepository.findByBookList_Isbn13(isbn);
             for (User userHasTheBook : users) {
                 List<Respond> responds = userHasTheBook.getResponds();
                 Respond res = new Respond();
@@ -93,9 +93,14 @@ public class SharingController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             Demand oldDemand = demandRepository.findById(Long.valueOf(id));
-            if (oldDemand != null) {
-                oldDemand.setCancalled(demand.getCancalled());
+            if (oldDemand != null && demand.getCancalled() == true) {
+                oldDemand.setCancalled(true);
                 demandRepository.save(oldDemand);
+                List<Respond> responds = respondRepository.findByDemand_Id(oldDemand.getId());
+                for (Respond r : responds) {
+                    r.setCancalled(true);
+                    respondRepository.save(r);
+                }
             } else {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }

@@ -316,4 +316,5 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         assertEquals(true, match1);
         assertEquals(true, match2);
     }
+
 }

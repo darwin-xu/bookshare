@@ -1,9 +1,6 @@
 package com.bookshare.controller;
 
-import org.testng.annotations.Test;
-import org.testng.AssertJUnit;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testng.AssertJUnit.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,6 +16,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 import com.bookshare.domain.User;
