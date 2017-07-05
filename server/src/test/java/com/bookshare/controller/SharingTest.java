@@ -297,11 +297,13 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
             assertEquals(Boolean.FALSE, r.getAgreed());
             if (r.getDemand().getIsbn().equals(bookToBeAgreed)) {
                 r.setAgreed(true);
+                assertEquals(Boolean.TRUE, r.getCancalled());
                 mockMvc.perform(MockMvcRequestBuilders.put("/sharing/responds/" + r.getId()).cookie(cookie2)
                         .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(r)))
                         .andExpect(status().isOk());
                 match1 = true;
             } else {
+                assertEquals(Boolean.FALSE, r.getCancalled());
                 match2 = true;
             }
         }

@@ -40,6 +40,9 @@ public class Respond implements Serializable {
     @Column(nullable = false)
     private Integer priority;
 
+    @Column
+    private String deliveryId;
+
     @JsonIgnoreProperties
     @Column(nullable = false)
     private Date creationDate;
@@ -87,6 +90,14 @@ public class Respond implements Serializable {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
+    }
+
+    public String getDeliveryId() {
+        return deliveryId;
+    }
+
+    public void setDeliveryId(String deliveryId) {
+        this.deliveryId = deliveryId;
     }
 
     public Respond() {

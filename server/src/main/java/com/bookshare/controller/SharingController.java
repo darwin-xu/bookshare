@@ -59,19 +59,25 @@ public class SharingController {
             userRepository.save(user);
 
             // Find the user who has this book.
-            List<User> users = userRepository.findByBookList_Isbn13(isbn);
-            for (User userHasTheBook : users) {
-                List<Respond> responds = userHasTheBook.getResponds();
-                Respond res = new Respond();
-                res.setDemand(demand);
-                respondRepository.save(res);
-                responds.add(res);
-                userHasTheBook.setResponds(responds);
-                userRepository.save(userHasTheBook);
-            }
+            createResponds(isbn, demand);
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    private void createResponds(String isbn, Demand demand) {
+        List<User> users = userRepository.findByBookList_Isbn13(isbn);
+        int priority = 0;
+        for (User userHasTheBook : users) {
+            List<Respond> responds = userHasTheBook.getResponds();
+            Respond res = new Respond();
+            res.setDemand(demand);
+            res.setPriority(priority++);
+            respondRepository.save(res);
+            responds.add(res);
+            userHasTheBook.setResponds(responds);
+            userRepository.save(userHasTheBook);
         }
     }
 
