@@ -1,4 +1,4 @@
-package com.bookshare.controller;
+package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +18,7 @@ import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Test
 @SpringBootTest
 @AutoConfigureMockMvc
 public class LoginTests extends AbstractTestNGSpringContextTests {

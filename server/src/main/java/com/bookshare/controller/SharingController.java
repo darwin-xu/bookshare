@@ -42,6 +42,39 @@ public class SharingController {
     @Autowired
     private RespondRepository respondRepository;
 
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    public void test(HttpServletResponse response) {
+        Demand demand = new Demand();
+        demand.setIsbn("9787500648192");
+        demandRepository.save(demand);
+        List<Demand> ds = demandRepository.findByResponds_Id(null);
+        for (Demand d : ds) {
+            System.out.println(d.getId() + ":" + d.getIsbn());
+        }
+    }
+
+    @RequestMapping(value = "test1", method = RequestMethod.GET)
+    public void test1(HttpServletResponse response) {
+        // logger.debug("test1 - 1");
+        // List<Demand> demands = demandRepository.findByResponds_Id(null);
+        // for (Demand d : demands) {
+        // logger.debug("test1 - 2");
+        // List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
+        // int priority = 0;
+        // for (User userHasTheBook : users) {
+        // logger.debug("test1 - 3");
+        // List<Respond> responds = userHasTheBook.getResponds();
+        // Respond res = new Respond();
+        // res.setDemand(d);
+        // res.setPriority(priority++);
+        // respondRepository.save(res);
+        // responds.add(res);
+        // userHasTheBook.setResponds(responds);
+        // userRepository.save(userHasTheBook);
+        // }
+        // }
+    }
+
     @RequestMapping(value = "demands/book/{isbn}", method = RequestMethod.POST)
     public void postDemand(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
@@ -60,6 +93,7 @@ public class SharingController {
 
             // Find the user who has this book.
             createResponds(isbn, demand);
+
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

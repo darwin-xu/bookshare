@@ -2,11 +2,13 @@ package com.bookshare.domain;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -21,6 +23,10 @@ public class Demand implements Serializable {
 
     @Column(nullable = false)
     private String isbn;
+
+    @OneToMany(mappedBy = "demand")
+    @Column
+    private List<Respond> responds;
 
     @Column(nullable = false)
     private Boolean cancalled;

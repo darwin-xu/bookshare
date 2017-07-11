@@ -1,4 +1,4 @@
-package com.bookshare.controller;
+package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testng.AssertJUnit.assertEquals;
@@ -16,6 +16,7 @@ import com.bookshare.business.AuditManager;
 import com.bookshare.domain.Audit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Test
 @SpringBootTest
 @AutoConfigureMockMvc
 public class BookBackendTest extends AbstractTestNGSpringContextTests {

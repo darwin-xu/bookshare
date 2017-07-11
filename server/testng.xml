@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Suite">
-  <test name="Test">
+  <test name="Test" preserve-order="true">
     <classes>
-      <class name="com.bookshare.controller.RemoteServerTest"/>
-      <class name="com.bookshare.utility.StringUtilTest"/>
-      <class name="com.bookshare.controller.BookBackendTest"/>
-      <class name="com.bookshare.controller.UserShelfTest"/>
-      <class name="com.bookshare.controller.LoginTests"/>
-      <class name="com.bookshare.controller.SharingTest"/>
-      <class name="com.bookshare.controller.AppPortalTest"/>
+      <class name="com.bookshare.test.controller.RemoteServerTest"/>
+      <class name="com.bookshare.test.utility.StringUtilTest"/>
+      <class name="com.bookshare.test.controller.BookBackendTest"/>
+      <class name="com.bookshare.test.controller.UserShelfTest"/>
+      <class name="com.bookshare.test.controller.LoginTests"/>
+      <class name="com.bookshare.test.controller.SharingTest"/>
+      <class name="com.bookshare.test.controller.AppPortalTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

@@ -1,8 +1,11 @@
-package com.bookshare.utility;
+package com.bookshare.test.utility;
 
 import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
+import com.bookshare.utility.FileUtil;
+
+@Test
 public class StringUtilTest {
 
     @Test

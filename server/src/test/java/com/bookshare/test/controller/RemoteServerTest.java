@@ -1,10 +1,11 @@
-package com.bookshare.controller;
+package com.bookshare.test.controller;
 
 import org.springframework.web.client.RestTemplate;
 import org.testng.annotations.Test;
 
 import com.bookshare.domain.User;
 
+@Test
 public class RemoteServerTest {
 
     @Test

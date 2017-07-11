@@ -1,4 +1,4 @@
-package com.bookshare.controller;
+package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testng.AssertJUnit.assertEquals;
@@ -25,6 +25,7 @@ import com.bookshare.domain.User;
 import com.bookshare.utility.TestCaseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Test
 @SpringBootTest
 @AutoConfigureMockMvc
 public class SharingTest extends AbstractTestNGSpringContextTests {

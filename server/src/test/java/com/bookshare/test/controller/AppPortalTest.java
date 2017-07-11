@@ -1,4 +1,4 @@
-package com.bookshare.controller;
+package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testng.AssertJUnit.assertEquals;
@@ -16,6 +16,7 @@ import com.bookshare.dto.SectionDto;
 import com.bookshare.dto.SheetDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Test
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AppPortalTest extends AbstractTestNGSpringContextTests {
@@ -84,7 +85,7 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
 
-        String sections2[] = { "1. 法学", "2. 医学", "天文学书籍‎", "旅游指南‎", "軍事書籍‎ Military" };
+        String sections2[] = { "1. 法学", "2. 医学", "天文学书籍", "旅游指南", "軍事書籍 Military" };
         sheet.setSections(sections2);
         mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
