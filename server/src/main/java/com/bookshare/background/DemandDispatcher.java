@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.bookshare.dao.DemandRepository;
 import com.bookshare.dao.RespondRepository;
@@ -30,20 +31,26 @@ public class DemandDispatcher {
     @Autowired
     private RespondRepository respondRepository;
 
+    @Transactional
     @Scheduled(fixedRateString = "${bookshare.book.dispatch-interval:60}000")
     public void createRespondsForDemands() {
         logger.trace("createRespondsForDemands");
+        // Find all demands without the corresponding responds yet.
         List<Demand> demands = demandRepository.findByResponds_Id(null);
+        // Iterate over the demands.
         for (Demand d : demands) {
+            // Find all users who have this book.
             List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
             int priority = 0;
             for (User userHasTheBook : users) {
+                // Create a new respond for the user who has the book.
+                Respond rpd = new Respond();
+                rpd.setDemand(d);
+                rpd.setPriority(priority++);
+                respondRepository.save(rpd);
+                // Add it to the user's respond list.
                 List<Respond> responds = userHasTheBook.getResponds();
-                Respond res = new Respond();
-                res.setDemand(d);
-                res.setPriority(priority++);
-                respondRepository.save(res);
-                responds.add(res);
+                responds.add(rpd);
                 userHasTheBook.setResponds(responds);
                 userRepository.save(userHasTheBook);
             }

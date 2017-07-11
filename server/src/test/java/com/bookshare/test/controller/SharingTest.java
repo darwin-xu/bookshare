@@ -23,6 +23,7 @@ import com.bookshare.domain.Demand;
 import com.bookshare.domain.Respond;
 import com.bookshare.domain.User;
 import com.bookshare.utility.TestCaseUtil;
+import com.bookshare.utility.TimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Test
@@ -180,6 +181,9 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
 
     @Test(groups = "check", dependsOnGroups = "create")
     public void checkResponds() throws Exception {
+        // Let DemandDispatcher has time to run.
+        TimeUtil.delay(4);
+
         // Get responds for the first session.
         Respond respondsActual1[] = mapper.readValue(mockMvc
                 .perform(MockMvcRequestBuilders.get("/sharing/responds").cookie(cookie1)

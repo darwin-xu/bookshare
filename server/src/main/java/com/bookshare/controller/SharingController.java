@@ -83,35 +83,19 @@ public class SharingController {
             User user = session.getUser();
 
             // Create a demand for the user.
-            List<Demand> demands = user.getDemands();
             Demand demand = new Demand();
             demand.setIsbn(isbn);
             demandRepository.save(demand);
+
+            // Add the demand to the user.
+            List<Demand> demands = user.getDemands();
             demands.add(demand);
             user.setDemands(demands);
             userRepository.save(user);
 
-            // Find the user who has this book.
-            createResponds(isbn, demand);
-
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-    }
-
-    private void createResponds(String isbn, Demand demand) {
-        List<User> users = userRepository.findByBookList_Isbn13(isbn);
-        int priority = 0;
-        for (User userHasTheBook : users) {
-            List<Respond> responds = userHasTheBook.getResponds();
-            Respond res = new Respond();
-            res.setDemand(demand);
-            res.setPriority(priority++);
-            respondRepository.save(res);
-            responds.add(res);
-            userHasTheBook.setResponds(responds);
-            userRepository.save(userHasTheBook);
         }
     }
 
