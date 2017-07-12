@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +34,23 @@ public class User implements Serializable {
     @JsonIgnore
     private Long id;
 
+    @Column
     private String username;
 
+    @Column
     private String oldPassword;
 
+    @Column
     private String password;
 
+    @Column
     private String verifyCode;
 
     @JsonIgnore
+    @Column
     private long verifyCodeValidity;
 
+    @JsonIgnore
     @ManyToMany
     private List<Book> bookList;
 
@@ -55,8 +60,8 @@ public class User implements Serializable {
     private List<Demand> demands;
 
     @JsonIgnore
-    @OneToMany
-    @OrderBy("creationDate")
+    @OneToMany(mappedBy = "user")
+    @Column
     private List<Respond> responds;
 
     public String getUsername() {
@@ -67,20 +72,20 @@ public class User implements Serializable {
         this.username = username;
     }
 
+    public String getOldPassword() {
+        return oldPassword;
+    }
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword = oldPassword;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
     }
 
     public String getVerifyCode() {
@@ -99,28 +104,20 @@ public class User implements Serializable {
         return verifyCodeValidity;
     }
 
-    public String getOldPassword() {
-        return oldPassword;
+    public List<Book> getBookList() {
+        return bookList;
     }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
+    public void setBookList(List<Book> bookList) {
+        this.bookList = bookList;
     }
 
     public List<Demand> getDemands() {
         return demands;
     }
 
-    public void setDemands(List<Demand> demands) {
-        this.demands = demands;
-    }
-
     public List<Respond> getResponds() {
         return responds;
-    }
-
-    public void setResponds(List<Respond> responds) {
-        this.responds = responds;
     }
 
     @Override

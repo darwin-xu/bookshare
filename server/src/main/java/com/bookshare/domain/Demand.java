@@ -37,7 +37,6 @@ public class Demand implements Serializable {
     @Column(nullable = false)
     private Boolean cancalled;
 
-    @JsonIgnore
     @Column(nullable = false)
     private final Date creationDate;
 

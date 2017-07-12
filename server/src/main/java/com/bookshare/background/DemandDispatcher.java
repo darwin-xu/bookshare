@@ -46,13 +46,9 @@ public class DemandDispatcher {
                 // Create a new respond for the user who has the book.
                 Respond rpd = new Respond();
                 rpd.setDemand(d);
+                rpd.setUser(userHasTheBook);
                 rpd.setPriority(priority++);
                 respondRepository.save(rpd);
-                // Add it to the user's respond list.
-                List<Respond> responds = userHasTheBook.getResponds();
-                responds.add(rpd);
-                userHasTheBook.setResponds(responds);
-                userRepository.save(userHasTheBook);
             }
         }
 

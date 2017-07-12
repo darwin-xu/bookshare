@@ -23,6 +23,10 @@ public class Respond implements Serializable {
     @ManyToOne
     private Demand demand;
 
+    @JsonIgnore
+    @ManyToOne
+    private User user;
+
     @Column(nullable = false)
     private Boolean agreed;
 
@@ -43,7 +47,6 @@ public class Respond implements Serializable {
     @Column
     private String deliveryId;
 
-    @JsonIgnore
     @Column(nullable = false)
     private Date creationDate;
 
@@ -57,6 +60,14 @@ public class Respond implements Serializable {
 
     public void setDemand(Demand demand) {
         this.demand = demand;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Boolean getAgreed() {
@@ -102,6 +113,10 @@ public class Respond implements Serializable {
 
     public void setDeliveryId(String deliveryId) {
         this.deliveryId = deliveryId;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     public Respond() {
