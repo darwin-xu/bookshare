@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Respond implements Serializable {
@@ -26,7 +26,7 @@ public class Respond implements Serializable {
     @Column(nullable = false)
     private Boolean agreed;
 
-    @JsonIgnoreProperties
+    @JsonIgnore
     @Column
     private Date agreementDate;
 
@@ -36,14 +36,14 @@ public class Respond implements Serializable {
     @Column(nullable = false)
     private Boolean selected;
 
-    @JsonIgnoreProperties
+    @JsonIgnore
     @Column(nullable = false)
     private Integer priority;
 
     @Column
     private String deliveryId;
 
-    @JsonIgnoreProperties
+    @JsonIgnore
     @Column(nullable = false)
     private Date creationDate;
 
@@ -66,6 +66,10 @@ public class Respond implements Serializable {
     public void setAgreed(Boolean agreed) {
         this.agreed = agreed;
         agreementDate = new Date(new java.util.Date().getTime());
+    }
+
+    public Date getAgreementDate() {
+        return agreementDate;
     }
 
     public Boolean getCancalled() {

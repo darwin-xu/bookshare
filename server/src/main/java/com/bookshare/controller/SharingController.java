@@ -85,13 +85,8 @@ public class SharingController {
             // Create a demand for the user.
             Demand demand = new Demand();
             demand.setIsbn(isbn);
+            demand.setUser(user);
             demandRepository.save(demand);
-
-            // Add the demand to the user.
-            List<Demand> demands = user.getDemands();
-            demands.add(demand);
-            user.setDemands(demands);
-            userRepository.save(user);
 
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {

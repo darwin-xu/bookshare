@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -17,7 +17,7 @@ public class Book implements Serializable {
 
     @Id
     @GeneratedValue
-    @JsonIgnoreProperties
+    @JsonIgnore
     private Long id;
 
     @Column(nullable = false)

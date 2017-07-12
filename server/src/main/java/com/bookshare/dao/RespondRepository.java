@@ -2,6 +2,7 @@ package com.bookshare.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -12,5 +13,8 @@ public interface RespondRepository extends PagingAndSortingRepository<Respond, L
     Respond findById(@Param("id") Long id);
 
     List<Respond> findByDemand_Id(Long id);
+    
+    @Query("select r from Respond r where r.agreed = true")
+    List<Respond> findByAgreed();
 
 }

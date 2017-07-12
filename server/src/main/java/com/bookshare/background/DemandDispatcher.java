@@ -55,6 +55,13 @@ public class DemandDispatcher {
                 userRepository.save(userHasTheBook);
             }
         }
+
+        List<Respond> responds = respondRepository.findByAgreed();
+        logger.trace("================================");
+        for (Respond r : responds) {
+            logger.trace("ISBN:" + r.getDemand().getIsbn() + " " + r.getAgreed() + " " + r.getAgreementDate());
+        }
+        logger.trace("================================");
     }
 
 }

@@ -8,9 +8,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Demand implements Serializable {
@@ -24,6 +25,11 @@ public class Demand implements Serializable {
     @Column(nullable = false)
     private String isbn;
 
+    @JsonIgnore
+    @ManyToOne
+    private User user;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "demand")
     @Column
     private List<Respond> responds;
@@ -31,7 +37,7 @@ public class Demand implements Serializable {
     @Column(nullable = false)
     private Boolean cancalled;
 
-    @JsonIgnoreProperties
+    @JsonIgnore
     @Column(nullable = false)
     private final Date creationDate;
 
@@ -43,8 +49,24 @@ public class Demand implements Serializable {
         return isbn;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public void setIsbn(String isbn) {
         this.isbn = isbn;
+    }
+
+    public List<Respond> getResponds() {
+        return responds;
+    }
+
+    public void setResponds(List<Respond> responds) {
+        this.responds = responds;
     }
 
     public Boolean getCancalled() {

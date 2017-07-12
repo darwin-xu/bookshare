@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -48,10 +49,12 @@ public class User implements Serializable {
     @ManyToMany
     private List<Book> bookList;
 
-    @OneToMany
-    @OrderBy("creationDate")
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    @Column
     private List<Demand> demands;
 
+    @JsonIgnore
     @OneToMany
     @OrderBy("creationDate")
     private List<Respond> responds;
