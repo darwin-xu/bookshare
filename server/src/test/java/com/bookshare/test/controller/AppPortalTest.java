@@ -6,22 +6,16 @@ import static org.testng.AssertJUnit.assertEquals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testng.annotations.Test;
 
 import com.bookshare.dto.SectionDto;
 import com.bookshare.dto.SheetDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Test
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AppPortalTest extends AbstractTestNGSpringContextTests {
-
-    private ObjectMapper mapper = new ObjectMapper();
+public class AppPortalTest extends AbstractMockMvcTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,9 +24,8 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
     public void getSheet() throws Exception {
         String sheetName = "Library";
 
-        SheetDto sheetActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sheets/" + sheetName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), SheetDto.class);
+        SheetDto sheetActual = perform(mockMvc, Method.GET, "/app/sheets/" + sheetName, null, null, status().isOk(),
+                SheetDto.class);
 
         SheetDto sheetExpect = new SheetDto();
         sheetExpect.setName(sheetName);
@@ -51,8 +44,7 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
                 "History", "Guide" };
         sheet.setSections(sections);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(sheet))).andExpect(status().isConflict());
+        perform(mockMvc, Method.POST, "/app/sheets/" + sheetName, null, sheet, status().isConflict(), null);
     }
 
     @Test
@@ -65,12 +57,10 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
                 "History", "Guide" };
         sheet.setSections(sections);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
+        perform(mockMvc, Method.POST, "/app/sheets/" + sheetName, null, sheet, status().isOk(), null);
 
-        SheetDto sheetActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sheets/" + sheetName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), SheetDto.class);
+        SheetDto sheetActual = perform(mockMvc, Method.GET, "/app/sheets/" + sheetName, null, null, status().isOk(),
+                SheetDto.class);
         assertEquals(sheet, sheetActual);
     }
 
@@ -82,17 +72,14 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         sheet.setName(sheetName);
         String sections1[] = { "xxx" };
         sheet.setSections(sections1);
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
+        perform(mockMvc, Method.POST, "/app/sheets/" + sheetName, null, sheet, status().isOk(), null);
 
         String sections2[] = { "1. 法学", "2. 医学", "天文学书籍", "旅游指南", "軍事書籍 Military" };
         sheet.setSections(sections2);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(sheet))).andExpect(status().isOk());
+        perform(mockMvc, Method.PATCH, "/app/sheets/" + sheetName, null, sheet, status().isOk(), null);
 
-        SheetDto sheetActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sheets/" + sheetName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), SheetDto.class);
+        SheetDto sheetActual = perform(mockMvc, Method.GET, "/app/sheets/" + sheetName, null, sheet, status().isOk(),
+                SheetDto.class);
         assertEquals(sheet, sheetActual);
     }
 
@@ -104,17 +91,15 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         sheet.setName(sheetName);
         String sections1[] = { "xxx" };
         sheet.setSections(sections1);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sheets/" + sheetName).contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(sheet))).andExpect(status().isNotFound());
+        perform(mockMvc, Method.PATCH, "/app/sheets/" + sheetName, null, sheet, status().isNotFound(), null);
     }
 
     @Test
     public void getSection() throws Exception {
         String sectionName = "经典";
 
-        SectionDto sectionActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sections/" + sectionName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), SectionDto.class);
+        SectionDto sectionActual = perform(mockMvc, Method.GET, "/app/sections/" + sectionName, null, null,
+                status().isOk(), SectionDto.class);
 
         SectionDto sectionExpect = new SectionDto();
         sectionExpect.setName(sectionName);
@@ -133,9 +118,7 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         String isbns[] = { "1", "2", "3", "4", "5", "6" };
         section.setIsbns(isbns);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sections/" + sectionName)
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
-                .andExpect(status().isConflict());
+        perform(mockMvc, Method.POST, "/app/sections/" + sectionName, null, section, status().isConflict(), null);
     }
 
     @Test
@@ -147,13 +130,10 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         String isbns[] = { "5", "4", "3", "2", "1" };
         section.setIsbns(isbns);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/app/sections/" + sectionName)
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
-                .andExpect(status().isOk());
+        perform(mockMvc, Method.POST, "/app/sections/" + sectionName, null, section, status().isOk(), null);
 
-        SectionDto sectionActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sections/" + sectionName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), SectionDto.class);
+        SectionDto sectionActual = perform(mockMvc, Method.GET, "/app/sections/" + sectionName, null, null,
+                status().isOk(), SectionDto.class);
         assertEquals(section, sectionActual);
     }
 
@@ -165,13 +145,10 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         section.setName(sectionName);
         String isbns[] = { "11", "22", "33", "44", "55", "66" };
         section.setIsbns(isbns);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sections/" + sectionName)
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
-                .andExpect(status().isOk());
+        perform(mockMvc, Method.PATCH, "/app/sections/" + sectionName, null, section, status().isOk(), null);
 
-        SectionDto sectionActual = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/app/sections/" + sectionName).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), SectionDto.class);
+        SectionDto sectionActual = perform(mockMvc, Method.GET, "/app/sections/" + sectionName, null, section,
+                status().isOk(), SectionDto.class);
         assertEquals(section, sectionActual);
     }
 
@@ -183,9 +160,7 @@ public class AppPortalTest extends AbstractTestNGSpringContextTests {
         section.setName(sectionName);
         String isbns[] = { "11", "22", "33", "44", "55", "66" };
         section.setIsbns(isbns);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/app/sections/" + sectionName)
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(section)))
-                .andExpect(status().isNotFound());
+        perform(mockMvc, Method.PATCH, "/app/sections/" + sectionName, null, section, status().isNotFound(), null);
     }
 
 }
