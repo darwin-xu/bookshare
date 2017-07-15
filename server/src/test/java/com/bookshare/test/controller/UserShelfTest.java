@@ -1,6 +1,7 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testng.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,23 +12,15 @@ import javax.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 import com.bookshare.domain.User;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Test
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserShelfTest extends AbstractTestNGSpringContextTests {
-
-    private ObjectMapper mapper = new ObjectMapper();
+public class UserShelfTest extends AbstractMockMvcTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -39,63 +32,49 @@ public class UserShelfTest extends AbstractTestNGSpringContextTests {
         // Create a new user.
         user = new User();
         user.setUsername("userabc");
-        mockMvc.perform(MockMvcRequestBuilders.post("/users/getVerifyCode").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user))).andExpect(status().isCreated());
+        perform(mockMvc, Method.POST, "/users/getVerifyCode", null, user, status().isCreated(), null);
 
         // Use modify to set a password for user.
         user = new User();
         user.setUsername("userabc");
         user.setVerifyCode("112233");
         user.setPassword("newpassword123");
-        mockMvc.perform(MockMvcRequestBuilders.patch("/users/changePassword").contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(user))).andExpect(status().isOk());
+        perform(mockMvc, Method.PATCH, "/users/changePassword", null, user, status().isOk(), null);
 
         // Use username and password to login.
         user = new User();
         user.setUsername("userabc");
         user.setPassword("newpassword123");
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/sessions/login")
-                .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(user)))
-                .andExpect(status().isOk()).andReturn();
-
-        // Get the cookie from response.
-        Cookie cookie = result.getResponse().getCookies()[0];
+        Cookie cookie = perform(mockMvc, Method.POST, "/sessions/login", null, user, status().isOk(), Cookie.class);
 
         // Post the new books to this user's shelf.
         String isbns[] = { "9787514610307", "9787550284340", "9787550217454", "9787030324672", "9787569914061" };
         Set<String> booksISBN = new HashSet<String>(Arrays.asList(isbns));
         for (String isbn : booksISBN) {
-            mockMvc.perform(MockMvcRequestBuilders.post("/users/bookshelf/" + isbn).cookie(cookie))
-                    .andExpect(status().isOk());
+            perform(mockMvc, Method.POST, "/users/bookshelf/" + isbn, cookie, null, status().isOk(), null);
         }
 
         // Post again.
         for (String isbn : booksISBN) {
-            mockMvc.perform(MockMvcRequestBuilders.post("/users/bookshelf/" + isbn).cookie(cookie))
-                    .andExpect(status().isNotAcceptable());
+            perform(mockMvc, Method.POST, "/users/bookshelf/" + isbn, cookie, null, status().isNotAcceptable(), null);
         }
 
         // Get the books from user's shelf.
-        String booksISBNActual1[] = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/users/bookshelf").cookie(cookie)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+        String booksISBNActual1[] = perform(mockMvc, Method.GET, "/users/bookshelf/", cookie, null, status().isOk(),
+                String[].class);
 
-        AssertJUnit.assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual1)));
+        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual1)));
 
         // Remove some books from user's shelf.
         String toRemove = "9787550217454";
-        mockMvc.perform(MockMvcRequestBuilders.delete("/users/bookshelf/" + toRemove).cookie(cookie))
-                .andExpect(status().isOk());
+        perform(mockMvc, Method.DELETE, "/users/bookshelf/" + toRemove, cookie, null, status().isOk(), null);
 
         // Get the books from user's shelf.
-        String booksISBNActual2[] = mapper.readValue(mockMvc
-                .perform(MockMvcRequestBuilders.get("/users/bookshelf").cookie(cookie)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), String[].class);
+        String booksISBNActual2[] = perform(mockMvc, Method.GET, "/users/bookshelf/", cookie, null, status().isOk(),
+                String[].class);
 
         booksISBN.remove(toRemove);
-        AssertJUnit.assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual2)));
+        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual2)));
     }
 
 }
