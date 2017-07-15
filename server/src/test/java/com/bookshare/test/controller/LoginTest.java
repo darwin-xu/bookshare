@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Test
 @SpringBootTest
 @AutoConfigureMockMvc
-public class LoginTests extends AbstractTestNGSpringContextTests {
+public class LoginTest extends AbstractTestNGSpringContextTests {
 
     private ObjectMapper mapper = new ObjectMapper();
 

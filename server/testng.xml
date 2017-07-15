@@ -3,13 +3,13 @@
 <suite name="Suite">
   <test name="Test" preserve-order="true">
     <classes>
-      <class name="com.bookshare.test.controller.RemoteServerTest"/>
       <class name="com.bookshare.test.utility.StringUtilTest"/>
+      <class name="com.bookshare.test.controller.RemoteServerTest"/>
       <class name="com.bookshare.test.controller.BookBackendTest"/>
       <class name="com.bookshare.test.controller.UserShelfTest"/>
-      <class name="com.bookshare.test.controller.LoginTests"/>
-      <class name="com.bookshare.test.controller.SharingTest"/>
+      <class name="com.bookshare.test.controller.LoginTest"/>
       <class name="com.bookshare.test.controller.AppPortalTest"/>
+      <class name="com.bookshare.test.controller.DemandRespondTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

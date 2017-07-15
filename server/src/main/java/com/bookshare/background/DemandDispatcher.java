@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.bookshare.dao.DemandRepository;
 import com.bookshare.dao.RespondRepository;
@@ -18,6 +20,7 @@ import com.bookshare.domain.Respond;
 import com.bookshare.domain.User;
 
 @Component
+@RequestMapping("background")
 public class DemandDispatcher {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -32,32 +35,43 @@ public class DemandDispatcher {
     private RespondRepository respondRepository;
 
     @Transactional
-    @Scheduled(fixedRateString = "${bookshare.book.dispatch-interval:60}000")
+    @Scheduled(fixedDelayString = "${bookshare.book.dispatch-interval:60}000")
     public void createRespondsForDemands() {
-        logger.trace("createRespondsForDemands");
-        // Find all demands without the corresponding responds yet.
-        List<Demand> demands = demandRepository.findByResponds_Id(null);
-        // Iterate over the demands.
-        for (Demand d : demands) {
-            // Find all users who have this book.
-            List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
-            int priority = 0;
-            for (User userHasTheBook : users) {
-                // Create a new respond for the user who has the book.
-                Respond rpd = new Respond();
-                rpd.setDemand(d);
-                rpd.setUser(userHasTheBook);
-                rpd.setPriority(priority++);
-                respondRepository.save(rpd);
+        synchronized (this) {
+            logger.trace("createRespondsForDemands");
+            // Find all demands without the corresponding responds yet.
+            List<Demand> demands = demandRepository.findByResponds_Id(null);
+            // Iterate over the demands.
+            for (Demand d : demands) {
+                // Find all users who have this book.
+                List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
+                int priority = 0;
+                for (User userHasTheBook : users) {
+                    // Create a new respond for the user who has the book.
+                    Respond rpd = new Respond();
+                    rpd.setDemand(d);
+                    rpd.setUser(userHasTheBook);
+                    rpd.setPriority(priority++);
+                    respondRepository.save(rpd);
+                }
             }
-        }
 
-        List<Respond> responds = respondRepository.findByAgreed();
-        logger.trace("================================");
-        for (Respond r : responds) {
-            logger.trace("ISBN:" + r.getDemand().getIsbn() + " " + r.getAgreed() + " " + r.getAgreementDate());
+            List<Respond> responds = respondRepository.findByAgreed();
+            logger.trace("================================");
+            for (Respond r : responds) {
+                logger.trace("ISBN:" + r.getDemand().getIsbn() + " " + r.getAgreed() + " " + r.getAgreementDate());
+            }
+            logger.trace("================================");
+
+            notifyAll();
         }
-        logger.trace("================================");
+    }
+
+    @RequestMapping(value = "waitForDispatch", method = RequestMethod.GET)
+    public void waitForDispatch() throws InterruptedException {
+        synchronized (this) {
+            this.wait();
+        }
     }
 
 }
