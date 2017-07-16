@@ -1,6 +1,8 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 import static org.testng.AssertJUnit.assertEquals;
 
 import java.util.ArrayList;
@@ -32,14 +34,14 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     String books[] = { "9787500648192", "9787505417731", "9787508622545", "9787301150894", "9787516810941",
             "9787509766989", "9787553805900", "9787550278998", "9787508665450" };
 
-    // ----------- A -- B -- C -- D -- E -- F -- G -- H -- I
+    // Prepare --- A -- B -- C -- D -- E -- F -- G -- H -- I
     char v1[] = { '+', '+', '+', '+', '+', ' ', ' ', ' ', ' ' };
-    char w1[] = { '+', ' ', '+', ' ', '+', ' ', ' ', ' ', ' ' };
+    char w1[] = { '+', ' ', '+', ' ', '+', '+', ' ', ' ', ' ' };
     char x1[] = { ' ', ' ', ' ', ' ', '+', '+', '+', '+', '+' };
     char y1[] = { ' ', ' ', ' ', ' ', '+', ' ', '+', ' ', '+' };
     char z1[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
 
-    // ----------- A -- B -- C -- D -- E -- F -- G -- H -- I
+    // Demand ---- A -- B -- C -- D -- E -- F -- G -- H -- I
     char v2[] = { ' ', ' ', ' ', ' ', ' ', '*', '*', '*', ' ' };
     char w2[] = { ' ', ' ', ' ', ' ', ' ', ' ', '*', '*', '*' };
     char x2[] = { '*', '*', '*', ' ', ' ', ' ', ' ', ' ', ' ' };
@@ -48,19 +50,40 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     // --------------------------------------------------------
     // ----------- 1 -- 2 -- 3 -- 1 -- 2 -- 2 -- 3 -- 2 -- 1
 
-    // ----------- A -- B -- C -- D -- E -- F -- G -- H -- I
+    // Respond --- A -- B -- C -- D -- E -- F -- G -- H -- I
     char v3[] = { '1', '2', '3', '1', '2', ' ', ' ', ' ', ' ' };
-    char w3[] = { '1', ' ', '3', ' ', '2', ' ', ' ', ' ', ' ' };
+    char w3[] = { '1', ' ', '3', ' ', '2', '2', ' ', ' ', ' ' };
     char x3[] = { ' ', ' ', ' ', ' ', '2', '2', '3', '2', '1' };
     char y3[] = { ' ', ' ', ' ', ' ', '2', ' ', '3', ' ', '1' };
     char z3[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
 
-    // ----------- A -- B -- C -- D -- E -- F -- G -- H -- I
-    char v4[] = { ' ', ' ', ' ', ' ', ' ', ' ', '!', ' ', ' ' };
-    char w4[] = { ' ', ' ', ' ', ' ', ' ', ' ', '!', '!', '!' };
+    // Cancel ---- A -- B -- C -- D -- E -- F -- G -- H -- I
+    char v4[] = { ' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ' };
+    char w4[] = { ' ', ' ', ' ', ' ', ' ', ' ', 'x', 'x', 'x' };
     char x4[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
     char y4[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
-    char z4[] = { ' ', ' ', ' ', ' ', ' ', ' ', '!', ' ', ' ' };
+    char z4[] = { ' ', ' ', ' ', ' ', ' ', ' ', 'x', ' ', ' ' };
+
+    // Answer ---- A -- B -- C -- D -- E -- F -- G -- H -- I
+    char v5[] = { '!', '!', '!', ' ', '!', ' ', ' ', ' ', ' ' };
+    char w5[] = { '!', ' ', '!', ' ', '!', '!', ' ', ' ', ' ' };
+    char x5[] = { ' ', ' ', ' ', ' ', '!', '!', '!', ' ', ' ' };
+    char y5[] = { ' ', ' ', ' ', ' ', '!', ' ', ' ', ' ', ' ' };
+    char z5[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+
+    // Select ---- A -- B -- C -- D -- E -- F -- G -- H -- I
+    // Demand
+    char v6[] = { ' ', ' ', ' ', ' ', ' ', ' ', '1', ' ', ' ' };
+    char w6[] = { ' ', ' ', ' ', ' ', ' ', ' ', '1', ' ', ' ' };
+    char x6[] = { '1', '1', '2', ' ', ' ', '2', ' ', ' ', ' ' };
+    char y6[] = { ' ', ' ', '2', ' ', '2', '2', ' ', ' ', ' ' };
+    char z6[] = { ' ', '1', '2', ' ', '2', ' ', '1', ' ', ' ' };
+    // Respond
+    char v7[] = { '1', '1', '2', ' ', ' ', ' ', ' ', ' ', ' ' };
+    char w7[] = { '1', ' ', '2', ' ', '2', '2', ' ', ' ', ' ' };
+    char x7[] = { ' ', ' ', ' ', ' ', '2', '2', '1', ' ', ' ' };
+    char y7[] = { ' ', ' ', ' ', ' ', '2', ' ', ' ', ' ', ' ' };
+    char z7[] = { ' ', ' ', ' ', ' ', '2', ' ', ' ', ' ', ' ' };
 
     Map<String, Cookie> userCookieMap = new HashMap<String, Cookie>();
 
@@ -110,6 +133,38 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         changeDemandFor("x", x4);
         changeDemandFor("y", y4);
         changeDemandFor("z", z4);
+    }
+
+    @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = timeout_ms)
+    public void checkChangedDemand() throws Exception {
+        checkChangedDemand("v", v2, v4);
+        checkChangedDemand("w", w2, w4);
+        checkChangedDemand("x", x2, x4);
+        checkChangedDemand("y", y2, y4);
+        checkChangedDemand("z", z2, z4);
+    }
+
+    @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = timeout_ms)
+    public void answerRespond() throws Exception {
+
+    }
+
+    private void checkChangedDemand(String userName, char bookDataDemand[], char bookDataCancelled[]) throws Exception {
+        Cookie cookie = userCookieMap.get(userName);
+
+        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand[].class);
+
+        List<String> isbnsDemand = getBooks(bookDataDemand);
+        List<String> isbnsCancelled = getBooks(bookDataCancelled);
+
+        for (Demand d : demands) {
+            assertTrue(isbnsDemand.contains(d.getIsbn()));
+            if (isbnsCancelled.contains(d.getIsbn()))
+                assertTrue(d.getCancalled());
+            else
+                assertFalse(d.getCancalled());
+        }
     }
 
     private void changeDemandFor(String userName, char bookData[]) throws Exception {

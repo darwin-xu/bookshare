@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
 
-    protected final int timeout_ms = 10000;
+    protected final int timeout_ms = 20000;
 
     private ObjectMapper mapper = new ObjectMapper();
 
