@@ -14,14 +14,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
 
     protected final int timeout_ms = 10000;
-    
+
     private ObjectMapper mapper = new ObjectMapper();
 
     public enum Method {
         GET, PUT, POST, PATCH, DELETE
     };
 
-    public <T> T perform(MockMvc mvc, Method method, String url, Cookie cookie, Object obj, ResultMatcher result,
+    public <T> T perform(MockMvc mvc, Method method, String url, Cookie cookie, Object json, ResultMatcher result,
             Class<T> valueType) throws Exception {
         MockHttpServletRequestBuilder builder;
 
@@ -53,8 +53,8 @@ public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
         }
 
         // Add content in the request.
-        if (obj != null) {
-            builder = builder.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(obj));
+        if (json != null) {
+            builder = builder.contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(json));
         }
 
         if (valueType == null) {

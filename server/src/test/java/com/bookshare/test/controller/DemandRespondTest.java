@@ -56,11 +56,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     char z3[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
 
     // ----------- A -- B -- C -- D -- E -- F -- G -- H -- I
-    char v4[] = { '1', '2', '3', '1', '2', ' ', ' ', ' ', ' ' };
-    char w4[] = { '1', ' ', '3', ' ', '2', ' ', ' ', ' ', ' ' };
-    char x4[] = { ' ', ' ', ' ', ' ', '2', '2', '3', '2', '1' };
-    char y4[] = { ' ', ' ', ' ', ' ', '2', ' ', '3', ' ', '1' };
-    char z4[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+    char v4[] = { ' ', ' ', ' ', ' ', ' ', ' ', '!', ' ', ' ' };
+    char w4[] = { ' ', ' ', ' ', ' ', ' ', ' ', '!', '!', '!' };
+    char x4[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+    char y4[] = { ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ' };
+    char z4[] = { ' ', ' ', ' ', ' ', ' ', ' ', '!', ' ', ' ' };
 
     Map<String, Cookie> userCookieMap = new HashMap<String, Cookie>();
 
@@ -103,13 +103,37 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         checkRespondFor("z", z3);
     }
 
+    @Test(groups = "change", dependsOnGroups = "check", timeOut = timeout_ms)
+    public void changeDemand() throws Exception {
+        changeDemandFor("v", v4);
+        changeDemandFor("w", w4);
+        changeDemandFor("x", x4);
+        changeDemandFor("y", y4);
+        changeDemandFor("z", z4);
+    }
+
+    private void changeDemandFor(String userName, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(userName);
+
+        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand[].class);
+
+        List<String> isbns = getBooks(bookData);
+        for (Demand d : demands) {
+            if (isbns.contains(d.getIsbn())) {
+                d.setCancalled(true);
+                perform(mockMvc, Method.PUT, "/sharing/demands/" + d.getId(), cookie, d, status().isOk(), null);
+            }
+        }
+    }
+
     private void checkRespondFor(String userName, char bookData[]) throws Exception {
         Cookie cookie = userCookieMap.get(userName);
 
         Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
                 Respond[].class);
 
-        assertEquals(TestCaseUtil.sortedStringList(getIsbns(bookData)),
+        assertEquals(TestCaseUtil.sortedStringList(getBooks(bookData)),
                 TestCaseUtil.sortedStringList(getIsbns(responds)));
     }
 
@@ -119,21 +143,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
                 Demand[].class);
 
-        assertEquals(TestCaseUtil.sortedStringList(getIsbns(bookData)),
+        assertEquals(TestCaseUtil.sortedStringList(getBooks(bookData)),
                 TestCaseUtil.sortedStringList(getIsbns(demands)));
-    }
-
-    private List<String> getIsbns(char bookData[]) {
-        List<String> isbns = new ArrayList<String>();
-        for (int i = 0; i < bookData.length; ++i) {
-            String isbn = getBook(i, bookData);
-            if (isbn != null) {
-                int n = getBookCount(i, bookData);
-                for (int c = 0; c < n; ++c)
-                    isbns.add(isbn);
-            }
-        }
-        return isbns;
     }
 
     private List<String> getIsbns(Respond responds[]) {
@@ -157,10 +168,9 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         Cookie cookie = createAndLogin(userName);
         userCookieMap.put(userName, cookie);
 
-        for (int i = 0; i < bookData.length; ++i) {
-            String isbn = getBook(i, bookData);
-            if (isbn != null)
-                postUsersBookshelf(isbn, cookie);
+        List<String> isbns = getBooks(bookData);
+        for (String isbn : isbns) {
+            postUsersBookshelf(isbn, cookie);
         }
     }
 
@@ -178,29 +188,23 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         return perform(mockMvc, Method.POST, "/sessions/login", null, user, status().isOk(), Cookie.class);
     }
 
-    private int getBookCount(int i, char bookData[]) {
-        if ('0' < bookData[i] && bookData[i] < '9')
-            return (int) (bookData[i] - '0');
-        else if (bookData[i] != ' ')
-            return 1;
-        else
-            return 0;
-    }
-
-    private String getBook(int i, char bookData[]) {
-        if (bookData[i] != ' ')
-            return books[i];
-        else
-            return null;
+    private List<String> getBooks(char bookData[]) {
+        List<String> isbns = new ArrayList<String>();
+        for (int i = 0; i < bookData.length; ++i)
+            if ('0' < bookData[i] && bookData[i] < '9')
+                for (int c = 0; c < bookData[i] - '0'; ++c)
+                    isbns.add(books[i]);
+            else if (bookData[i] != ' ')
+                isbns.add(books[i]);
+        return isbns;
     }
 
     private void issueDemandFor(String userName, char bookData[]) throws Exception {
         Cookie cookie = userCookieMap.get(userName);
 
-        for (int i = 0; i < bookData.length; ++i) {
-            String isbn = getBook(i, bookData);
-            if (isbn != null)
-                postSharingDemandsBook(isbn, cookie);
+        List<String> isbns = getBooks(bookData);
+        for (String isbn : isbns) {
+            postSharingDemandsBook(isbn, cookie);
         }
     }
 

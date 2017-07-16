@@ -38,7 +38,7 @@ public class DemandDispatcher {
     @Scheduled(fixedDelayString = "${bookshare.book.dispatch-interval-sec:60}000")
     public void createRespondsForDemands() {
         synchronized (this) {
-            logger.trace("createRespondsForDemands");
+            logger.trace("=== Begin ===");
             // Find all demands without the corresponding responds yet.
             List<Demand> demands = demandRepository.findByResponds_Id(null);
             // Iterate over the demands.
@@ -57,11 +57,10 @@ public class DemandDispatcher {
             }
 
             List<Respond> responds = respondRepository.findByAgreed();
-            logger.trace("================================");
             for (Respond r : responds) {
                 logger.trace("ISBN:" + r.getDemand().getIsbn() + " " + r.getAgreed() + " " + r.getAgreementDate());
             }
-            logger.trace("================================");
+            logger.trace("=== End ====");
 
             notifyAll();
         }
