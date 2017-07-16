@@ -35,7 +35,7 @@ public class DemandDispatcher {
     private RespondRepository respondRepository;
 
     @Transactional
-    @Scheduled(fixedDelayString = "${bookshare.book.dispatch-interval:60}000")
+    @Scheduled(fixedDelayString = "${bookshare.book.dispatch-interval-sec:60}000")
     public void createRespondsForDemands() {
         synchronized (this) {
             logger.trace("createRespondsForDemands");

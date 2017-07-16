@@ -64,7 +64,7 @@ public class DemandRespondTest extends AbstractMockMvcTest {
 
     Map<String, Cookie> userCookieMap = new HashMap<String, Cookie>();
 
-    @Test(groups = "prepare")
+    @Test(groups = "prepare", timeOut = timeout_ms)
     public void prepareUserShelf() throws Exception {
         prepareUserShelfFor("v", v1);
         prepareUserShelfFor("w", w1);
@@ -73,7 +73,7 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         prepareUserShelfFor("z", z1);
     }
 
-    @Test(groups = "issue", dependsOnGroups = "prepare")
+    @Test(groups = "issue", dependsOnGroups = "prepare", timeOut = timeout_ms)
     public void issueDemand() throws Exception {
         issueDemandFor("v", v2);
         issueDemandFor("w", w2);
@@ -82,7 +82,7 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         issueDemandFor("z", z2);
     }
 
-    @Test(groups = "check", dependsOnGroups = "issue")
+    @Test(groups = "check", dependsOnGroups = "issue", timeOut = timeout_ms)
     public void checkDemand() throws Exception {
         checkDemandFor("v", v2);
         checkDemandFor("w", w2);
@@ -91,7 +91,7 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         checkDemandFor("z", z2);
     }
 
-    @Test(groups = "check", dependsOnGroups = "issue")
+    @Test(groups = "check", dependsOnGroups = "issue", timeOut = timeout_ms)
     public void checkRespond() throws Exception {
         // Make sure the dispatcher
         perform(mockMvc, Method.GET, "/background/waitForDispatch", null, null, status().isOk(), null);

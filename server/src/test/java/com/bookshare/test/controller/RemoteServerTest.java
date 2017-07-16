@@ -6,9 +6,9 @@ import org.testng.annotations.Test;
 import com.bookshare.domain.User;
 
 @Test
-public class RemoteServerTest {
+public class RemoteServerTest extends AbstractMockMvcTest {
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void userWithName() {
         User user = new User();
         user.setUsername("TestNo11");

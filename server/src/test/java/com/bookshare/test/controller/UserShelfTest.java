@@ -25,7 +25,7 @@ public class UserShelfTest extends AbstractMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void usersBooksheef() throws Exception {
         User user;
 

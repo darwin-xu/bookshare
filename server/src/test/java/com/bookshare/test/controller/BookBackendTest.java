@@ -20,7 +20,7 @@ public class BookBackendTest extends AbstractMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void getBook() throws Exception {
         // 1. Get the ISBNQueryCount for the first time.
         Audit audit = perform(mockMvc, Method.GET, "/audit/" + AuditManager.isbnQueryCount, null, null, status().isOk(),

@@ -20,8 +20,8 @@ public class Tryouts extends AbstractTestNGSpringContextTests {
 
     @Test
     public void tryDemand() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/test")).andExpect(status().isOk());
-        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/test1")).andExpect(status().isOk());
+//        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/test")).andExpect(status().isOk());
+//        mockMvc.perform(MockMvcRequestBuilders.get("/sharing/test1")).andExpect(status().isOk());
     }
 
 }

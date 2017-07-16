@@ -21,7 +21,7 @@ public class LoginTest extends AbstractMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void userWithEmptyName() throws Exception {
         User user = new User();
 
@@ -29,7 +29,7 @@ public class LoginTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/users/getVerifyCode", null, user, status().isBadRequest(), null);
     }
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void userWithName() throws Exception {
         User user;
 
@@ -67,7 +67,7 @@ public class LoginTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/sessions/logout", cookie, null, status().isOk(), null);
     }
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void userWithWrongVerifyCode() throws Exception {
         User user;
 
@@ -84,7 +84,7 @@ public class LoginTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.PATCH, "/users/changePassword", null, user, status().isForbidden(), null);
     }
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void userWithWrongPassword() throws Exception {
         User user;
 
@@ -107,7 +107,7 @@ public class LoginTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/sessions/login", null, user, status().isForbidden(), null);
     }
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void userWithWrongOldPassword() throws Exception {
         // Create a user for test.
         User user;
@@ -138,7 +138,7 @@ public class LoginTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.PATCH, "/users/changePassword", null, user, status().isForbidden(), null);
     }
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void logoutWithWrongCookie() throws Exception {
         // Create a nonexistent cookie
         Cookie cookie = new Cookie("session", new Session().getSessionID());
@@ -147,7 +147,7 @@ public class LoginTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/sessions/logout", cookie, null, status().isUnauthorized(), null);
     }
 
-    @Test
+    @Test(timeOut = timeout_ms)
     public void checkSession() throws Exception {
         // Check session without cookie.
         perform(mockMvc, Method.POST, "/sessions/check", null, null, status().is4xxClientError(), null);
