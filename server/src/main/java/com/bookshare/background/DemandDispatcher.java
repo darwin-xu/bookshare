@@ -29,8 +29,8 @@ public class DemandDispatcher {
     @Value("${bookshare.book.dispatch.demand-expire-min}")
     private int demandExpireMin;
 
-    @Value("${bookshare.book.dispatch.respond-first-expire-min}")
-    private int respondFirstExpireMin;
+    @Value("${bookshare.book.dispatch.first-respond-trigger-min}")
+    private int firstRespondTriggerMin;
 
     @Autowired
     private UserRepository userRepository;
@@ -46,6 +46,7 @@ public class DemandDispatcher {
     public void createRespondsForDemands() {
         synchronized (this) {
             logger.trace("=== Begin ===");
+            logger.trace("=======" + demandExpireMin + "===" + firstRespondTriggerMin);
             // Find all demands without the corresponding responds yet.
             List<Demand> demands = demandRepository.findByResponds_Id(null);
             // Iterate over the demands.

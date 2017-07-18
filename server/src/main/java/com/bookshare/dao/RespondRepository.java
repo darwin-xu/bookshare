@@ -16,11 +16,11 @@ public interface RespondRepository extends PagingAndSortingRepository<Respond, L
 
     @Query("select r from Respond r where r.agreed = true order by r.demand.isbn, r.priority")
     List<Respond> findByAgreed();
-    
+
     @Query("select r.demand.isbn from Respond r where r.agreed = true group by r.demand.isbn")
     List<String> findAllAgreedIsbns();
 
-//    @Query("select r from Respond r where ")
-//    List<Respond> findByD();
+    @Query("select r from Respond r where r.agreed = true")
+    List<String> findUnresovedBook();
 
 }

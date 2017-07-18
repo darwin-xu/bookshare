@@ -23,10 +23,6 @@ public class BookshareApplication extends WebMvcConfigurerAdapter {
     @Value("${bookshare.book.root-cover-path}")
     private String rootCoverPath;
 
-    public void setRootCoverPath(String rootCoverPath) {
-        this.rootCoverPath = rootCoverPath;
-    }
-
     public static void main(String[] args) {
         Map<String, String> env = System.getenv();
         logger.debug("System environment list:");

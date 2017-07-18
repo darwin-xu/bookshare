@@ -47,9 +47,6 @@ public class Respond implements Serializable {
     @Column
     private String deliveryId;
 
-    @Column(nullable = false)
-    private Date creationDate;
-
     public Long getId() {
         return id;
     }
@@ -115,16 +112,11 @@ public class Respond implements Serializable {
         this.deliveryId = deliveryId;
     }
 
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
     public Respond() {
         agreed = false;
         cancalled = false;
         selected = false;
         priority = 0;
-        creationDate = new Date(new java.util.Date().getTime());
     }
 
     @Override
