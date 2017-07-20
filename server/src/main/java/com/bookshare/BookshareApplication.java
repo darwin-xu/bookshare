@@ -6,21 +6,21 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@ConfigurationProperties("bookshare.book")
 @SpringBootApplication
 @EnableScheduling
 public class BookshareApplication extends WebMvcConfigurerAdapter {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Value("${bookshare.book.root-cover-path}")
     private String rootCoverPath;
 
     public void setRootCoverPath(String rootCoverPath) {

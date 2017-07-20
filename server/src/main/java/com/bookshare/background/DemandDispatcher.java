@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,12 @@ public class DemandDispatcher {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Value("${bookshare.book.dispatch.demand-expire-min}")
+    private int demandExpireMin;
+
+    @Value("${bookshare.book.dispatch.respond-first-expire-min}")
+    private int respondFirstExpireMin;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -35,7 +42,7 @@ public class DemandDispatcher {
     private RespondRepository respondRepository;
 
     @Transactional
-    @Scheduled(fixedDelayString = "${bookshare.book.dispatch-interval-sec:60}000")
+    @Scheduled(fixedDelayString = "${bookshare.book.dispatch.interval-sec:60}000")
     public void createRespondsForDemands() {
         synchronized (this) {
             logger.trace("=== Begin ===");
@@ -56,9 +63,15 @@ public class DemandDispatcher {
                 }
             }
 
+            List<String> isbns = respondRepository.findAllAgreedIsbns();
+            for (String isbn : isbns) {
+                logger.trace("FFF: " + isbn);
+            }
+
             List<Respond> responds = respondRepository.findByAgreed();
             for (Respond r : responds) {
-                logger.trace("ISBN:" + r.getDemand().getIsbn() + " " + r.getAgreed() + " " + r.getAgreementDate());
+                logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
+                        + r.getUser().getUsername() + " has it. " + r.getPriority());
             }
             logger.trace("=== End ====");
 

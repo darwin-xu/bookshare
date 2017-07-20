@@ -125,4 +125,18 @@ public class SharingController {
         }
     }
 
+    @RequestMapping(value = "test", method = RequestMethod.GET)
+    public void test() {
+        System.out.println("QQQQQ: ===================================================");
+        List<Demand> ds = demandRepository.findByR();
+        for (Demand d : ds) {
+            System.out.println("QQQQQ: " + d.getIsbn() + " " + d.getUser().getUsername());
+            List<Respond> rs = d.getResponds();
+            for (Respond r : rs) {
+                System.out.println("QQQQQ: " + r.getId() + " " + r.getAgreed());
+            }
+        }
+        System.out.println("QQQQQ: ===================================================");
+    }
+
 }

@@ -14,7 +14,7 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,23 +25,16 @@ import com.bookshare.dto.JuheBookDto;
 import com.bookshare.utility.RandomUtil;
 import com.bookshare.utility.StringUtil;
 
-@ConfigurationProperties("bookshare.book")
 @Service
 public class BookBackend {
 
     private final static Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    @Value("${bookshare.book.backend-url}")
     private String backendUrl;
 
+    @Value("${bookshare.book.root-cover-path}")
     private String rootCoverPath;
-
-    public void setBackendUrl(String backendUrl) {
-        this.backendUrl = backendUrl;
-    }
-
-    public void setRootCoverPath(String rootCoverPath) {
-        this.rootCoverPath = rootCoverPath;
-    }
 
     @Autowired
     private BookRepository bookRepository;

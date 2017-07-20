@@ -13,8 +13,14 @@ public interface RespondRepository extends PagingAndSortingRepository<Respond, L
     Respond findById(@Param("id") Long id);
 
     List<Respond> findByDemand_Id(Long id);
-    
-    @Query("select r from Respond r where r.agreed = true")
+
+    @Query("select r from Respond r where r.agreed = true order by r.demand.isbn, r.priority")
     List<Respond> findByAgreed();
+    
+    @Query("select r.demand.isbn from Respond r where r.agreed = true group by r.demand.isbn")
+    List<String> findAllAgreedIsbns();
+
+//    @Query("select r from Respond r where ")
+//    List<Respond> findByD();
 
 }

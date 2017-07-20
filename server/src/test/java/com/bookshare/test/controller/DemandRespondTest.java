@@ -73,11 +73,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
 
     // Select ---- A -- B -- C -- D -- E -- F -- G -- H -- I
     // Demand
-    char v6[] = { ' ', ' ', ' ', ' ', ' ', ' ', '1', ' ', ' ' };
+    char v6[] = { ' ', ' ', ' ', ' ', ' ', '2', '1', ' ', ' ' };
     char w6[] = { ' ', ' ', ' ', ' ', ' ', ' ', '1', ' ', ' ' };
-    char x6[] = { '1', '1', '2', ' ', ' ', '2', ' ', ' ', ' ' };
-    char y6[] = { ' ', ' ', '2', ' ', '2', '2', ' ', ' ', ' ' };
-    char z6[] = { ' ', '1', '2', ' ', '2', ' ', '1', ' ', ' ' };
+    char x6[] = { '1', '1', '2', ' ', ' ', ' ', ' ', ' ', ' ' };
+    char y6[] = { ' ', ' ', '2', ' ', '2', ' ', ' ', ' ', ' ' };
+    char z6[] = { ' ', '1', '2', ' ', '2', '2', '1', ' ', ' ' };
     // Respond
     char v7[] = { '1', '1', '2', ' ', ' ', ' ', ' ', ' ', ' ' };
     char w7[] = { '1', ' ', '2', ' ', '2', '2', ' ', ' ', ' ' };
@@ -146,7 +146,27 @@ public class DemandRespondTest extends AbstractMockMvcTest {
 
     @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = timeout_ms)
     public void answerRespond() throws Exception {
+        answerRespondFor("v", v5);
+        answerRespondFor("w", w5);
+        answerRespondFor("x", x5);
+        answerRespondFor("y", y5);
+        answerRespondFor("z", z5);
+        perform(mockMvc, Method.GET, "/sharing/test", null, null, status().isOk(), null);
+    }
 
+    private void answerRespondFor(String userName, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(userName);
+
+        Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
+                Respond[].class);
+
+        List<String> isbns = getBooks(bookData);
+        for (Respond r : responds) {
+            if (isbns.contains(r.getDemand().getIsbn())) {
+                r.setAgreed(true);
+                perform(mockMvc, Method.PUT, "/sharing/responds/" + r.getId(), cookie, r, status().isOk(), null);
+            }
+        }
     }
 
     private void checkChangedDemand(String userName, char bookDataDemand[], char bookDataCancelled[]) throws Exception {
