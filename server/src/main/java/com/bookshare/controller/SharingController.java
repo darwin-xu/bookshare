@@ -136,6 +136,18 @@ public class SharingController {
                 System.out.println("QQQQQ: " + r.getId() + " " + r.getAgreed());
             }
         }
+        {
+            System.out.println("QQQQQ: +++++++++++++++++++");
+            List<Demand> ds1 = demandRepository.findByR1();
+            for (Demand d : ds1) {
+                System.out.println("QQQQQ: " + d.getIsbn() + " " + d.getUser().getUsername());
+                List<Respond> rs = d.getResponds();
+                for (Respond r : rs) {
+                    System.out.println("QQQQQ: " + r.getId() + " " + r.getAgreed());
+                }
+            }
+            System.out.println("QQQQQ: +++++++++++++++++++");
+        }
         System.out.println("QQQQQ: ===================================================");
     }
 

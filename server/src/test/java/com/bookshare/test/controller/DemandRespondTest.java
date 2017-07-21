@@ -22,6 +22,7 @@ import com.bookshare.domain.Demand;
 import com.bookshare.domain.Respond;
 import com.bookshare.domain.User;
 import com.bookshare.utility.TestCaseUtil;
+import com.bookshare.utility.TimeUtil;
 
 @Test
 @SpringBootTest
@@ -152,6 +153,7 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         answerRespondFor("y", y5);
         answerRespondFor("z", z5);
         perform(mockMvc, Method.GET, "/sharing/test", null, null, status().isOk(), null);
+        TimeUtil.delay(5);
     }
 
     private void answerRespondFor(String userName, char bookData[]) throws Exception {
