@@ -156,8 +156,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         TimeUtil.delay(5);
     }
 
-    private void answerRespondFor(String userName, char bookData[]) throws Exception {
-        Cookie cookie = userCookieMap.get(userName);
+    private void answerRespondFor(String username, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
 
         Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
                 Respond[].class);
@@ -171,8 +171,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         }
     }
 
-    private void checkChangedDemand(String userName, char bookDataDemand[], char bookDataCancelled[]) throws Exception {
-        Cookie cookie = userCookieMap.get(userName);
+    private void checkChangedDemand(String username, char bookDataDemand[], char bookDataCancelled[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
 
         Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
                 Demand[].class);
@@ -189,8 +189,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         }
     }
 
-    private void changeDemandFor(String userName, char bookData[]) throws Exception {
-        Cookie cookie = userCookieMap.get(userName);
+    private void changeDemandFor(String username, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
 
         Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
                 Demand[].class);
@@ -204,8 +204,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         }
     }
 
-    private void checkRespondFor(String userName, char bookData[]) throws Exception {
-        Cookie cookie = userCookieMap.get(userName);
+    private void checkRespondFor(String username, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
 
         Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
                 Respond[].class);
@@ -214,8 +214,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
                 TestCaseUtil.sortedStringList(getIsbns(responds)));
     }
 
-    private void checkDemandFor(String userName, char bookData[]) throws Exception {
-        Cookie cookie = userCookieMap.get(userName);
+    private void checkDemandFor(String username, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
 
         Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
                 Demand[].class);
@@ -240,10 +240,10 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         return isbns;
     }
 
-    private void prepareUserShelfFor(String userName, char bookData[]) throws Exception {
+    private void prepareUserShelfFor(String username, char bookData[]) throws Exception {
         // Create a user
-        Cookie cookie = createAndLogin(userName);
-        userCookieMap.put(userName, cookie);
+        Cookie cookie = createAndLogin(username);
+        userCookieMap.put(username, cookie);
 
         List<String> isbns = getBooks(bookData);
         for (String isbn : isbns) {
@@ -255,9 +255,9 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/users/bookshelf/" + isbn, cookie, null, status().isOk(), null);
     }
 
-    private Cookie createAndLogin(String userName) throws Exception {
+    private Cookie createAndLogin(String username) throws Exception {
         User user = new User();
-        user.setUsername(userName);
+        user.setUsername(username);
         perform(mockMvc, Method.POST, "/users/getVerifyCode", null, user, status().isCreated(), null);
         user.setVerifyCode("112233");
         user.setPassword("123");
@@ -276,8 +276,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         return isbns;
     }
 
-    private void issueDemandFor(String userName, char bookData[]) throws Exception {
-        Cookie cookie = userCookieMap.get(userName);
+    private void issueDemandFor(String username, char bookData[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
 
         List<String> isbns = getBooks(bookData);
         for (String isbn : isbns) {

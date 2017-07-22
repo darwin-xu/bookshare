@@ -2,6 +2,7 @@ package com.bookshare.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -17,8 +18,11 @@ public interface DemandRepository extends PagingAndSortingRepository<Demand, Lon
     @Query("select d from Demand as d inner join d.responds as r where r.agreed = 'true'")
     List<Demand> findByR();
 
-    //@Query("select d from Demand as d inner join d.responds as r where not exists (from Respond as r where r.agreed = 'true')")
-    @Query("select d from Demand d where not exists (from d inner join d.responds r where r.agreed = 'true')")
+    @Query("select d from Demand as d inner join d.responds as r where not exists (from Respond as r where r.agreed = 'true')")
+    //@Query("select d from Demand d where not exists (from d inner join d.responds r where r.agreed = 'true')")
     List<Demand> findByR1();
     
+    @Modifying
+    void invalidRespondsFor(Long id);
+
 }

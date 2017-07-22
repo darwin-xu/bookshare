@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,11 +29,15 @@ public class Demand implements Serializable {
     @JsonIgnore
     @ManyToOne
     private User user;
+    
+    @JsonIgnore
+    @OneToOne
+    private Respond selectedRespond;
 
     @JsonIgnore
     @OneToMany(mappedBy = "demand")
     @Column
-    private List<Respond> responds;
+    private List<Respond> pendingResponds;
 
     @Column(nullable = false)
     private Boolean cancalled;
@@ -61,11 +66,11 @@ public class Demand implements Serializable {
     }
 
     public List<Respond> getResponds() {
-        return responds;
+        return pendingResponds;
     }
 
     public void setResponds(List<Respond> responds) {
-        this.responds = responds;
+        this.pendingResponds = responds;
     }
 
     public Boolean getCancalled() {

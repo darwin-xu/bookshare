@@ -64,16 +64,26 @@ public class DemandDispatcher {
                 }
             }
 
-            List<String> isbns = respondRepository.findAllAgreedIsbns();
-            for (String isbn : isbns) {
-                logger.trace("FFF: " + isbn);
-            }
-
             List<Respond> responds = respondRepository.findByAgreed();
             for (Respond r : responds) {
                 logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
-                        + r.getUser().getUsername() + " has it. " + r.getPriority());
+                        + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
             }
+
+            List<String> isbns = respondRepository.findAllAgreedIsbns();
+            for (String isbn : isbns) {
+                logger.trace("FFF: " + isbn);
+                //respondRepository.selectRespond(isbn);
+            }
+
+            logger.trace("EEEAAA:");
+
+            List<Respond> responds1 = respondRepository.findByAgreed();
+            for (Respond r : responds1) {
+                logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
+                        + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
+            }
+
             logger.trace("=== End ====");
 
             notifyAll();
