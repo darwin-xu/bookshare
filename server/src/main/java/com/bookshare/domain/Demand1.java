@@ -8,14 +8,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-public class Demand implements Serializable {
+public class Demand1 implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -23,67 +20,40 @@ public class Demand implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column
+    private Date createDate;
+
     @Column(nullable = false)
     private String isbn;
 
-    @JsonIgnore
-    @ManyToOne
-    private User user;
-    
-    @JsonIgnore
-    @OneToOne
-    private Respond selectedRespond;
-
-    @JsonIgnore
     @OneToMany(mappedBy = "demand")
-    @Column
-    private List<Respond> responds;
+    private List<Respond1> responds;
 
-    @Column(nullable = false)
-    private Boolean cancalled;
-
-    @Column(nullable = false)
-    private final Date creationDate;
-
-    public Long getId() {
-        return id;
-    }
+    @OneToOne
+    private Bookshelf bookshelf;
 
     public String getIsbn() {
         return isbn;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
-    public List<Respond> getResponds() {
+    public List<Respond1> getResponds() {
         return responds;
     }
 
-    public void setResponds(List<Respond> responds) {
+    public void setResponds(List<Respond1> responds) {
         this.responds = responds;
     }
 
-    public Boolean getCancalled() {
-        return cancalled;
+    public Bookshelf getBookshelf() {
+        return bookshelf;
     }
 
-    public void setCancalled(Boolean cancalled) {
-        this.cancalled = cancalled;
-    }
-
-    public Demand() {
-        cancalled = false;
-        creationDate = new Date(new java.util.Date().getTime());
+    public void setBookshelf(Bookshelf bookshelf) {
+        this.bookshelf = bookshelf;
     }
 
     @Override
@@ -102,13 +72,29 @@ public class Demand implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Demand other = (Demand) obj;
+        Demand1 other = (Demand1) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }

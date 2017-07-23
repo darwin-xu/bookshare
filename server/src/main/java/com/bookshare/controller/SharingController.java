@@ -1,6 +1,9 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bookshare.dao.Demand1Repository;
 import com.bookshare.dao.DemandRepository;
 import com.bookshare.dao.RespondRepository;
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Demand;
+import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
@@ -41,6 +47,9 @@ public class SharingController {
 
     @Autowired
     private RespondRepository respondRepository;
+
+    @Autowired
+    private Demand1Repository demand1Repository;
 
     @RequestMapping(value = "demands/book/{isbn}", method = RequestMethod.POST)
     public void postDemand(@CookieValue("session") String sessionID, @PathVariable String isbn,
@@ -125,30 +134,60 @@ public class SharingController {
         }
     }
 
+    @Transactional
     @RequestMapping(value = "test", method = RequestMethod.GET)
     public void test() {
-        System.out.println("QQQQQ: ===================================================");
-        List<Demand> ds = demandRepository.findByR();
-        for (Demand d : ds) {
-            System.out.println("QQQQQ: " + d.getIsbn() + " " + d.getUser().getUsername());
-            List<Respond> rs = d.getResponds();
-            for (Respond r : rs) {
-                System.out.println("QQQQQ: " + r.getId() + " " + r.getAgreed());
-            }
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Calendar c = Calendar.getInstance();
+        {
+            Demand1 d = new Demand1();
+            d.setIsbn("123");
+            d.setCreateDate(new Date(c.getTimeInMillis()));
+            demand1Repository.save(d);
+
+            Demand1 d1 = new Demand1();
+            d1.setIsbn("122");
+            d1.setCreateDate(new Date(c.getTimeInMillis() - 180001));
+            demand1Repository.save(d1);
+
+            Demand1 d2 = new Demand1();
+            d2.setIsbn("121");
+            d2.setCreateDate(new Date(c.getTimeInMillis() - 179999));
+            demand1Repository.save(d2);
         }
         {
-            System.out.println("QQQQQ: +++++++++++++++++++");
-            List<Demand> ds1 = demandRepository.findByR1();
-            for (Demand d : ds1) {
-                System.out.println("QQQQQ: " + d.getIsbn() + " " + d.getUser().getUsername());
-                List<Respond> rs = d.getResponds();
-                for (Respond r : rs) {
-                    System.out.println("QQQQQ: " + r.getId() + " " + r.getAgreed());
-                }
+            Iterable<Demand1> ds = demand1Repository.findAll();
+            System.out.println("===ALL================");
+            for (Demand1 d : ds) {
+                System.out.println(df.format(d.getCreateDate()));
             }
-            System.out.println("QQQQQ: +++++++++++++++++++");
+            System.out.println("======================");
         }
-        System.out.println("QQQQQ: ===================================================");
+
+        {
+            Date ddd = new Date(c.getTimeInMillis() + 100000000);
+            Iterable<Demand1> ds = demand1Repository.findByExpire(ddd);
+            System.out.println("===Expire=============");
+            for (Demand1 d : ds) {
+                System.out.println(df.format(d.getCreateDate()));
+            }
+            System.out.println("======================");
+        }
+
+        {
+            Date ddd = new Date(c.getTimeInMillis() + 200000000);
+            Iterable<Demand1> ds = demand1Repository.findAll();
+            for (Demand1 d : ds) {
+                demand1Repository.updateFor(d.getId(), ddd);
+            }
+
+            System.out.println("===Modify=============");
+            Iterable<Demand1> ds1 = demand1Repository.findAll();
+            for (Demand1 d : ds1) {
+                System.out.println(df.format(d.getCreateDate()));
+            }
+            System.out.println("======================");
+        }
     }
 
 }

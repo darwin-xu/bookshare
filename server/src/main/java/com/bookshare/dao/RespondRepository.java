@@ -32,7 +32,7 @@ public interface RespondRepository extends PagingAndSortingRepository<Respond, L
     int selectRespondFor(String isbn);
 
     // Used to invalid other responds which associated to the same book for a user.
-    @Modifying
-    void invalidRespondsFor(String username, String isbn);
+//    @Modifying
+//    void invalidRespondsFor(String username, String isbn);
 
 }
