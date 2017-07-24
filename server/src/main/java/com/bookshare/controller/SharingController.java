@@ -1,7 +1,7 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -134,59 +134,69 @@ public class SharingController {
         }
     }
 
+    void test(String s, Iterable<Demand1> ds) {
+        System.out.println("===" + s + "=================");
+        for (Demand1 demand : ds) {
+            System.out.println(demand.getCreateDate());
+        }
+        System.out.println("======================");
+    }
+
     @Transactional
     @RequestMapping(value = "test", method = RequestMethod.GET)
     public void test() {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp ts = new Timestamp(System.currentTimeMillis() - 180000);
+        System.out.println("+++++++" + ts);
         Calendar c = Calendar.getInstance();
         {
             Demand1 d = new Demand1();
             d.setIsbn("123");
-            d.setCreateDate(new Date(c.getTimeInMillis()));
+            d.setCreateDate(new Timestamp(System.currentTimeMillis()));
             demand1Repository.save(d);
 
             Demand1 d1 = new Demand1();
             d1.setIsbn("122");
-            d1.setCreateDate(new Date(c.getTimeInMillis() - 180001));
+            d1.setCreateDate(new Timestamp(System.currentTimeMillis() - 180000));
             demand1Repository.save(d1);
 
             Demand1 d2 = new Demand1();
             d2.setIsbn("121");
-            d2.setCreateDate(new Date(c.getTimeInMillis() - 179999));
+            d2.setCreateDate(new Timestamp(System.currentTimeMillis() - 179999));
             demand1Repository.save(d2);
+
+            Demand1 d3 = new Demand1();
+            d3.setIsbn("120");
+            d3.setCreateDate(new Timestamp(System.currentTimeMillis() - 90000));
+            demand1Repository.save(d3);
         }
         {
-            Iterable<Demand1> ds = demand1Repository.findAll();
-            System.out.println("===ALL================");
-            for (Demand1 d : ds) {
-                System.out.println(df.format(d.getCreateDate()));
-            }
-            System.out.println("======================");
+            test("all", demand1Repository.findAll());
         }
 
-        {
-            Date ddd = new Date(c.getTimeInMillis() + 100000000);
-            Iterable<Demand1> ds = demand1Repository.findByExpire(ddd);
-            System.out.println("===Expire=============");
-            for (Demand1 d : ds) {
-                System.out.println(df.format(d.getCreateDate()));
-            }
-            System.out.println("======================");
-        }
+        Timestamp ddd = new Timestamp(System.currentTimeMillis() - 60000);
+        System.out.println("+++++++" + ddd);
+        test("Expire", demand1Repository.findByExpire(ddd));
+        test("before", demand1Repository.findByCreateDateBefore(ddd));
+        test("after", demand1Repository.findByCreateDateAfter(ddd));
+
+        // {
+        // Date ddd = new Date(c.getTimeInMillis() + 200000000);
+        // Iterable<Demand1> ds = demand1Repository.findAll();
+        // for (Demand1 d : ds) {
+        // System.out.println("=" + d.getId());
+        // demand1Repository.updateFor(d.getId());
+        // }
+        //
+        // System.out.println("===Modify=============");
+        // Iterable<Demand1> ds1 = demand1Repository.findAll();
+        // for (Demand1 d : ds1) {
+        // System.out.println(df.format(d.getCreateDate()));
+        // }
+        // System.out.println("======================");
+        // }
 
         {
-            Date ddd = new Date(c.getTimeInMillis() + 200000000);
-            Iterable<Demand1> ds = demand1Repository.findAll();
-            for (Demand1 d : ds) {
-                demand1Repository.updateFor(d.getId(), ddd);
-            }
-
-            System.out.println("===Modify=============");
-            Iterable<Demand1> ds1 = demand1Repository.findAll();
-            for (Demand1 d : ds1) {
-                System.out.println(df.format(d.getCreateDate()));
-            }
-            System.out.println("======================");
         }
     }
 

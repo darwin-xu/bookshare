@@ -1,7 +1,7 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -21,7 +21,7 @@ public class Demand1 implements Serializable {
     private Long id;
 
     @Column
-    private Date createDate;
+    private Timestamp createDate;
 
     @Column(nullable = false)
     private String isbn;
@@ -81,11 +81,11 @@ public class Demand1 implements Serializable {
         return true;
     }
 
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
