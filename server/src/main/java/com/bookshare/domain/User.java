@@ -53,7 +53,7 @@ public class User implements Serializable {
     @JsonIgnore
     @ManyToMany
     private List<Book> bookList;
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     @Column
@@ -63,6 +63,11 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     @Column
     private List<Demand> demands;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    @Column
+    private List<Demand1> demand1s;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")

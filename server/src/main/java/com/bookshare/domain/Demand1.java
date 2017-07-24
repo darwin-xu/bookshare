@@ -8,9 +8,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Demand1 implements Serializable {
 
@@ -20,8 +26,12 @@ public class Demand1 implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @JsonIgnore
+    @ManyToOne
+    private User user;
+
     @Column
-    private Timestamp createDate;
+    private Timestamp createdOn;
 
     @Column(nullable = false)
     private String isbn;
@@ -31,6 +41,22 @@ public class Demand1 implements Serializable {
 
     @OneToOne
     private Bookshelf bookshelf;
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Timestamp getCreatedOn() {
+        return createdOn;
+    }
 
     public String getIsbn() {
         return isbn;
@@ -42,10 +68,6 @@ public class Demand1 implements Serializable {
 
     public List<Respond1> getResponds() {
         return responds;
-    }
-
-    public void setResponds(List<Respond1> responds) {
-        this.responds = responds;
     }
 
     public Bookshelf getBookshelf() {
@@ -81,16 +103,12 @@ public class Demand1 implements Serializable {
         return true;
     }
 
-    public Timestamp getCreateDate() {
-        return createDate;
+    public Demand1() {
+        createdOn = new Timestamp(System.currentTimeMillis());
     }
 
-    public void setCreateDate(Timestamp createDate) {
-        this.createDate = createDate;
-    }
-
-    public Long getId() {
-        return id;
+    public void setResponds(List<Respond1> responds) {
+        this.responds = responds;
     }
 
     public void setId(Long id) {

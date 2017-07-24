@@ -1,9 +1,7 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,14 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.Demand1Repository;
 import com.bookshare.dao.DemandRepository;
+import com.bookshare.dao.Respond1Repository;
 import com.bookshare.dao.RespondRepository;
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Demand;
 import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
+import com.bookshare.domain.Respond1;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(value = "sharing")
@@ -50,6 +52,9 @@ public class SharingController {
 
     @Autowired
     private Demand1Repository demand1Repository;
+
+    @Autowired
+    private Respond1Repository respond1Repository;
 
     @RequestMapping(value = "demands/book/{isbn}", method = RequestMethod.POST)
     public void postDemand(@CookieValue("session") String sessionID, @PathVariable String isbn,
@@ -134,70 +139,19 @@ public class SharingController {
         }
     }
 
-    void test(String s, Iterable<Demand1> ds) {
-        System.out.println("===" + s + "=================");
-        for (Demand1 demand : ds) {
-            System.out.println(demand.getCreateDate());
-        }
-        System.out.println("======================");
-    }
-
     @Transactional
     @RequestMapping(value = "test", method = RequestMethod.GET)
-    public void test() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp ts = new Timestamp(System.currentTimeMillis() - 180000);
-        System.out.println("+++++++" + ts);
-        Calendar c = Calendar.getInstance();
-        {
-            Demand1 d = new Demand1();
-            d.setIsbn("123");
-            d.setCreateDate(new Timestamp(System.currentTimeMillis()));
-            demand1Repository.save(d);
-
-            Demand1 d1 = new Demand1();
-            d1.setIsbn("122");
-            d1.setCreateDate(new Timestamp(System.currentTimeMillis() - 180000));
-            demand1Repository.save(d1);
-
-            Demand1 d2 = new Demand1();
-            d2.setIsbn("121");
-            d2.setCreateDate(new Timestamp(System.currentTimeMillis() - 179999));
-            demand1Repository.save(d2);
-
-            Demand1 d3 = new Demand1();
-            d3.setIsbn("120");
-            d3.setCreateDate(new Timestamp(System.currentTimeMillis() - 90000));
-            demand1Repository.save(d3);
-        }
-        {
-            test("all", demand1Repository.findAll());
-        }
-
-        Timestamp ddd = new Timestamp(System.currentTimeMillis() - 60000);
-        System.out.println("+++++++" + ddd);
-        test("Expire", demand1Repository.findByExpire(ddd));
-        test("before", demand1Repository.findByCreateDateBefore(ddd));
-        test("after", demand1Repository.findByCreateDateAfter(ddd));
-
-        // {
-        // Date ddd = new Date(c.getTimeInMillis() + 200000000);
-        // Iterable<Demand1> ds = demand1Repository.findAll();
-        // for (Demand1 d : ds) {
-        // System.out.println("=" + d.getId());
-        // demand1Repository.updateFor(d.getId());
-        // }
-        //
-        // System.out.println("===Modify=============");
-        // Iterable<Demand1> ds1 = demand1Repository.findAll();
-        // for (Demand1 d : ds1) {
-        // System.out.println(df.format(d.getCreateDate()));
-        // }
-        // System.out.println("======================");
-        // }
-
-        {
-        }
+    public String test() throws JsonProcessingException {
+        Demand1 d = new Demand1();
+        List<Respond1> responds = new ArrayList<Respond1>();
+        Respond1 r = new Respond1();
+        r.setPriority(5);
+        r.setDemand(d);
+        responds.add(r);
+        d.setResponds(responds);
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writeValueAsString(d);
+       // return d;
     }
 
 }
