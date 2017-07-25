@@ -23,6 +23,7 @@ import com.bookshare.backend.BookBackend;
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Book;
+import com.bookshare.domain.Bookshelf;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
@@ -79,10 +80,11 @@ public class UserController {
         String isbns[] = null;
         if (session != null) {
             User user = session.getUser();
-            List<Book> books = user.getBookList();
-            isbns = new String[books.size()];
-            for (int i = 0; i < books.size(); ++i) {
-                isbns[i] = books.get(i).getIsbn13();
+
+            List<Bookshelf> bookshelfs = user.getBookshelfs();
+            isbns = new String[bookshelfs.size()];
+            for (int i = 0; i < bookshelfs.size(); ++i) {
+                isbns[i] = bookshelfs.get(i).getBook().getIsbn13();
             }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

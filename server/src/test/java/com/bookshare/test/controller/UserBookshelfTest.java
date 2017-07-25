@@ -20,7 +20,7 @@ import com.bookshare.domain.User;
 @Test
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserShelfTest extends AbstractMockMvcTest {
+public class UserBookshelfTest extends AbstractMockMvcTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,7 +63,7 @@ public class UserShelfTest extends AbstractMockMvcTest {
         String booksISBNActual1[] = perform(mockMvc, Method.GET, "/users/bookshelf/", cookie, null, status().isOk(),
                 String[].class);
 
-        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual1)));
+        assertEquals(new HashSet<String>(Arrays.asList(booksISBNActual1)), booksISBN);
 
         // Remove some books from user's shelf.
         String toRemove = "9787550217454";
@@ -74,7 +74,7 @@ public class UserShelfTest extends AbstractMockMvcTest {
                 String[].class);
 
         booksISBN.remove(toRemove);
-        assertEquals(booksISBN, new HashSet<String>(Arrays.asList(booksISBNActual2)));
+        assertEquals(new HashSet<String>(Arrays.asList(booksISBNActual2)), booksISBN);
     }
 
 }

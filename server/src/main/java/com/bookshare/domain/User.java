@@ -74,6 +74,10 @@ public class User implements Serializable {
     @Column
     private List<Respond> responds;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -120,6 +124,10 @@ public class User implements Serializable {
 
     public void setBookList(List<Book> bookList) {
         this.bookList = bookList;
+    }
+
+    public List<Bookshelf> getBookshelfs() {
+        return bookshelfs;
     }
 
     public List<Demand> getDemands() {

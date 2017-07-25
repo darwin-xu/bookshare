@@ -1,7 +1,7 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -21,17 +21,67 @@ public class Bookshelf implements Serializable {
     private Long id;
 
     @ManyToOne
-    User user;
+    private User user;
 
     @ManyToOne
-    Book book;
+    private Book book;
 
     @OneToMany(mappedBy = "bookshelf")
-    List<Respond1> responds;
+    private List<Respond1> responds;
 
-    Date importDate;
+    private Timestamp importedOn;
 
     @OneToOne
-    Demand demand;
+    private Demand demand;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public List<Respond1> getResponds() {
+        return responds;
+    }
+
+    public void setResponds(List<Respond1> responds) {
+        this.responds = responds;
+    }
+
+    public Demand getDemand() {
+        return demand;
+    }
+
+    public void setDemand(Demand demand) {
+        this.demand = demand;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Timestamp getImportedOn() {
+        return importedOn;
+    }
+
+    public Bookshelf() {
+
+    }
+
+    public Bookshelf(User user, Book book) {
+        this.user = user;
+        this.book = book;
+        this.importedOn = new Timestamp(System.currentTimeMillis());
+    }
 
 }

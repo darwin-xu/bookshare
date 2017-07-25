@@ -1,7 +1,7 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;

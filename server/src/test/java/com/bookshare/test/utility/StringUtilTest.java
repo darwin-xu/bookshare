@@ -1,6 +1,7 @@
 package com.bookshare.test.utility;
 
-import org.testng.AssertJUnit;
+import static org.testng.Assert.assertEquals;
+
 import org.testng.annotations.Test;
 
 import com.bookshare.utility.FileUtil;
@@ -10,13 +11,13 @@ public class StringUtilTest {
 
     @Test
     public void getSuffix() {
-        AssertJUnit.assertEquals(".mpg", FileUtil.getSuffix("k/ee.j/this.mpg"));
-        AssertJUnit.assertEquals(".jpg", FileUtil.getSuffix("kkkkk.jpg"));
-        AssertJUnit.assertEquals("", FileUtil.getSuffix("kkkkk"));
-        AssertJUnit.assertEquals(".jpg", FileUtil.getSuffix("http://123.43.78.9:80/uname/file.jpg"));
-        AssertJUnit.assertEquals("", FileUtil.getSuffix("http://123.43.78.9:80/uname/filename"));
-        AssertJUnit.assertEquals("", FileUtil.getSuffix("http://123.43.78.9:80/uname.jpg/filename"));
-        AssertJUnit.assertEquals(".mkv", FileUtil.getSuffix("http://123.43.78.9:80/uname.jpg/filename.mkv"));
+        assertEquals(FileUtil.getSuffix("k/ee.j/this.mpg"), ".mpg");
+        assertEquals(FileUtil.getSuffix("kkkkk.jpg"), ".jpg");
+        assertEquals(FileUtil.getSuffix("kkkkk"), "");
+        assertEquals(FileUtil.getSuffix("http://123.43.78.9:80/uname/file.jpg"), ".jpg");
+        assertEquals(FileUtil.getSuffix("http://123.43.78.9:80/uname/filename"), "");
+        assertEquals(FileUtil.getSuffix("http://123.43.78.9:80/uname.jpg/filename"), "");
+        assertEquals(FileUtil.getSuffix("http://123.43.78.9:80/uname.jpg/filename.mkv"), ".mkv");
     }
 
 }

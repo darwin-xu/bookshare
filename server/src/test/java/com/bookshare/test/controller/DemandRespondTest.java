@@ -1,9 +1,9 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-import static org.testng.AssertJUnit.assertEquals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -207,8 +207,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
                 Respond[].class);
 
-        assertEquals(TestCaseUtil.sortedStringList(getBooks(bookData)),
-                TestCaseUtil.sortedStringList(getIsbns(responds)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(responds)),
+                TestCaseUtil.sortedStringList(getBooks(bookData)));
     }
 
     private void checkDemandFor(String username, char bookData[]) throws Exception {
@@ -217,8 +217,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
                 Demand[].class);
 
-        assertEquals(TestCaseUtil.sortedStringList(getBooks(bookData)),
-                TestCaseUtil.sortedStringList(getIsbns(demands)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(demands)),
+                TestCaseUtil.sortedStringList(getBooks(bookData)));
     }
 
     private List<String> getIsbns(Respond responds[]) {
