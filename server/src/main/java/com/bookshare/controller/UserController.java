@@ -1,7 +1,6 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.backend.BookBackend;
+import com.bookshare.dao.BookshelfRepository;
 import com.bookshare.dao.SessionRepository;
 import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Book;
@@ -44,6 +44,9 @@ public class UserController {
 
     @Autowired
     BookBackend bookBackend;
+
+    @Autowired
+    BookshelfRepository bookshelfRepository;
 
     @RequestMapping(value = "getVerifyCode", method = RequestMethod.POST)
     public void getVerifyCode(@RequestBody User user, HttpServletResponse response) {
@@ -99,15 +102,26 @@ public class UserController {
         if (session != null) {
             User user = session.getUser();
 
-            // Get user original book list.
-            List<Book> userBooks = user.getBookList();
-            Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
+            // // Get user original book list.
+            // List<Book> userBooks = user.getBookList();
+            // Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
+            //
+            // Book book = bookBackend.getBook(isbn);
+            // if (book != null && userOriginBooks.add(book)) {
+            // // Save it to database.
+            // user.setBookList(new ArrayList<Book>(userOriginBooks));
+            // userRepository.save(user);
+            // } else {
+            // response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            // }
 
+            List<Bookshelf> bookshelfs = user.getBookshelfs();
+            Set<Bookshelf> originBookshelf = new HashSet<Bookshelf>(bookshelfs);
             Book book = bookBackend.getBook(isbn);
-            if (book != null && userOriginBooks.add(book)) {
-                // Save it to database.
-                user.setBookList(new ArrayList<Book>(userOriginBooks));
-                userRepository.save(user);
+            Bookshelf bookshelf;
+            if (book != null && originBookshelf.add(bookshelf = new Bookshelf(user, book))) {
+                bookshelfRepository.save(bookshelf);
+                response.setStatus(HttpServletResponse.SC_CREATED);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
             }
@@ -123,15 +137,22 @@ public class UserController {
         if (session != null) {
             User user = session.getUser();
 
-            // Get user original book list.
-            List<Book> userBooks = user.getBookList();
-            Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
-
-            Book book = bookBackend.getBook(isbn);
-            if (book != null && userOriginBooks.remove(book)) {
-                // Save it to database.
-                user.setBookList(new ArrayList<Book>(userOriginBooks));
-                userRepository.save(user);
+            // // Get user original book list.
+            // List<Book> userBooks = user.getBookList();
+            // Set<Book> userOriginBooks = new HashSet<Book>(userBooks);
+            //
+            // Book book = bookBackend.getBook(isbn);
+            // if (book != null && userOriginBooks.remove(book)) {
+            // // Save it to database.
+            // user.setBookList(new ArrayList<Book>(userOriginBooks));
+            // userRepository.save(user);
+            // } else {
+            // response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            // }
+            //
+            Bookshelf bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(user.getId(), isbn);
+            if (bookshelf != null) {
+                bookshelfRepository.delete(bookshelf);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
             }

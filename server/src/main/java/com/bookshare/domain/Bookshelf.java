@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,6 +30,7 @@ public class Bookshelf implements Serializable {
     @OneToMany(mappedBy = "bookshelf")
     private List<Respond1> responds;
 
+    @Column
     private Timestamp importedOn;
 
     @OneToOne
@@ -82,6 +84,31 @@ public class Bookshelf implements Serializable {
         this.user = user;
         this.book = book;
         this.importedOn = new Timestamp(System.currentTimeMillis());
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((book == null) ? 0 : book.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Bookshelf other = (Bookshelf) obj;
+        if (book == null) {
+            if (other.book != null)
+                return false;
+        } else if (!book.equals(other.book))
+            return false;
+        return true;
     }
 
 }
