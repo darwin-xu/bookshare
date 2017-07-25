@@ -8,10 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Respond1 implements Serializable {
 
@@ -60,6 +56,15 @@ public class Respond1 implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Respond1() {
+
+    }
+
+    public Respond1(Demand1 demand, Bookshelf bookshelf) {
+        this.demand = demand;
+        this.bookshelf = bookshelf;
     }
 
 }

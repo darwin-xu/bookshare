@@ -134,6 +134,10 @@ public class User implements Serializable {
         return demands;
     }
 
+    public List<Demand1> getDemand1s() {
+        return demand1s;
+    }
+
     public List<Respond> getResponds() {
         return responds;
     }

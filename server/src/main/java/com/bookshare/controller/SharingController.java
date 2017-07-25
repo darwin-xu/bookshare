@@ -1,7 +1,6 @@
 package com.bookshare.controller;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,11 +25,9 @@ import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Demand;
 import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
-import com.bookshare.domain.Respond1;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(value = "sharing")
@@ -62,13 +59,8 @@ public class SharingController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-
-            // Create a demand for the user.
-            Demand demand = new Demand();
-            demand.setIsbn(isbn);
-            demand.setUser(user);
-            demandRepository.save(demand);
-
+            Demand1 d = new Demand1(user, isbn);
+            demand1Repository.save(d);
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -76,11 +68,11 @@ public class SharingController {
     }
 
     @RequestMapping(value = "demands", method = RequestMethod.GET, produces = "application/json")
-    public List<Demand> getDemands(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    public List<Demand1> getDemands(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-            return user.getDemands();
+            return user.getDemand1s();
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
@@ -92,18 +84,18 @@ public class SharingController {
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            Demand oldDemand = demandRepository.findById(Long.valueOf(id));
-            if (oldDemand != null && demand.getCancalled() == true) {
-                oldDemand.setCancalled(true);
-                demandRepository.save(oldDemand);
-                List<Respond> responds = respondRepository.findByDemand_Id(oldDemand.getId());
-                for (Respond r : responds) {
-                    r.setCancalled(true);
-                    respondRepository.save(r);
-                }
-            } else {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            }
+            // Demand oldDemand = demandRepository.findById(Long.valueOf(id));
+            // if (oldDemand != null && demand.getCancalled() == true) {
+            // oldDemand.setCancalled(true);
+            // demandRepository.save(oldDemand);
+            // List<Respond> responds = respondRepository.findByDemand_Id(oldDemand.getId());
+            // for (Respond r : responds) {
+            // r.setCancalled(true);
+            // respondRepository.save(r);
+            // }
+            // } else {
+            // response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            // }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -141,17 +133,17 @@ public class SharingController {
 
     @Transactional
     @RequestMapping(value = "test", method = RequestMethod.GET)
-    public String test() throws JsonProcessingException {
-        Demand1 d = new Demand1();
-        List<Respond1> responds = new ArrayList<Respond1>();
-        Respond1 r = new Respond1();
-        r.setPriority(5);
-        r.setDemand(d);
-        responds.add(r);
-        d.setResponds(responds);
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(d);
-       // return d;
+    public void test() throws JsonProcessingException {
+        // Demand1 d = new Demand1();
+        // List<Respond1> responds = new ArrayList<Respond1>();
+        // Respond1 r = new Respond1();
+        // r.setPriority(5);
+        // r.setDemand(d);
+        // responds.add(r);
+        // d.setResponds(responds);
+        // ObjectMapper mapper = new ObjectMapper();
+        // return mapper.writeValueAsString(d);
+        // // return d;
     }
 
 }
