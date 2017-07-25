@@ -1,7 +1,7 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,7 +31,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         sheetExpect.setName(sheetName);
         String sections[] = { "热门", "经典", "流行", "青春" };
         sheetExpect.setSections(sections);
-        assertEquals(sheetExpect, sheetActual);
+        assertEquals(sheetActual, sheetExpect);
     }
 
     @Test(timeOut = timeout_ms)
@@ -61,7 +61,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
 
         SheetDto sheetActual = perform(mockMvc, Method.GET, "/app/sheets/" + sheetName, null, null, status().isOk(),
                 SheetDto.class);
-        assertEquals(sheet, sheetActual);
+        assertEquals(sheetActual, sheet);
     }
 
     @Test(timeOut = timeout_ms)
@@ -80,7 +80,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
 
         SheetDto sheetActual = perform(mockMvc, Method.GET, "/app/sheets/" + sheetName, null, sheet, status().isOk(),
                 SheetDto.class);
-        assertEquals(sheet, sheetActual);
+        assertEquals(sheetActual, sheet);
     }
 
     @Test(timeOut = timeout_ms)
@@ -106,7 +106,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         String isbns[] = { "9787516810941", "9787509766989", "9787553805900", "9787550278998", "9787508665450",
                 "9787301268711" };
         sectionExpect.setIsbns(isbns);
-        assertEquals(sectionExpect, sectionActual);
+        assertEquals(sectionActual, sectionExpect);
     }
 
     @Test(timeOut = timeout_ms)
@@ -134,7 +134,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
 
         SectionDto sectionActual = perform(mockMvc, Method.GET, "/app/sections/" + sectionName, null, null,
                 status().isOk(), SectionDto.class);
-        assertEquals(section, sectionActual);
+        assertEquals(sectionActual, section);
     }
 
     @Test(timeOut = timeout_ms)
@@ -149,7 +149,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
 
         SectionDto sectionActual = perform(mockMvc, Method.GET, "/app/sections/" + sectionName, null, section,
                 status().isOk(), SectionDto.class);
-        assertEquals(section, sectionActual);
+        assertEquals(sectionActual, section);
     }
 
     @Test(timeOut = timeout_ms)

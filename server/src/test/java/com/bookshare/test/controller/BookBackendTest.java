@@ -1,7 +1,7 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,13 +31,13 @@ public class BookBackendTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.GET, "/books/9787500648192", null, null, status().isOk(), null);
         audit = perform(mockMvc, Method.GET, "/audit/" + AuditManager.isbnQueryCount, null, null, status().isOk(),
                 Audit.class);
-        assertEquals(baseCount + 1, audit.getCount());
+        assertEquals(audit.getCount(), baseCount + 1);
 
         // 3. Get the ISBNQueryCount again after GET books/{isbn}.
         perform(mockMvc, Method.GET, "/books/9787500648192", null, null, status().isOk(), null);
         audit = perform(mockMvc, Method.GET, "/audit/" + AuditManager.isbnQueryCount, null, null, status().isOk(),
                 Audit.class);
-        assertEquals(baseCount + 1, audit.getCount());
+        assertEquals(audit.getCount(), baseCount + 1);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.bookshare.test.controller;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,8 +155,8 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                         Demand[].class);
         String isbnsDemandExpect1[] = { "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsDemandExpect1),
-                TestCaseUtil.sortedStringList(getIsbns(demandsActual1)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(demandsActual1)),
+                TestCaseUtil.sortedStringList(isbnsDemandExpect1));
 
         // Get demands for the first session.
         Demand demandsActual2[] = mapper
@@ -165,8 +165,8 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                         Demand[].class);
         String isbnsDemandExpect2[] = { "9787535491657", "9787544270472" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsDemandExpect2),
-                TestCaseUtil.sortedStringList(getIsbns(demandsActual2)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(demandsActual2)),
+                TestCaseUtil.sortedStringList(isbnsDemandExpect2));
 
         // Get demands for the first session.
         Demand demandsActual3[] = mapper
@@ -175,8 +175,8 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                         Demand[].class);
         String isbnsDemandExpect3[] = { "9787514122756" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsDemandExpect3),
-                TestCaseUtil.sortedStringList(getIsbns(demandsActual3)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(demandsActual3)),
+                TestCaseUtil.sortedStringList(isbnsDemandExpect3));
     }
 
     @Test(groups = "check", dependsOnGroups = "create")
@@ -190,8 +190,8 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
         String isbnsRespondExpect1[] = { "9787535491657", "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect1),
-                TestCaseUtil.sortedStringList(getIsbns(respondsActual1)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(respondsActual1)),
+                TestCaseUtil.sortedStringList(isbnsRespondExpect1));
         for (Respond r : respondsActual1) {
             assertEquals(Boolean.FALSE, r.getCancalled());
         }
@@ -202,10 +202,10 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
         String isbnsRespondExpect2[] = { "9787535491657", "9787544270472", "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect2),
-                TestCaseUtil.sortedStringList(getIsbns(respondsActual2)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(respondsActual2)),
+                TestCaseUtil.sortedStringList(isbnsRespondExpect2));
         for (Respond r : respondsActual2) {
-            assertEquals(Boolean.FALSE, r.getCancalled());
+            assertEquals(r.getCancalled(), Boolean.FALSE);
         }
 
         // Get responds for the third session.
@@ -214,10 +214,10 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(), Respond[].class);
         String isbnsRespondExpect3[] = { "9787535491657", "9787544270472", "9787514122756", "9787535491657" };
-        assertEquals(TestCaseUtil.sortedStringList(isbnsRespondExpect3),
-                TestCaseUtil.sortedStringList(getIsbns(respondsActual3)));
+        assertEquals(TestCaseUtil.sortedStringList(getIsbns(respondsActual3)),
+                TestCaseUtil.sortedStringList(isbnsRespondExpect3));
         for (Respond r : respondsActual3) {
-            assertEquals(Boolean.FALSE, r.getCancalled());
+            assertEquals(r.getCancalled(), Boolean.FALSE);
         }
     }
 
@@ -230,7 +230,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                         Demand[].class);
         for (Demand d : demand1old) {
-            assertEquals(Boolean.FALSE, d.getCancalled());
+            assertEquals(d.getCancalled(), Boolean.FALSE);
             d.setCancalled(true);
             mockMvc.perform(MockMvcRequestBuilders.put("/sharing/demands/" + d.getId()).cookie(cookie1)
                     .contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(d)))
@@ -242,7 +242,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(),
                         Demand[].class);
         for (Demand d : demand1new) {
-            assertEquals(Boolean.TRUE, d.getCancalled());
+            assertEquals(d.getCancalled(), Boolean.TRUE);
         }
 
         // Get and change the demands for the second session.
@@ -255,7 +255,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
         boolean match1 = false;
         boolean match2 = false;
         for (Demand d : demand2old) {
-            assertEquals(Boolean.FALSE, d.getCancalled());
+            assertEquals( d.getCancalled(), Boolean.FALSE);
             if (d.getIsbn().equals(bookToBeCancalled)) {
                 d.setCancalled(true);
                 mockMvc.perform(MockMvcRequestBuilders.put("/sharing/demands/" + d.getId()).cookie(cookie2)
@@ -266,7 +266,7 @@ public class SharingTest extends AbstractTestNGSpringContextTests {
                 match2 = true;
             }
         }
-        assertEquals(true, match1);
+        assertEquals( match1, true);
         assertEquals(true, match2);
         Demand demand2new[] = mapper
                 .readValue(

@@ -57,7 +57,7 @@ public class User implements Serializable {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     @Column
-    List<Bookshelf> bookshelfs;
+    private List<Bookshelf> bookshelfs;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
@@ -73,6 +73,10 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user")
     @Column
     private List<Respond> responds;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getUsername() {
         return username;
@@ -120,6 +124,14 @@ public class User implements Serializable {
 
     public void setBookList(List<Book> bookList) {
         this.bookList = bookList;
+    }
+
+    public List<Bookshelf> getBookshelfs() {
+        return bookshelfs;
+    }
+
+    public List<Demand1> getDemand1s() {
+        return demand1s;
     }
 
     public List<Demand> getDemands() {

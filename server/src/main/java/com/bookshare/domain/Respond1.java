@@ -8,10 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Respond1 implements Serializable {
 
@@ -21,6 +19,7 @@ public class Respond1 implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     private Demand1 demand;
 

@@ -150,8 +150,9 @@ public class SharingController {
         responds.add(r);
         d.setResponds(responds);
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.writeValueAsString(d);
-       // return d;
+        //return mapper.writeValueAsString(d);
+        return mapper.writeValueAsString(r);
+        //return d;
     }
 
 }

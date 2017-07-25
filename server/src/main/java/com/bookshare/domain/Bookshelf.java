@@ -1,9 +1,10 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,9 +30,75 @@ public class Bookshelf implements Serializable {
     @OneToMany(mappedBy = "bookshelf")
     List<Respond1> responds;
 
-    Date importDate;
+    @Column
+    Timestamp importedOn;
 
     @OneToOne
     Demand demand;
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public List<Respond1> getResponds() {
+        return responds;
+    }
+
+    public Timestamp getImportedOn() {
+        return importedOn;
+    }
+
+    public Demand getDemand() {
+        return demand;
+    }
+
+    public void setDemand(Demand demand) {
+        this.demand = demand;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((book == null) ? 0 : book.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Bookshelf other = (Bookshelf) obj;
+        if (book == null) {
+            if (other.book != null)
+                return false;
+        } else if (!book.equals(other.book))
+            return false;
+        return true;
+    }
+
+    public Bookshelf() {
+    }
+
+    public Bookshelf(User user, Book book) {
+        this.user = user;
+        this.book = book;
+        this.importedOn = new Timestamp(System.currentTimeMillis());
+    }
 }

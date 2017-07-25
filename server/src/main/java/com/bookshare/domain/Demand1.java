@@ -12,11 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Entity
 public class Demand1 implements Serializable {
 
@@ -36,6 +34,7 @@ public class Demand1 implements Serializable {
     @Column(nullable = false)
     private String isbn;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "demand")
     private List<Respond1> responds;
 
