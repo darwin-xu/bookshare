@@ -83,7 +83,6 @@ public class UserController {
         String isbns[] = null;
         if (session != null) {
             User user = session.getUser();
-
             List<Bookshelf> bookshelfs = user.getBookshelfs();
             isbns = new String[bookshelfs.size()];
             for (int i = 0; i < bookshelfs.size(); ++i) {
@@ -101,7 +100,6 @@ public class UserController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-
             List<Bookshelf> bookshelfs = user.getBookshelfs();
             Set<Bookshelf> originBookshelfs = new HashSet<Bookshelf>(bookshelfs);
             Book book = bookBackend.getBook(isbn);
@@ -123,7 +121,6 @@ public class UserController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-
             Bookshelf bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(user.getId(), isbn);
             if (bookshelf != null) {
                 bookshelfRepository.delete(bookshelf);

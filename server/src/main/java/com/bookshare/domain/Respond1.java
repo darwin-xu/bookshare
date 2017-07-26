@@ -61,4 +61,13 @@ public class Respond1 implements Serializable {
         this.id = id;
     }
 
+    public Respond1() {
+
+    }
+
+    public Respond1(Demand1 demand, Bookshelf bookshelf) {
+        this.demand = demand;
+        this.bookshelf = bookshelf;
+    }
+
 }

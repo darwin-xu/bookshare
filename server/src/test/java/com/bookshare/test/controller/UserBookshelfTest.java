@@ -69,6 +69,7 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
         for (String s : booksISBNActual1) {
             System.out.println(s);
         }
+
         assertEquals(new HashSet<String>(Arrays.asList(booksISBNActual1)), booksISBN);
 
         // Remove some books from user's shelf.

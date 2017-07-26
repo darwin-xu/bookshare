@@ -13,11 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.bookshare.dao.BookshelfRepository;
+import com.bookshare.dao.Demand1Repository;
 import com.bookshare.dao.DemandRepository;
+import com.bookshare.dao.Respond1Repository;
 import com.bookshare.dao.RespondRepository;
 import com.bookshare.dao.UserRepository;
+import com.bookshare.domain.Bookshelf;
 import com.bookshare.domain.Demand;
+import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
+import com.bookshare.domain.Respond1;
 import com.bookshare.domain.User;
 
 @Component
@@ -39,7 +45,16 @@ public class DemandDispatcher {
     private DemandRepository demandRepository;
 
     @Autowired
+    private Demand1Repository demand1Repository;
+
+    @Autowired
     private RespondRepository respondRepository;
+
+    @Autowired
+    private Respond1Repository respond1Repository;
+
+    @Autowired
+    BookshelfRepository bookshelfRepository;
 
     @Transactional
     @Scheduled(fixedDelayString = "${bookshare.book.dispatch.interval-sec:60}000")
@@ -64,6 +79,17 @@ public class DemandDispatcher {
                 }
             }
 
+            List<Demand1> ds = demand1Repository.findByResponds_Id(null);
+            for (Demand1 d : ds) {
+                logger.trace("SSS:    Process demand:" + d.getIsbn());
+                List<Bookshelf> bookshelfs = bookshelfRepository.findAvailable(d.getIsbn());
+                for (Bookshelf b : bookshelfs) {
+                    logger.trace("SSS:    Process bookshelfs:" + b.getUser().getUsername());
+                    Respond1 r = new Respond1(d, b);
+                    respond1Repository.save(r);
+                }
+            }
+
             List<Respond> responds = respondRepository.findByAgreed();
             for (Respond r : responds) {
                 logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
@@ -73,7 +99,7 @@ public class DemandDispatcher {
             List<String> isbns = respondRepository.findAllAgreedIsbns();
             for (String isbn : isbns) {
                 logger.trace("FFF: " + isbn);
-                //respondRepository.selectRespond(isbn);
+                // respondRepository.selectRespond(isbn);
             }
 
             logger.trace("EEEAAA:");

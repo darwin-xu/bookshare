@@ -22,19 +22,19 @@ public class Bookshelf implements Serializable {
     private Long id;
 
     @ManyToOne
-    User user;
+    private User user;
 
     @ManyToOne
-    Book book;
+    private Book book;
 
     @OneToMany(mappedBy = "bookshelf")
-    List<Respond1> responds;
+    private List<Respond1> responds;
 
     @Column
-    Timestamp importedOn;
+    private Timestamp importedOn;
 
     @OneToOne
-    Demand demand;
+    private Demand demand;
 
     public User getUser() {
         return user;
@@ -56,8 +56,8 @@ public class Bookshelf implements Serializable {
         return responds;
     }
 
-    public Timestamp getImportedOn() {
-        return importedOn;
+    public void setResponds(List<Respond1> responds) {
+        this.responds = responds;
     }
 
     public Demand getDemand() {
@@ -66,6 +66,14 @@ public class Bookshelf implements Serializable {
 
     public void setDemand(Demand demand) {
         this.demand = demand;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Timestamp getImportedOn() {
+        return importedOn;
     }
 
     @Override

@@ -103,15 +103,12 @@ public class Demand1 implements Serializable {
     }
 
     public Demand1() {
-        createdOn = new Timestamp(System.currentTimeMillis());
     }
 
-    public void setResponds(List<Respond1> responds) {
-        this.responds = responds;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Demand1(User user, String isbn) {
+        this.user = user;
+        this.isbn = isbn;
+        this.createdOn = new Timestamp(System.currentTimeMillis());
     }
 
 }
