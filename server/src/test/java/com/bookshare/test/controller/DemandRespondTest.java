@@ -21,6 +21,7 @@ import org.testng.annotations.Test;
 import com.bookshare.domain.Demand;
 import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
+import com.bookshare.domain.Respond1;
 import com.bookshare.domain.User;
 import com.bookshare.utility.TestCaseUtil;
 
@@ -120,11 +121,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         // Make sure the dispatcher
         perform(mockMvc, Method.GET, "/background/waitForDispatch", null, null, status().isOk(), null);
 
-//        checkRespondFor("v", v3);
-//        checkRespondFor("w", w3);
-//        checkRespondFor("x", x3);
-//        checkRespondFor("y", y3);
-//        checkRespondFor("z", z3);
+        checkRespondFor("v", v3);
+        checkRespondFor("w", w3);
+        checkRespondFor("x", x3);
+        checkRespondFor("y", y3);
+        checkRespondFor("z", z3);
     }
 
     // @Test(groups = "change", dependsOnGroups = "check", timeOut = timeout_ms)
@@ -205,8 +206,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     private void checkRespondFor(String username, char bookData[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
-                Respond[].class);
+        Respond1 responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
+                Respond1[].class);
 
         assertEquals(TestCaseUtil.sortedStringList(getIsbns(responds)),
                 TestCaseUtil.sortedStringList(getBooks(bookData)));
@@ -222,9 +223,9 @@ public class DemandRespondTest extends AbstractMockMvcTest {
                 TestCaseUtil.sortedStringList(getBooks(bookData)));
     }
 
-    private List<String> getIsbns(Respond responds[]) {
+    private List<String> getIsbns(Respond1 responds[]) {
         List<String> isbns = new ArrayList<String>();
-        for (Respond r : responds) {
+        for (Respond1 r : responds) {
             isbns.add(r.getDemand().getIsbn());
         }
         return isbns;

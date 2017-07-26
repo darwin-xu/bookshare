@@ -25,6 +25,7 @@ import com.bookshare.dao.UserRepository;
 import com.bookshare.domain.Demand;
 import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
+import com.bookshare.domain.Respond1;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -102,12 +103,12 @@ public class SharingController {
     }
 
     @RequestMapping(value = "responds", method = RequestMethod.GET, produces = "application/json")
-    public List<Respond> getResponds(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    public List<Respond1> getResponds(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
             // Get the responds of the user.
-            return user.getResponds();
+            return respond1Repository.findByBookshelf_User_Id(user.getId());
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;

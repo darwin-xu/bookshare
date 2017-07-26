@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Bookshelf implements Serializable {
 
@@ -27,12 +29,14 @@ public class Bookshelf implements Serializable {
     @ManyToOne
     private Book book;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bookshelf")
     private List<Respond1> responds;
 
     @Column
     private Timestamp importedOn;
 
+    @JsonIgnore
     @OneToOne
     private Demand demand;
 

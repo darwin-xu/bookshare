@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 public class Demand1 implements Serializable {
@@ -34,7 +33,7 @@ public class Demand1 implements Serializable {
     @Column(nullable = false)
     private String isbn;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "demand")
     private List<Respond1> responds;
 

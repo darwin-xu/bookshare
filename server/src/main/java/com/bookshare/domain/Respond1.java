@@ -8,7 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Respond1 implements Serializable {
@@ -19,10 +19,10 @@ public class Respond1 implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @JsonBackReference
     @ManyToOne
     private Demand1 demand;
 
+    @JsonIgnore
     @ManyToOne
     private Bookshelf bookshelf;
 
