@@ -120,11 +120,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         // Make sure the dispatcher
         perform(mockMvc, Method.GET, "/background/waitForDispatch", null, null, status().isOk(), null);
 
-        checkRespondFor("v", v3);
-        checkRespondFor("w", w3);
-        checkRespondFor("x", x3);
-        checkRespondFor("y", y3);
-        checkRespondFor("z", z3);
+//        checkRespondFor("v", v3);
+//        checkRespondFor("w", w3);
+//        checkRespondFor("x", x3);
+//        checkRespondFor("y", y3);
+//        checkRespondFor("z", z3);
     }
 
     // @Test(groups = "change", dependsOnGroups = "check", timeOut = timeout_ms)

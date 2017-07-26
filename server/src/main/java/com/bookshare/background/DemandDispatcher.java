@@ -63,21 +63,21 @@ public class DemandDispatcher {
             logger.trace("=== Begin ===");
             logger.trace("=======" + demandExpireMin + "===" + firstRespondTriggerMin);
             // Find all demands without the corresponding responds yet.
-            List<Demand> demands = demandRepository.findByResponds_Id(null);
-            // Iterate over the demands.
-            for (Demand d : demands) {
-                // Find all users who have this book.
-                List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
-                int priority = 0;
-                for (User userHasTheBook : users) {
-                    // Create a new respond for the user who has the book.
-                    Respond rpd = new Respond();
-                    rpd.setDemand(d);
-                    rpd.setUser(userHasTheBook);
-                    rpd.setPriority(priority++);
-                    respondRepository.save(rpd);
-                }
-            }
+//            List<Demand> demands = demandRepository.findByResponds_Id(null);
+//            // Iterate over the demands.
+//            for (Demand d : demands) {
+//                // Find all users who have this book.
+//                List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
+//                int priority = 0;
+//                for (User userHasTheBook : users) {
+//                    // Create a new respond for the user who has the book.
+//                    Respond rpd = new Respond();
+//                    rpd.setDemand(d);
+//                    rpd.setUser(userHasTheBook);
+//                    rpd.setPriority(priority++);
+//                    respondRepository.save(rpd);
+//                }
+//            }
 
             List<Demand1> ds = demand1Repository.findByResponds_Id(null);
             for (Demand1 d : ds) {
@@ -90,27 +90,27 @@ public class DemandDispatcher {
                 }
             }
 
-            List<Respond> responds = respondRepository.findByAgreed();
-            for (Respond r : responds) {
-                logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
-                        + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
-            }
-
-            List<String> isbns = respondRepository.findAllAgreedIsbns();
-            for (String isbn : isbns) {
-                logger.trace("FFF: " + isbn);
-                // respondRepository.selectRespond(isbn);
-            }
-
-            logger.trace("EEEAAA:");
-
-            List<Respond> responds1 = respondRepository.findByAgreed();
-            for (Respond r : responds1) {
-                logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
-                        + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
-            }
-
-            logger.trace("=== End ====");
+//            List<Respond> responds = respondRepository.findByAgreed();
+//            for (Respond r : responds) {
+//                logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
+//                        + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
+//            }
+//
+//            List<String> isbns = respondRepository.findAllAgreedIsbns();
+//            for (String isbn : isbns) {
+//                logger.trace("FFF: " + isbn);
+//                // respondRepository.selectRespond(isbn);
+//            }
+//
+//            logger.trace("EEEAAA:");
+//
+//            List<Respond> responds1 = respondRepository.findByAgreed();
+//            for (Respond r : responds1) {
+//                logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
+//                        + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
+//            }
+//
+//            logger.trace("=== End ====");
 
             notifyAll();
         }
