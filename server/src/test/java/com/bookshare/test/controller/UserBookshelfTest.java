@@ -51,38 +51,32 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
         String isbns[] = { "9787514610307", "9787550284340", "9787550217454", "9787030324672", "9787569914061" };
         Set<String> booksISBN = new HashSet<String>(Arrays.asList(isbns));
         for (String isbn : booksISBN) {
-            perform(mockMvc, Method.POST, "/users/bookshelf/" + isbn, cookie, null, status().isCreated(), null);
+            perform(mockMvc, Method.POST, "/users/bookshelf/books/" + isbn, cookie, null, status().isCreated(), null);
         }
 
         // Post again.
         for (String isbn : booksISBN) {
-            perform(mockMvc, Method.POST, "/users/bookshelf/" + isbn, cookie, null, status().isNotAcceptable(), null);
+            perform(mockMvc, Method.POST, "/users/bookshelf/books/" + isbn, cookie, null, status().isNotAcceptable(),
+                    null);
         }
 
         // Get the books from user's shelf.
-        String booksISBNActual1[] = perform(mockMvc, Method.GET, "/users/bookshelf/", cookie, null, status().isOk(),
-                String[].class);
-
-        System.out.println("===expect============================");
-        System.out.println(booksISBN);
-        System.out.println("===actual============================");
-        for (String s : booksISBNActual1) {
-            System.out.println(s);
-        }
+        String booksISBNActual1[] = perform(mockMvc, Method.GET, "/users/bookshelf/books/", cookie, null,
+                status().isOk(), String[].class);
 
         assertEquals(new HashSet<String>(Arrays.asList(booksISBNActual1)), booksISBN);
 
         // Remove some books from user's shelf.
         String toRemove1 = "9787550217454";
-        perform(mockMvc, Method.DELETE, "/users/bookshelf/" + toRemove1, cookie, null, status().isOk(), null);
+        perform(mockMvc, Method.DELETE, "/users/bookshelf/books/" + toRemove1, cookie, null, status().isOk(), null);
 
         String toRemove2 = "9787515804743";
-        perform(mockMvc, Method.DELETE, "/users/bookshelf/" + toRemove2, cookie, null, status().isNotAcceptable(),
+        perform(mockMvc, Method.DELETE, "/users/bookshelf/books/" + toRemove2, cookie, null, status().isNotAcceptable(),
                 null);
 
         // Get the books from user's shelf.
-        String booksISBNActual2[] = perform(mockMvc, Method.GET, "/users/bookshelf/", cookie, null, status().isOk(),
-                String[].class);
+        String booksISBNActual2[] = perform(mockMvc, Method.GET, "/users/bookshelf/books/", cookie, null,
+                status().isOk(), String[].class);
 
         booksISBN.remove(toRemove1);
         assertEquals(new HashSet<String>(Arrays.asList(booksISBNActual2)), booksISBN);

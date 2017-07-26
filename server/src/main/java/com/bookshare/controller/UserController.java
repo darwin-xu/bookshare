@@ -77,7 +77,7 @@ public class UserController {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     }
 
-    @RequestMapping(value = "bookshelf", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "bookshelf/books", method = RequestMethod.GET, produces = "application/json")
     public String[] getBookshelf(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         String isbns[] = null;
@@ -94,7 +94,7 @@ public class UserController {
         return isbns;
     }
 
-    @RequestMapping(value = "bookshelf/{isbn}", method = RequestMethod.POST)
+    @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.POST)
     public void postBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
@@ -115,7 +115,13 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "bookshelf/{isbn}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.GET)
+    public void getBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+            HttpServletResponse response) {
+
+    }
+
+    @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.DELETE)
     public void deleteBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);

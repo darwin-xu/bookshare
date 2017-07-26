@@ -40,6 +40,16 @@ public class Bookshelf implements Serializable {
     @OneToOne
     private Demand demand;
 
+    @Column
+    private Boolean agreed;
+
+    @Column
+    private Timestamp agreedOn;
+
+    public Long getId() {
+        return id;
+    }
+
     public User getUser() {
         return user;
     }
@@ -72,12 +82,22 @@ public class Bookshelf implements Serializable {
         this.demand = demand;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public Timestamp getImportedOn() {
         return importedOn;
+    }
+
+    public Boolean getAgreed() {
+        return agreed;
+    }
+
+    public void setAgreed(Boolean agreed) {
+        this.agreed = agreed;
+        if (this.agreed == true)
+            this.agreedOn = new Timestamp(System.currentTimeMillis());
+    }
+
+    public Timestamp getAgreedOn() {
+        return agreedOn;
     }
 
     @Override
@@ -112,5 +132,7 @@ public class Bookshelf implements Serializable {
         this.user = user;
         this.book = book;
         this.importedOn = new Timestamp(System.currentTimeMillis());
+        this.agreed = false;
     }
+
 }
