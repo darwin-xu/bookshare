@@ -115,10 +115,18 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.GET)
-    public void getBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+    @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.GET)
+    public Bookshelf getBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
-
+        Session session = sessionRepository.findBySessionID(sessionID);
+        Bookshelf bookshelf = null;
+        if (session != null) {
+            User user = session.getUser();
+            bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(user.getId(), isbn);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return bookshelf;
     }
 
     @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.DELETE)
