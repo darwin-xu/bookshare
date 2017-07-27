@@ -97,4 +97,13 @@ public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
         return isbns;
     }
 
+    protected void preGetBooks(MockMvc mvc) throws Exception {
+        String isbns[] = { "9787514610307", "9787550284340", "9787550217454", "9787030324672", "9787569914061",
+                "9787505417731", "9787508622545", "9787301150894", "9787516810941", "9787509766989", "9787553805900",
+                "9787550278998", "9787508665450" };
+        for (String isbn : isbns) {
+            perform(mvc, Method.GET, "/books/" + isbn, null, null, status().isOk(), null);
+        }
+    }
+
 }

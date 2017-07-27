@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.bookshare.domain.Demand;
@@ -87,6 +88,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     char z7[] = { ' ', ' ', ' ', ' ', '2', ' ', ' ', ' ', ' ' };
 
     Map<String, Cookie> userCookieMap = new HashMap<String, Cookie>();
+
+    @BeforeMethod
+    public void init() throws Exception {
+        preGetBooks(mockMvc);
+    }
 
     @Test(groups = "prepare", timeOut = int_timeout_ms)
     public void prepareUserShelf() throws Exception {
@@ -250,7 +256,7 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     }
 
     private void postUsersBookshelf(String isbn, Cookie cookie) throws Exception {
-        perform(mockMvc, Method.POST, "/users/bookshelf/" + isbn, cookie, null, status().isCreated(), null);
+        perform(mockMvc, Method.POST, "/users/bookshelf/books/" + isbn, cookie, null, status().isCreated(), null);
     }
 
     private void issueDemandFor(String username, char mask[]) throws Exception {

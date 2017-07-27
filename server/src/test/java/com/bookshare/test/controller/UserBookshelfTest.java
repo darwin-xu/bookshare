@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.bookshare.domain.Bookshelf;
@@ -38,6 +39,11 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
     char s6[] = { '+', ' ', ' ', ' ', '+', ' ' };
 
     Cookie cookie = null;
+
+    @BeforeMethod
+    public void init() throws Exception {
+        preGetBooks(mockMvc);
+    }
 
     @Test(priority = 1, timeOut = int_timeout_ms)
     public void getCookie() throws Exception {
@@ -161,7 +167,7 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
         Bookshelf bookshelfsAfter[] = perform(mockMvc, Method.GET, "/users/bookshelf", cookie, null, status().isOk(),
                 Bookshelf[].class);
         assertEquals(bookshelfsAfter, new Bookshelf[0]);
-        String isbns[] = perform(mockMvc, Method.GET, "/users/bookshelf/book", cookie, null, status().isOk(),
+        String isbns[] = perform(mockMvc, Method.GET, "/users/bookshelf/books", cookie, null, status().isOk(),
                 String[].class);
         assertEquals(isbns, new String[0]);
     }
