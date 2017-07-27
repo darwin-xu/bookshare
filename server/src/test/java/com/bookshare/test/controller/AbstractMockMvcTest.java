@@ -1,5 +1,10 @@
 package com.bookshare.test.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 
 import org.springframework.http.MediaType;
@@ -9,11 +14,14 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.bookshare.domain.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
 
-    protected final int timeout_ms = 20000;
+    protected final int ext_timeout_ms = 60000;
+
+    protected final int int_timeout_ms = 2000;
 
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -66,6 +74,27 @@ public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
             return mapper.readValue(
                     mvc.perform(builder).andExpect(result).andReturn().getResponse().getContentAsString(), valueType);
         }
+    }
+
+    protected Cookie createAndLogin(MockMvc mvc, String username) throws Exception {
+        User user = new User();
+        user.setUsername(username);
+        perform(mvc, Method.POST, "/users/getVerifyCode", null, user, status().isCreated(), null);
+        user.setVerifyCode("112233");
+        user.setPassword("123");
+        perform(mvc, Method.PATCH, "/users/changePassword", null, user, status().isOk(), null);
+        return perform(mvc, Method.POST, "/sessions/login", null, user, status().isOk(), Cookie.class);
+    }
+
+    protected List<String> getBooks(char mask[], String bookArray[]) {
+        List<String> isbns = new ArrayList<String>();
+        for (int i = 0; i < mask.length; ++i)
+            if ('0' < mask[i] && mask[i] < '9')
+                for (int c = 0; c < mask[i] - '0'; ++c)
+                    isbns.add(bookArray[i]);
+            else if (mask[i] != ' ')
+                isbns.add(bookArray[i]);
+        return isbns;
     }
 
 }

@@ -9,6 +9,8 @@ import com.bookshare.domain.Bookshelf;
 
 public interface BookshelfRepository extends PagingAndSortingRepository<Bookshelf, Long> {
 
+    Bookshelf findById(Long Id);
+    
     Bookshelf findByUser_IdAndBook_Isbn13(Long userId, String bookIsbn);
 
     @Query("select bs from Bookshelf bs inner join bs.book b where b.isbn13 = ?1 and bs.demand is null")

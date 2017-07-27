@@ -78,12 +78,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "bookshelf/books", method = RequestMethod.GET, produces = "application/json")
-    public String[] getBookshelf(@CookieValue("session") String sessionID, HttpServletResponse response) {
-        Session session = sessionRepository.findBySessionID(sessionID);
+    public String[] getBookshelfBook(@CookieValue("session") String sessionID, HttpServletResponse response) {
         String isbns[] = null;
+        Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            User user = session.getUser();
-            List<Bookshelf> bookshelfs = user.getBookshelfs();
+            List<Bookshelf> bookshelfs = session.getUser().getBookshelfs();
             isbns = new String[bookshelfs.size()];
             for (int i = 0; i < bookshelfs.size(); ++i) {
                 isbns[i] = bookshelfs.get(i).getBook().getIsbn13();
@@ -95,7 +94,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.POST)
-    public void postBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+    public void postBookshelfBook(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
@@ -115,31 +114,91 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.GET)
-    public Bookshelf getBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+    @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.DELETE)
+    public void deleteBookshelfBook(@CookieValue("session") String sessionID, @PathVariable String isbn,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
-        Bookshelf bookshelf = null;
         if (session != null) {
-            User user = session.getUser();
-            bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(user.getId(), isbn);
+            Bookshelf bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(session.getUser().getId(), isbn);
+            if (bookshelf != null) {
+                bookshelfRepository.delete(bookshelf);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "bookshelf/search/{isbn}", method = RequestMethod.GET, produces = "application/json")
+    public Bookshelf searchBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+            HttpServletResponse response) {
+        Bookshelf bookshelf = null;
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(session.getUser().getId(), isbn);
+            if (bookshelf == null)
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
         return bookshelf;
     }
 
-    @RequestMapping(value = "bookshelf/books/{isbn}", method = RequestMethod.DELETE)
-    public void deleteBookshelf(@CookieValue("session") String sessionID, @PathVariable String isbn,
+    @RequestMapping(value = "bookshelf", method = RequestMethod.GET, produces = "application/json")
+    public List<Bookshelf> getBookshelf(@CookieValue("session") String sessionID, HttpServletResponse response) {
+        List<Bookshelf> bookshelfs = null;
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            bookshelfs = session.getUser().getBookshelfs();
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return bookshelfs;
+    }
+
+    @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.GET, produces = "application/json")
+    public Bookshelf getBookshelf(@CookieValue("session") String sessionID, @PathVariable String id,
+            HttpServletResponse response) {
+        Bookshelf bookshelf = null;
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            bookshelf = bookshelfRepository.findById(Long.parseLong(id));
+            if (bookshelf == null)
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return bookshelf;
+    }
+
+    @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.PUT)
+    public void putBookshelf(@CookieValue("session") String sessionID, @PathVariable String id,
+            @RequestBody Bookshelf bookshelf, HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            Bookshelf b = bookshelfRepository.findById(Long.parseLong(id));
+            if (b != null) {
+                b.setAgreed(bookshelf.getAgreed());
+                bookshelfRepository.save(b);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.DELETE)
+    public void deleteBookshelf(@CookieValue("session") String sessionID, @PathVariable String id,
             HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            User user = session.getUser();
-            Bookshelf bookshelf = bookshelfRepository.findByUser_IdAndBook_Isbn13(user.getId(), isbn);
-            if (bookshelf != null) {
-                bookshelfRepository.delete(bookshelf);
+            Bookshelf b = bookshelfRepository.findById(Long.parseLong(id));
+            if (b != null) {
+                bookshelfRepository.delete(b);
             } else {
-                response.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

@@ -20,7 +20,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void getSheet() throws Exception {
         String sheetName = "Library";
 
@@ -34,7 +34,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         assertEquals(sheetActual, sheetExpect);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void postExistingSheet() throws Exception {
         String sheetName = "Library";
 
@@ -47,7 +47,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/app/sheets/" + sheetName, null, sheet, status().isConflict(), null);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void postNonexistentSheet() throws Exception {
         String sheetName = "推荐";
 
@@ -64,7 +64,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         assertEquals(sheetActual, sheet);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void patchExistingSheet() throws Exception {
         String sheetName = "Library库";
 
@@ -83,7 +83,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         assertEquals(sheetActual, sheet);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void patchNonexistentSheet() throws Exception {
         String sheetName = "Nonexistent";
 
@@ -94,7 +94,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.PATCH, "/app/sheets/" + sheetName, null, sheet, status().isNotFound(), null);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void getSection() throws Exception {
         String sectionName = "经典";
 
@@ -109,7 +109,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         assertEquals(sectionActual, sectionExpect);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void postExistingSection() throws Exception {
         String sectionName = "热门";
 
@@ -121,7 +121,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         perform(mockMvc, Method.POST, "/app/sections/" + sectionName, null, section, status().isConflict(), null);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void postNonexistentSection() throws Exception {
         String sectionName = "New section";
 
@@ -137,7 +137,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         assertEquals(sectionActual, section);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void patchExistingSection() throws Exception {
         String sectionName = "热门";
 
@@ -152,7 +152,7 @@ public class AppPortalTest extends AbstractMockMvcTest {
         assertEquals(sectionActual, section);
     }
 
-    @Test(timeOut = timeout_ms)
+    @Test(timeOut = int_timeout_ms)
     public void patchNonexistentSection() throws Exception {
         String sectionName = "不存在";
 
