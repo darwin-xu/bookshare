@@ -136,7 +136,7 @@ class DataService {
                     SwiftyBeaver.error(error.localizedDescription)
                 } else if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
-                        // Update local cache
+                        // Update local cache
                         book.cover = data as NSData?
                         do {
                             try uiContext!.save()
@@ -341,7 +341,7 @@ class DataService {
         }
 
         uiContext = context
-        // TODO: try to put this into background to improve performance.
+        // TODO: try to put this into background to improve performance.
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Book")
         do {
             let results = try context.fetch(fetchRequest)
