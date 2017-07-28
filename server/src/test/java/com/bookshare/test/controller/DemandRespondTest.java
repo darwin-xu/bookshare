@@ -19,9 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.bookshare.domain.Demand1;
+import com.bookshare.domain.Demand;
 import com.bookshare.domain.Respond;
-import com.bookshare.domain.Respond1;
 import com.bookshare.utility.TestCaseUtil;
 
 @Test
@@ -159,31 +158,31 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     // answerRespondFor("z", z5);
     // }
 
-    private void answerRespondFor(String username, char mask[]) throws Exception {
-        Cookie cookie = userCookieMap.get(username);
-
-        Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
-                Respond[].class);
-
-        List<String> isbns = getBooks(mask, books);
-        for (Respond r : responds) {
-            if (isbns.contains(r.getDemand().getIsbn())) {
-                r.setAgreed(true);
-                perform(mockMvc, Method.PUT, "/sharing/responds/" + r.getId(), cookie, r, status().isOk(), null);
-            }
-        }
-    }
+    // private void answerRespondFor(String username, char mask[]) throws Exception {
+    // Cookie cookie = userCookieMap.get(username);
+    //
+    // Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
+    // Respond[].class);
+    //
+    // List<String> isbns = getBooks(mask, books);
+    // for (Respond r : responds) {
+    // if (isbns.contains(r.getDemand().getIsbn())) {
+    // r.setAgreed(true);
+    // perform(mockMvc, Method.PUT, "/sharing/responds/" + r.getId(), cookie, r, status().isOk(), null);
+    // }
+    // }
+    // }
 
     private void checkChangedDemand(String username, char maskDemand[], char maskCanceled[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Demand1 demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
-                Demand1[].class);
+        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand[].class);
 
         List<String> isbnsDemand = getBooks(maskDemand, books);
         List<String> isbnsCanceled = getBooks(maskCanceled, books);
 
-        for (Demand1 d : demands) {
+        for (Demand d : demands) {
             assertTrue(isbnsDemand.contains(d.getIsbn()));
             if (isbnsCanceled.contains(d.getIsbn()))
                 assertTrue(d.getCanceled());
@@ -195,11 +194,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     private void changeDemandFor(String username, char mask[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Demand1 demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
-                Demand1[].class);
+        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand[].class);
 
         List<String> isbns = getBooks(mask, books);
-        for (Demand1 d : demands) {
+        for (Demand d : demands) {
             if (isbns.contains(d.getIsbn())) {
                 d.setCanceled(true);
                 perform(mockMvc, Method.PUT, "/sharing/demands/" + d.getId(), cookie, d, status().isOk(), null);
@@ -210,8 +209,8 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     private void checkRespondFor(String username, char mask[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Respond1 responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
-                Respond1[].class);
+        Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
+                Respond[].class);
 
         assertEquals(TestCaseUtil.sortedStringList(getIsbns(responds)),
                 TestCaseUtil.sortedStringList(getBooks(mask, books)));
@@ -220,24 +219,24 @@ public class DemandRespondTest extends AbstractMockMvcTest {
     private void checkDemandFor(String username, char mask[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Demand1 demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
-                Demand1[].class);
+        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand[].class);
 
         assertEquals(TestCaseUtil.sortedStringList(getIsbns(demands)),
                 TestCaseUtil.sortedStringList(getBooks(mask, books)));
     }
 
-    private List<String> getIsbns(Respond1 responds[]) {
+    private List<String> getIsbns(Respond responds[]) {
         List<String> isbns = new ArrayList<String>();
-        for (Respond1 r : responds) {
+        for (Respond r : responds) {
             isbns.add(r.getDemand().getIsbn());
         }
         return isbns;
     }
 
-    private List<String> getIsbns(Demand1 demands[]) {
+    private List<String> getIsbns(Demand demands[]) {
         List<String> isbns = new ArrayList<String>();
-        for (Demand1 d : demands) {
+        for (Demand d : demands) {
             isbns.add(d.getIsbn());
         }
         return isbns;

@@ -1,7 +1,7 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -23,34 +23,28 @@ public class Demand implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @JsonIgnore
+    @ManyToOne
+    private User user;
+
+    @Column
+    private Timestamp createdOn;
+
     @Column(nullable = false)
     private String isbn;
 
     @JsonIgnore
-    @ManyToOne
-    private User user;
-    
-    @JsonIgnore
-    @OneToOne
-    private Respond selectedRespond;
-
-    @JsonIgnore
     @OneToMany(mappedBy = "demand")
-    @Column
     private List<Respond> responds;
 
-    @Column(nullable = false)
-    private Boolean cancalled;
+    @OneToOne
+    private Bookshelf bookshelf;
 
     @Column(nullable = false)
-    private final Date creationDate;
+    private Boolean canceled;
 
     public Long getId() {
         return id;
-    }
-
-    public String getIsbn() {
-        return isbn;
     }
 
     public User getUser() {
@@ -61,6 +55,14 @@ public class Demand implements Serializable {
         this.user = user;
     }
 
+    public Timestamp getCreatedOn() {
+        return createdOn;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
@@ -69,21 +71,20 @@ public class Demand implements Serializable {
         return responds;
     }
 
-    public void setResponds(List<Respond> responds) {
-        this.responds = responds;
+    public Bookshelf getBookshelf() {
+        return bookshelf;
     }
 
-    public Boolean getCancalled() {
-        return cancalled;
+    public void setBookshelf(Bookshelf bookshelf) {
+        this.bookshelf = bookshelf;
     }
 
-    public void setCancalled(Boolean cancalled) {
-        this.cancalled = cancalled;
+    public Boolean getCanceled() {
+        return canceled;
     }
 
-    public Demand() {
-        cancalled = false;
-        creationDate = new Date(new java.util.Date().getTime());
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
     }
 
     @Override
@@ -109,6 +110,16 @@ public class Demand implements Serializable {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public Demand() {
+    }
+
+    public Demand(User user, String isbn) {
+        this.user = user;
+        this.isbn = isbn;
+        this.createdOn = new Timestamp(System.currentTimeMillis());
+        this.canceled = false;
     }
 
 }

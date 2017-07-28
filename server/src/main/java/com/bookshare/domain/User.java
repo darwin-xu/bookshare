@@ -64,16 +64,6 @@ public class User implements Serializable {
     @Column
     private List<Demand> demands;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    @Column
-    private List<Demand1> demand1s;
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    @Column
-    private List<Respond> responds;
-
     public Long getId() {
         return id;
     }
@@ -130,16 +120,8 @@ public class User implements Serializable {
         return bookshelfs;
     }
 
-    public List<Demand1> getDemand1s() {
-        return demand1s;
-    }
-
     public List<Demand> getDemands() {
         return demands;
-    }
-
-    public List<Respond> getResponds() {
-        return responds;
     }
 
     @Override

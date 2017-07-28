@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bookshare.dao.Demand1Repository;
-import com.bookshare.dao.Respond1Repository;
+import com.bookshare.dao.DemandRepository;
+import com.bookshare.dao.RespondRepository;
 import com.bookshare.dao.SessionRepository;
-import com.bookshare.domain.Demand1;
-import com.bookshare.domain.Respond1;
+import com.bookshare.domain.Demand;
+import com.bookshare.domain.Respond;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
 
@@ -33,10 +33,10 @@ public class SharingController {
     private SessionRepository sessionRepository;
 
     @Autowired
-    private Demand1Repository demand1Repository;
+    private DemandRepository demandRepository;
 
     @Autowired
-    private Respond1Repository respond1Repository;
+    private RespondRepository respondRepository;
 
     @RequestMapping(value = "demands/book/{isbn}", method = RequestMethod.POST)
     public void postDemand(@CookieValue("session") String sessionID, @PathVariable String isbn,
@@ -44,8 +44,8 @@ public class SharingController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-            Demand1 d = new Demand1(user, isbn);
-            demand1Repository.save(d);
+            Demand d = new Demand(user, isbn);
+            demandRepository.save(d);
             response.setStatus(HttpServletResponse.SC_CREATED);
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -53,11 +53,11 @@ public class SharingController {
     }
 
     @RequestMapping(value = "demands", method = RequestMethod.GET, produces = "application/json")
-    public List<Demand1> getDemands(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    public List<Demand> getDemands(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-            return user.getDemand1s();
+            return user.getDemands();
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
@@ -65,15 +65,15 @@ public class SharingController {
     }
 
     @RequestMapping(value = "demands/{id}", method = RequestMethod.PUT)
-    public void putDemand(@CookieValue("session") String sessionID, @PathVariable String id,
-            @RequestBody Demand1 demand, HttpServletResponse response) {
+    public void putDemand(@CookieValue("session") String sessionID, @PathVariable String id, @RequestBody Demand demand,
+            HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-            Demand1 d = demand1Repository.findByIdAndUser_Id(Long.parseLong(id), user.getId());
+            Demand d = demandRepository.findByIdAndUser_Id(Long.parseLong(id), user.getId());
             if (d != null) {
                 d.setCanceled(demand.getCanceled());
-                demand1Repository.save(d);
+                demandRepository.save(d);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -83,12 +83,12 @@ public class SharingController {
     }
 
     @RequestMapping(value = "responds", method = RequestMethod.GET, produces = "application/json")
-    public List<Respond1> getResponds(@CookieValue("session") String sessionID, HttpServletResponse response) {
+    public List<Respond> getResponds(@CookieValue("session") String sessionID, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
             // Get the responds of the user.
-            return respond1Repository.findByBookshelf_User_Id(user.getId());
+            return respondRepository.findByBookshelf_User_Id(user.getId());
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;

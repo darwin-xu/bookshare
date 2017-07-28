@@ -31,7 +31,7 @@ public class Bookshelf implements Serializable {
 
     @JsonIgnore
     @OneToMany(mappedBy = "bookshelf")
-    private List<Respond1> responds;
+    private List<Respond> responds;
 
     @Column
     private Timestamp importedOn;
@@ -66,11 +66,11 @@ public class Bookshelf implements Serializable {
         this.book = book;
     }
 
-    public List<Respond1> getResponds() {
+    public List<Respond> getResponds() {
         return responds;
     }
 
-    public void setResponds(List<Respond1> responds) {
+    public void setResponds(List<Respond> responds) {
         this.responds = responds;
     }
 

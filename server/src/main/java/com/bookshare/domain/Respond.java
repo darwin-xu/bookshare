@@ -1,7 +1,6 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
-import java.sql.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,31 +24,10 @@ public class Respond implements Serializable {
 
     @JsonIgnore
     @ManyToOne
-    private User user;
-
-    @Column(nullable = false)
-    private Boolean agreed;
-
-    @JsonIgnore
-    @Column
-    private Date agreementDate;
-
-    @Column(nullable = false)
-    private Boolean cancalled;
-
-    @Column(nullable = false)
-    private Boolean selected;
-
-    @JsonIgnore
-    @Column(nullable = false)
-    private Integer priority;
+    private Bookshelf bookshelf;
 
     @Column
-    private String deliveryId;
-
-    public Long getId() {
-        return id;
-    }
+    private int priority;
 
     public Demand getDemand() {
         return demand;
@@ -59,89 +37,36 @@ public class Respond implements Serializable {
         this.demand = demand;
     }
 
-    public User getUser() {
-        return user;
+    public Bookshelf getBookshelf() {
+        return bookshelf;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setBookshelf(Bookshelf bookshelf) {
+        this.bookshelf = bookshelf;
     }
 
-    public Boolean getAgreed() {
-        return agreed;
-    }
-
-    public void setAgreed(Boolean agreed) {
-        this.agreed = agreed;
-        agreementDate = new Date(new java.util.Date().getTime());
-    }
-
-    public Date getAgreementDate() {
-        return agreementDate;
-    }
-
-    public Boolean getCancalled() {
-        return cancalled;
-    }
-
-    public void setCancalled(Boolean cancalled) {
-        this.cancalled = cancalled;
-    }
-
-    public Boolean getSelected() {
-        return selected;
-    }
-
-    public void setSelected(Boolean selected) {
-        this.selected = selected;
-    }
-
-    public Integer getPriority() {
+    public int getPriority() {
         return priority;
     }
 
-    public void setPriority(Integer priority) {
+    public void setPriority(int priority) {
         this.priority = priority;
     }
 
-    public String getDeliveryId() {
-        return deliveryId;
+    public Long getId() {
+        return id;
     }
 
-    public void setDeliveryId(String deliveryId) {
-        this.deliveryId = deliveryId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Respond() {
-        agreed = false;
-        cancalled = false;
-        selected = false;
-        priority = 0;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Respond other = (Respond) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
+    public Respond(Demand demand, Bookshelf bookshelf) {
+        this.demand = demand;
+        this.bookshelf = bookshelf;
     }
 
 }
