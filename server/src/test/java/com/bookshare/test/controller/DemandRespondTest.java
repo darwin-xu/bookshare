@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.bookshare.domain.Demand;
 import com.bookshare.domain.Demand1;
 import com.bookshare.domain.Respond;
 import com.bookshare.domain.Respond1;
@@ -133,23 +132,23 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         checkRespondFor("z", z3);
     }
 
-    // @Test(groups = "change", dependsOnGroups = "check", timeOut = timeout_ms)
-    // public void changeDemand() throws Exception {
-    // changeDemandFor("v", v4);
-    // changeDemandFor("w", w4);
-    // changeDemandFor("x", x4);
-    // changeDemandFor("y", y4);
-    // changeDemandFor("z", z4);
-    // }
-    //
-    // // @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = timeout_ms)
-    // public void checkChangedDemand() throws Exception {
-    // checkChangedDemand("v", v2, v4);
-    // checkChangedDemand("w", w2, w4);
-    // checkChangedDemand("x", x2, x4);
-    // checkChangedDemand("y", y2, y4);
-    // checkChangedDemand("z", z2, z4);
-    // }
+    @Test(groups = "change", dependsOnGroups = "check", timeOut = int_timeout_ms)
+    public void changeDemand() throws Exception {
+        changeDemandFor("v", v4);
+        changeDemandFor("w", w4);
+        changeDemandFor("x", x4);
+        changeDemandFor("y", y4);
+        changeDemandFor("z", z4);
+    }
+
+    @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = int_timeout_ms)
+    public void checkChangedDemand() throws Exception {
+        checkChangedDemand("v", v2, v4);
+        checkChangedDemand("w", w2, w4);
+        checkChangedDemand("x", x2, x4);
+        checkChangedDemand("y", y2, y4);
+        checkChangedDemand("z", z2, z4);
+    }
 
     // @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = timeout_ms)
     // public void answerRespond() throws Exception {
@@ -175,34 +174,34 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         }
     }
 
-    private void checkChangedDemand(String username, char maskDemand[], char maskCancelled[]) throws Exception {
+    private void checkChangedDemand(String username, char maskDemand[], char maskCanceled[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
-                Demand[].class);
+        Demand1 demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand1[].class);
 
         List<String> isbnsDemand = getBooks(maskDemand, books);
-        List<String> isbnsCancelled = getBooks(maskCancelled, books);
+        List<String> isbnsCanceled = getBooks(maskCanceled, books);
 
-        for (Demand d : demands) {
+        for (Demand1 d : demands) {
             assertTrue(isbnsDemand.contains(d.getIsbn()));
-            if (isbnsCancelled.contains(d.getIsbn()))
-                assertTrue(d.getCancalled());
+            if (isbnsCanceled.contains(d.getIsbn()))
+                assertTrue(d.getCanceled());
             else
-                assertFalse(d.getCancalled());
+                assertFalse(d.getCanceled());
         }
     }
 
     private void changeDemandFor(String username, char mask[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
 
-        Demand demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
-                Demand[].class);
+        Demand1 demands[] = perform(mockMvc, Method.GET, "/sharing/demands", cookie, null, status().isOk(),
+                Demand1[].class);
 
         List<String> isbns = getBooks(mask, books);
-        for (Demand d : demands) {
+        for (Demand1 d : demands) {
             if (isbns.contains(d.getIsbn())) {
-                d.setCancalled(true);
+                d.setCanceled(true);
                 perform(mockMvc, Method.PUT, "/sharing/demands/" + d.getId(), cookie, d, status().isOk(), null);
             }
         }

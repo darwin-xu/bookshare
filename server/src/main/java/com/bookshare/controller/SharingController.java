@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,18 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bookshare.dao.Demand1Repository;
-import com.bookshare.dao.DemandRepository;
 import com.bookshare.dao.Respond1Repository;
-import com.bookshare.dao.RespondRepository;
 import com.bookshare.dao.SessionRepository;
-import com.bookshare.dao.UserRepository;
-import com.bookshare.domain.Demand;
 import com.bookshare.domain.Demand1;
-import com.bookshare.domain.Respond;
 import com.bookshare.domain.Respond1;
 import com.bookshare.domain.Session;
 import com.bookshare.domain.User;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 @RestController
 @RequestMapping(value = "sharing")
@@ -38,15 +31,6 @@ public class SharingController {
 
     @Autowired
     private SessionRepository sessionRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private DemandRepository demandRepository;
-
-    @Autowired
-    private RespondRepository respondRepository;
 
     @Autowired
     private Demand1Repository demand1Repository;
@@ -81,22 +65,18 @@ public class SharingController {
     }
 
     @RequestMapping(value = "demands/{id}", method = RequestMethod.PUT)
-    public void putDemand(@CookieValue("session") String sessionID, @PathVariable String id, @RequestBody Demand demand,
-            HttpServletResponse response) {
+    public void putDemand(@CookieValue("session") String sessionID, @PathVariable String id,
+            @RequestBody Demand1 demand, HttpServletResponse response) {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
-            // Demand oldDemand = demandRepository.findById(Long.valueOf(id));
-            // if (oldDemand != null && demand.getCancalled() == true) {
-            // oldDemand.setCancalled(true);
-            // demandRepository.save(oldDemand);
-            // List<Respond> responds = respondRepository.findByDemand_Id(oldDemand.getId());
-            // for (Respond r : responds) {
-            // r.setCancalled(true);
-            // respondRepository.save(r);
-            // }
-            // } else {
-            // response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            // }
+            User user = session.getUser();
+            Demand1 d = demand1Repository.findByIdAndUser_Id(Long.parseLong(id), user.getId());
+            if (d != null) {
+                d.setCanceled(demand.getCanceled());
+                demand1Repository.save(d);
+            } else {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
@@ -113,28 +93,6 @@ public class SharingController {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
-    }
-
-    @RequestMapping(value = "responds/{id}", method = RequestMethod.PUT)
-    public void putResponds(@CookieValue("session") String sessionID, @PathVariable String id,
-            @RequestBody Respond respond, HttpServletResponse response) {
-        Session session = sessionRepository.findBySessionID(sessionID);
-        if (session != null) {
-            Respond oldRespond = respondRepository.findById(Long.valueOf(id));
-            if (oldRespond != null) {
-                oldRespond.setAgreed(respond.getAgreed());
-                respondRepository.save(oldRespond);
-            } else {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            }
-        } else {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-    }
-
-    @Transactional
-    @RequestMapping(value = "test", method = RequestMethod.GET)
-    public void test() throws JsonProcessingException {
     }
 
 }

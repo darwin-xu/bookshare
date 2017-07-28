@@ -8,7 +8,7 @@ import com.bookshare.domain.User;
 @Test
 public class RemoteServerTest extends AbstractMockMvcTest {
 
-    @Test(timeOut = int_timeout_ms)
+    @Test(timeOut = ext_timeout_ms)
     public void userWithName() {
         User user = new User();
         user.setUsername("TestNo11");

@@ -40,6 +40,9 @@ public class Demand1 implements Serializable {
     @OneToOne
     private Bookshelf bookshelf;
 
+    @Column(nullable = false)
+    private Boolean canceled;
+
     public Long getId() {
         return id;
     }
@@ -76,6 +79,14 @@ public class Demand1 implements Serializable {
         this.bookshelf = bookshelf;
     }
 
+    public Boolean getCanceled() {
+        return canceled;
+    }
+
+    public void setCanceled(Boolean canceled) {
+        this.canceled = canceled;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -108,6 +119,7 @@ public class Demand1 implements Serializable {
         this.user = user;
         this.isbn = isbn;
         this.createdOn = new Timestamp(System.currentTimeMillis());
+        this.canceled = false;
     }
 
 }

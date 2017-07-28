@@ -12,6 +12,8 @@ import com.bookshare.domain.Demand1;
 public interface Demand1Repository extends PagingAndSortingRepository<Demand1, Long> {
 
     Demand1 findById(Long id);
+    
+    Demand1 findByIdAndUser_Id(Long id, Long userId);
 
     // @Query("select d from Demand1 d where d.responds is null")
     // List<Demand1> findUnlinked();
