@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import com.bookshare.domain.Bookshelf;
 import com.bookshare.domain.Demand;
 import com.bookshare.domain.Respond;
 import com.bookshare.utility.TestCaseUtil;
@@ -149,29 +150,27 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         checkChangedDemand("z", z2, z4);
     }
 
-    // @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = timeout_ms)
-    // public void answerRespond() throws Exception {
-    // answerRespondFor("v", v5);
-    // answerRespondFor("w", w5);
-    // answerRespondFor("x", x5);
-    // answerRespondFor("y", y5);
-    // answerRespondFor("z", z5);
-    // }
+    @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = int_timeout_ms)
+    public void agreeBookshelf() throws Exception {
+        agreeBookshelfFor("v", v5);
+        agreeBookshelfFor("w", w5);
+        agreeBookshelfFor("x", x5);
+        agreeBookshelfFor("y", y5);
+        agreeBookshelfFor("z", z5);
+    }
 
-    // private void answerRespondFor(String username, char mask[]) throws Exception {
-    // Cookie cookie = userCookieMap.get(username);
-    //
-    // Respond responds[] = perform(mockMvc, Method.GET, "/sharing/responds", cookie, null, status().isOk(),
-    // Respond[].class);
-    //
-    // List<String> isbns = getBooks(mask, books);
-    // for (Respond r : responds) {
-    // if (isbns.contains(r.getDemand().getIsbn())) {
-    // r.setAgreed(true);
-    // perform(mockMvc, Method.PUT, "/sharing/responds/" + r.getId(), cookie, r, status().isOk(), null);
-    // }
-    // }
-    // }
+    private void agreeBookshelfFor(String username, char mask[]) throws Exception {
+        Cookie cookie = userCookieMap.get(username);
+
+        List<String> isbns = getBooks(mask, books);
+        for (String isbn : isbns) {
+            Bookshelf bookshelf = perform(mockMvc, Method.GET, "/users/bookshelf/search/" + isbn, cookie, null,
+                    status().isOk(), Bookshelf.class);
+            bookshelf.setAgreed(true);
+            perform(mockMvc, Method.PUT, "/users/bookshelf/" + bookshelf.getId(), cookie, bookshelf, status().isOk(),
+                    null);
+        }
+    }
 
     private void checkChangedDemand(String username, char maskDemand[], char maskCanceled[]) throws Exception {
         Cookie cookie = userCookieMap.get(username);
