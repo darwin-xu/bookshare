@@ -1,6 +1,18 @@
-*~
+# All file without extensions
+*
+!/**/
+!*.*
+
+# Temporary files of macOS
 .DS_Store
+
+# Backup files of VI
+*~
+
+# User configuration of Xcode
 UserInterfaceState.xcuserstate
+
+# Temporary files of server
 server/target
 server/cover_image
 server/test-output

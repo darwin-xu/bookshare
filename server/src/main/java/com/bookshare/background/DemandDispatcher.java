@@ -46,57 +46,19 @@ public class DemandDispatcher {
     public void createRespondsForDemands() {
         synchronized (this) {
             logger.trace("=== Begin ===");
-            logger.trace("=======" + demandExpireMin + "===" + firstRespondTriggerMin);
-            // Find all demands without the corresponding responds yet.
-            // List<Demand> demands = demandRepository.findByResponds_Id(null);
-            // // Iterate over the demands.
-            // for (Demand d : demands) {
-            // // Find all users who have this book.
-            // List<User> users = userRepository.findByBookList_Isbn13(d.getIsbn());
-            // int priority = 0;
-            // for (User userHasTheBook : users) {
-            // // Create a new respond for the user who has the book.
-            // Respond rpd = new Respond();
-            // rpd.setDemand(d);
-            // rpd.setUser(userHasTheBook);
-            // rpd.setPriority(priority++);
-            // respondRepository.save(rpd);
-            // }
-            // }
 
             List<Demand> ds = demandRepository.findByResponds_Id(null);
             for (Demand d : ds) {
-                logger.trace("SSS:    Process demand:" + d.getIsbn());
+                logger.trace("Find demands need to process for ISBN[" + d.getIsbn() + "]");
                 List<Bookshelf> bookshelfs = bookshelfRepository.findAvailable(d.getIsbn());
                 for (Bookshelf b : bookshelfs) {
-                    logger.trace("SSS:    Process bookshelfs:" + b.getUser().getUsername());
+                    logger.trace("   " + b.getUser().getUsername());
                     Respond r = new Respond(d, b);
                     respondRepository.save(r);
                 }
             }
 
-            // List<Respond> responds = respondRepository.findByAgreed();
-            // for (Respond r : responds) {
-            // logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
-            // + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
-            // }
-            //
-            // List<String> isbns = respondRepository.findAllAgreedIsbns();
-            // for (String isbn : isbns) {
-            // logger.trace("FFF: " + isbn);
-            // // respondRepository.selectRespond(isbn);
-            // }
-            //
-            // logger.trace("EEEAAA:");
-            //
-            // List<Respond> responds1 = respondRepository.findByAgreed();
-            // for (Respond r : responds1) {
-            // logger.trace("EEE: " + r.getDemand().getUser() + " wants: " + r.getDemand().getIsbn() + " "
-            // + r.getUser().getUsername() + " has it. " + r.getPriority() + " S:" + r.getSelected());
-            // }
-            //
-            // logger.trace("=== End ====");
-
+            logger.trace("=== End ====");
             notifyAll();
         }
     }
