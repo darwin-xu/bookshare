@@ -37,10 +37,10 @@ public class Bookshelf implements Serializable {
     private Timestamp importedOn;
 
     @JsonIgnore
-    @OneToOne
+    @OneToOne(mappedBy = "bookshelf")
     private Demand demand;
 
-    @Column
+    @Column(nullable = false)
     private Boolean agreed;
 
     @Column
@@ -76,10 +76,6 @@ public class Bookshelf implements Serializable {
 
     public Demand getDemand() {
         return demand;
-    }
-
-    public void setDemand(Demand demand) {
-        this.demand = demand;
     }
 
     public Timestamp getImportedOn() {

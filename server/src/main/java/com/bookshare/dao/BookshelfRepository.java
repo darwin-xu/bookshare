@@ -15,5 +15,7 @@ public interface BookshelfRepository extends PagingAndSortingRepository<Bookshel
 
     @Query("select bs from Bookshelf bs inner join bs.book b where b.isbn13 = ?1 and bs.demand is null")
     List<Bookshelf> findAvailable(String bookIsbn);
+    
+    List<Bookshelf> findByBook_Isbn13AndDemandIsNull(String bookIsbn);
 
 }

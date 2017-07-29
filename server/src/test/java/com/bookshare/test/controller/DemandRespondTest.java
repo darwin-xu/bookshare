@@ -23,6 +23,7 @@ import com.bookshare.domain.Bookshelf;
 import com.bookshare.domain.Demand;
 import com.bookshare.domain.Respond;
 import com.bookshare.utility.TestCaseUtil;
+import com.bookshare.utility.TimeUtil;
 
 @Test
 @SpringBootTest
@@ -150,13 +151,15 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         checkChangedDemand("z", z2, z4);
     }
 
-    @Test(groups = "checkChange", dependsOnGroups = "change", timeOut = int_timeout_ms)
+    @Test(groups = "checkChange", dependsOnGroups = "change")// timeOut = int_timeout_ms)
     public void agreeBookshelf() throws Exception {
         agreeBookshelfFor("v", v5);
         agreeBookshelfFor("w", w5);
         agreeBookshelfFor("x", x5);
         agreeBookshelfFor("y", y5);
         agreeBookshelfFor("z", z5);
+        
+        TimeUtil.delay(5);
     }
 
     private void agreeBookshelfFor(String username, char mask[]) throws Exception {

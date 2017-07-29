@@ -48,16 +48,36 @@ public class DemandDispatcher {
             logger.trace("=== Begin ===");
 
             List<Demand> ds = demandRepository.findByResponds_Id(null);
+            logger.trace("WWW: ++++ Link demand-respond ++++");
             for (Demand d : ds) {
-                logger.trace("Find demands need to process for ISBN[" + d.getIsbn() + "]");
-                List<Bookshelf> bookshelfs = bookshelfRepository.findAvailable(d.getIsbn());
+                logger.trace("WWW: Find demands need to process for ISBN[" + d.getIsbn() + "]");
+                List<Bookshelf> bookshelfs = bookshelfRepository.findByBook_Isbn13AndDemandIsNull(d.getIsbn());
+                // List<Bookshelf> bookshelfs = bookshelfRepository.findAvailable(d.getIsbn());
                 for (Bookshelf b : bookshelfs) {
-                    logger.trace("   " + b.getUser().getUsername());
+                    logger.trace("WWW:    " + b.getUser().getUsername());
                     Respond r = new Respond(d, b);
                     respondRepository.save(r);
                 }
             }
+            logger.trace("WWW: ---- Link demand-respond ----");
 
+            logger.trace("SSS: ++++ Unresolved books ++++");
+            List<String> isbns = demandRepository.findUnresolvedBooks();
+            for (String s : isbns) {
+                logger.trace("SSS: " + s);
+                List<Respond> responds = respondRepository.findUnresolvedRespondsOf(s);
+                for (Respond r : responds) {
+                    logger.trace(
+                            "SSS: " + r.getDemand().getUser().getUsername() + " demand for [" + r.getDemand().getIsbn()
+                                    + "] is on the shelf of " + r.getBookshelf().getUser().getUsername() + "/"
+                                    + Integer.toHexString(System.identityHashCode(r.getDemand())) + "=>"
+                                    + Integer.toHexString(System.identityHashCode(r.getBookshelf())) + "/");
+                    // r.getBookshelf().setDemand(r.getDemand());
+                    //bookshelfRepository.save(r.getBookshelf());
+                }
+            }
+            logger.trace("SSS: ---- Unresolved books ----");
+            
             logger.trace("=== End ====");
             notifyAll();
         }

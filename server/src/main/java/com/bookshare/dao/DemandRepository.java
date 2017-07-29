@@ -15,9 +15,13 @@ public interface DemandRepository extends PagingAndSortingRepository<Demand, Lon
 
     Demand findByIdAndUser_Id(Long id, Long userId);
 
+    @Query("select d.isbn from Demand d where d.bookshelf is null group by d.isbn")
+    List<String> findUnresolvedBooks();
+
     // @Query("select d from Demand d where d.responds is null")
     // List<Demand1> findUnlinked();
 
+    // TODO: is it possible to change it into "is null"?
     List<Demand> findByResponds_Id(Long id);
 
     // @Query("select d from Demand d where DATE_ADD(d.createDate, INTERVAL ?1 MINUTE) < NOW()")
