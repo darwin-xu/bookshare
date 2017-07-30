@@ -67,17 +67,22 @@ public class DemandDispatcher {
                 logger.trace("SSS: " + s);
                 List<Respond> responds = respondRepository.findUnresolvedRespondsOf(s);
                 for (Respond r : responds) {
+                    String sel = "";
+                    if (r.getDemand().getBookshelf() == null && r.getBookshelf().getDemand() == null) {
+                        r.getBookshelf().setDemand(r.getDemand());
+                        r.getDemand().setBookshelf(r.getBookshelf());
+                        demandRepository.save(r.getDemand());
+                        sel = "selected";
+                    }
                     logger.trace(
                             "SSS: " + r.getDemand().getUser().getUsername() + " demand for [" + r.getDemand().getIsbn()
-                                    + "] is on the shelf of " + r.getBookshelf().getUser().getUsername() + "/"
+                                    + "] is on the shelf of " + r.getBookshelf().getUser().getUsername() + " /"
                                     + Integer.toHexString(System.identityHashCode(r.getDemand())) + "=>"
-                                    + Integer.toHexString(System.identityHashCode(r.getBookshelf())) + "/");
-                    // r.getBookshelf().setDemand(r.getDemand());
-                    //bookshelfRepository.save(r.getBookshelf());
+                                    + Integer.toHexString(System.identityHashCode(r.getBookshelf())) + "/ " + sel);
                 }
             }
             logger.trace("SSS: ---- Unresolved books ----");
-            
+
             logger.trace("=== End ====");
             notifyAll();
         }

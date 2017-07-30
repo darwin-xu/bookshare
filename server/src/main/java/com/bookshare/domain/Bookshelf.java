@@ -78,6 +78,10 @@ public class Bookshelf implements Serializable {
         return demand;
     }
 
+    public void setDemand(Demand demand) {
+        this.demand = demand;
+    }
+
     public Timestamp getImportedOn() {
         return importedOn;
     }
