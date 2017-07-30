@@ -26,7 +26,7 @@ public class Respond implements Serializable {
     @ManyToOne
     private Bookshelf bookshelf;
 
-    @Column
+    @Column(nullable = false)
     private int priority;
 
     public Demand getDemand() {
@@ -64,9 +64,10 @@ public class Respond implements Serializable {
     public Respond() {
     }
 
-    public Respond(Demand demand, Bookshelf bookshelf) {
+    public Respond(Demand demand, Bookshelf bookshelf, int priority) {
         this.demand = demand;
         this.bookshelf = bookshelf;
+        this.priority = priority;
     }
 
 }

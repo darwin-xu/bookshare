@@ -52,10 +52,9 @@ public class DemandDispatcher {
             for (Demand d : ds) {
                 logger.trace("WWW: Find demands need to process for ISBN[" + d.getIsbn() + "]");
                 List<Bookshelf> bookshelfs = bookshelfRepository.findByBook_Isbn13AndDemandIsNull(d.getIsbn());
-                // List<Bookshelf> bookshelfs = bookshelfRepository.findAvailable(d.getIsbn());
                 for (Bookshelf b : bookshelfs) {
                     logger.trace("WWW:    " + b.getUser().getUsername());
-                    Respond r = new Respond(d, b);
+                    Respond r = new Respond(d, b, calculatePriorty(d, b));
                     respondRepository.save(r);
                 }
             }
@@ -86,6 +85,12 @@ public class DemandDispatcher {
             logger.trace("=== End ====");
             notifyAll();
         }
+    }
+
+    private int calculatePriorty(Demand d, Bookshelf b) {
+        int dIndex = d.getUser().getSharingIndex();
+        int bIndex = b.getUser().getSharingIndex();
+        return dIndex * 2 + bIndex;
     }
 
     @RequestMapping(value = "waitForDispatch", method = RequestMethod.GET)
