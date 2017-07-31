@@ -9,7 +9,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Section implements Serializable {
-    
+
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -18,7 +18,7 @@ public class Section implements Serializable {
 
     @Column
     private String sectionName;
-    
+
     @Column
     private String isbn;
 
@@ -37,5 +37,5 @@ public class Section implements Serializable {
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
-    
+
 }

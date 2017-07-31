@@ -73,11 +73,9 @@ public class DemandDispatcher {
                         demandRepository.save(r.getDemand());
                         sel = "selected";
                     }
-                    logger.trace(
-                            "SSS: " + r.getDemand().getUser().getUsername() + " demand for [" + r.getDemand().getIsbn()
-                                    + "] is on the shelf of " + r.getBookshelf().getUser().getUsername() + " /"
-                                    + Integer.toHexString(System.identityHashCode(r.getDemand())) + "=>"
-                                    + Integer.toHexString(System.identityHashCode(r.getBookshelf())) + "/ " + sel);
+                    logger.trace("SSS: " + r.getDemand().getUser().getUsername() + " demand for ["
+                            + r.getDemand().getIsbn() + "] is on the shelf of "
+                            + r.getBookshelf().getUser().getUsername() + " Priority[" + r.getPriority() + "] " + sel);
                 }
             }
             logger.trace("SSS: ---- Unresolved books ----");

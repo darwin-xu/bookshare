@@ -76,14 +76,17 @@ public class AbstractMockMvcTest extends AbstractTestNGSpringContextTests {
         }
     }
 
-    protected Cookie createAndLogin(MockMvc mvc, String username) throws Exception {
+    protected Cookie createAndLogin(MockMvc mvc, String username, int sharingIndex) throws Exception {
         User user = new User();
         user.setUsername(username);
         perform(mvc, Method.POST, "/users/getVerifyCode", null, user, status().isCreated(), null);
         user.setVerifyCode("112233");
         user.setPassword("123");
         perform(mvc, Method.PATCH, "/users/changePassword", null, user, status().isOk(), null);
-        return perform(mvc, Method.POST, "/sessions/login", null, user, status().isOk(), Cookie.class);
+        Cookie cookie = perform(mvc, Method.POST, "/sessions/login", null, user, status().isOk(), Cookie.class);
+        user.setSharingIndex(sharingIndex);
+        perform(mvc, Method.PATCH, "/users/changeUser", cookie, user, status().isOk(), null);
+        return cookie;
     }
 
     protected List<String> getBooks(char mask[], String bookArray[]) {

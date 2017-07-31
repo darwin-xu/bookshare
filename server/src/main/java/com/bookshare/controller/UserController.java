@@ -63,8 +63,9 @@ public class UserController {
             // TODO: Send to SMS center.
             userRepository.save(u);
             response.setStatus(HttpServletResponse.SC_CREATED);
-        } else
+        } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     @RequestMapping(value = "changePassword", method = RequestMethod.PATCH)
@@ -73,8 +74,22 @@ public class UserController {
         if (authUser != null) {
             authUser.setPassword(user.getPassword());
             userRepository.save(authUser);
-        } else
+        } else {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
+    }
+
+    @RequestMapping(value = "changeUser", method = RequestMethod.PATCH)
+    public void changeUser(@CookieValue("session") String sessionID, @RequestBody User user,
+            HttpServletResponse response) {
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            User userToChange = session.getUser();
+            userToChange.setSharingIndex(user.getSharingIndex());
+            userRepository.save(userToChange);
+        } else {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
     }
 
     @RequestMapping(value = "bookshelf/books", method = RequestMethod.GET, produces = "application/json")

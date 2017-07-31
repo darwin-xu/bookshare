@@ -96,11 +96,11 @@ public class DemandRespondTest extends AbstractMockMvcTest {
 
     @Test(groups = "prepare", timeOut = int_timeout_ms)
     public void prepareUserShelf() throws Exception {
-        prepareUserShelfFor("v", v1);
-        prepareUserShelfFor("w", w1);
-        prepareUserShelfFor("x", x1);
-        prepareUserShelfFor("y", y1);
-        prepareUserShelfFor("z", z1);
+        prepareUserShelfFor("v", v1, 5);
+        prepareUserShelfFor("w", w1, 4);
+        prepareUserShelfFor("x", x1, 3);
+        prepareUserShelfFor("y", y1, 2);
+        prepareUserShelfFor("z", z1, 1);
     }
 
     @Test(groups = "issue", dependsOnGroups = "prepare", timeOut = int_timeout_ms)
@@ -151,14 +151,14 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         checkChangedDemand("z", z2, z4);
     }
 
-    @Test(groups = "checkChange", dependsOnGroups = "change")// timeOut = int_timeout_ms)
+    @Test(groups = "checkChange", dependsOnGroups = "change") // timeOut = int_timeout_ms)
     public void agreeBookshelf() throws Exception {
         agreeBookshelfFor("v", v5);
         agreeBookshelfFor("w", w5);
         agreeBookshelfFor("x", x5);
         agreeBookshelfFor("y", y5);
         agreeBookshelfFor("z", z5);
-        
+
         TimeUtil.delay(5);
     }
 
@@ -244,9 +244,9 @@ public class DemandRespondTest extends AbstractMockMvcTest {
         return isbns;
     }
 
-    private void prepareUserShelfFor(String username, char mask[]) throws Exception {
+    private void prepareUserShelfFor(String username, char mask[], int sharingIndex) throws Exception {
         // Create a user
-        Cookie cookie = createAndLogin(mockMvc, username);
+        Cookie cookie = createAndLogin(mockMvc, username, sharingIndex);
         userCookieMap.put(username, cookie);
 
         List<String> isbns = getBooks(mask, books);

@@ -10,8 +10,7 @@ import com.bookshare.domain.Respond;
 public interface RespondRepository extends PagingAndSortingRepository<Respond, Long> {
 
     @Query("select r from Respond r inner join r.demand d inner join r.bookshelf b "
-            + "where d.bookshelf is null and b.agreed = true and r.demand.isbn = ?1 "
-            + "order by r.priority desc")
+            + "where d.bookshelf is null and b.agreed = true and r.demand.isbn = ?1 " + "order by r.priority desc")
     List<Respond> findUnresolvedRespondsOf(String isbn);
 
     List<Respond> findByBookshelf_User_Id(Long userId);

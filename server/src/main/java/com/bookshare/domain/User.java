@@ -65,7 +65,7 @@ public class User implements Serializable {
     private List<Demand> demands;
 
     @Column(nullable = false)
-    private int sharingIndex = 0;
+    private Integer sharingIndex = 0;
 
     public Long getId() {
         return id;
@@ -127,11 +127,11 @@ public class User implements Serializable {
         return demands;
     }
 
-    public int getSharingIndex() {
+    public Integer getSharingIndex() {
         return sharingIndex;
     }
 
-    public void setSharingIndex(int sharingIndex) {
+    public void setSharingIndex(Integer sharingIndex) {
         this.sharingIndex = sharingIndex;
     }
 

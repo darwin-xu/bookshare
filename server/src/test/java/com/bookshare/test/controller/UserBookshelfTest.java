@@ -47,7 +47,7 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
 
     @Test(priority = 1, timeOut = int_timeout_ms)
     public void getCookie() throws Exception {
-        cookie = createAndLogin(mockMvc, "UserBookshelfTest");
+        cookie = createAndLogin(mockMvc, "UserBookshelfTest", 0);
     }
 
     @Test(priority = 2, timeOut = int_timeout_ms)

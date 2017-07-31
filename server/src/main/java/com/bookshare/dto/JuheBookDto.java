@@ -41,13 +41,17 @@ public class JuheBookDto {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         JuheBookDto bookDto = (JuheBookDto) o;
 
-        if (errorCode != bookDto.errorCode) return false;
-        if (!reason.equals(bookDto.reason)) return false;
+        if (errorCode != bookDto.errorCode)
+            return false;
+        if (!reason.equals(bookDto.reason))
+            return false;
         return book.equals(bookDto.book);
     }
 
@@ -61,10 +65,6 @@ public class JuheBookDto {
 
     @Override
     public String toString() {
-        return "BookDto{" +
-                "reason='" + reason + '\'' +
-                ", book=" + book +
-                ", errorCode=" + errorCode +
-                '}';
+        return "BookDto{" + "reason='" + reason + '\'' + ", book=" + book + ", errorCode=" + errorCode + '}';
     }
 }
