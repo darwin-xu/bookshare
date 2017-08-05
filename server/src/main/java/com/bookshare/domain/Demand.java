@@ -12,8 +12,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 public class Demand implements Serializable {
 
@@ -23,7 +21,6 @@ public class Demand implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @JsonIgnore
     @ManyToOne
     private User user;
 
@@ -33,7 +30,6 @@ public class Demand implements Serializable {
     @Column(nullable = false)
     private String isbn;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "demand")
     private List<Respond> responds;
 
@@ -69,6 +65,10 @@ public class Demand implements Serializable {
 
     public List<Respond> getResponds() {
         return responds;
+    }
+
+    public void setResponds(List<Respond> responds) {
+        this.responds = responds;
     }
 
     public Bookshelf getBookshelf() {
@@ -120,6 +120,27 @@ public class Demand implements Serializable {
         this.isbn = isbn;
         this.createdOn = new Timestamp(System.currentTimeMillis());
         this.canceled = false;
+    }
+
+    public static Demand breakRecursiveRef(Demand demand) {
+        demand.getUser().setBookList(null);
+        demand.getUser().setBookshelfs(null);
+        demand.getUser().setDemands(null);
+
+        List<Respond> responds = demand.getResponds();
+        for (Respond r : responds) {
+            r.setBookshelf(null);
+            r.setDemand(null);
+        }
+
+        return demand;
+    }
+
+    public static List<Demand> breakRecursiveRef(List<Demand> demands) {
+        for (Demand demand : demands) {
+            breakRecursiveRef(demand);
+        }
+        return demands;
     }
 
 }

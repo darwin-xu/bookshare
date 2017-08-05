@@ -123,8 +123,16 @@ public class User implements Serializable {
         return bookshelfs;
     }
 
+    public void setBookshelfs(List<Bookshelf> bookshelfs) {
+        this.bookshelfs = bookshelfs;
+    }
+
     public List<Demand> getDemands() {
         return demands;
+    }
+
+    public void setDemands(List<Demand> demands) {
+        this.demands = demands;
     }
 
     public Integer getSharingIndex() {

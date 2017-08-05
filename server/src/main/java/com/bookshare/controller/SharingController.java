@@ -57,11 +57,27 @@ public class SharingController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
-            return user.getDemands();
+            return Demand.breakRecursiveRef(user.getDemands());
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;
         }
+    }
+
+    @RequestMapping(value = "demands/{id}", method = RequestMethod.GET, produces = "application/json")
+    public Demand getDemand(@CookieValue("session") String sessionID, @PathVariable String id,
+            HttpServletResponse response) {
+        Demand d = null;
+        Session session = sessionRepository.findBySessionID(sessionID);
+        if (session != null) {
+            User user = session.getUser();
+            d = demandRepository.findByIdAndUser_Id(Long.parseLong(id), user.getId());
+            if (d == null)
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        return Demand.breakRecursiveRef(d);
     }
 
     @RequestMapping(value = "demands/{id}", method = RequestMethod.PUT)
@@ -88,7 +104,7 @@ public class SharingController {
         if (session != null) {
             User user = session.getUser();
             // Get the responds of the user.
-            return respondRepository.findByBookshelf_User_Id(user.getId());
+            return Respond.breakRecursiveRef(respondRepository.findByBookshelf_User_Id(user.getId()));
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return null;

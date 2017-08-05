@@ -200,6 +200,14 @@ public class DemandRespondTest extends AbstractMockMvcTest {
             else
                 assertFalse(d.getCanceled());
         }
+
+        for (Demand dExp : demands) {
+            Demand dAct = perform(mockMvc, Method.GET, "/sharing/demands/" + dExp.getId(), cookie, null,
+                    status().isOk(), Demand.class);
+            assertEquals(dAct.getId(), dExp.getId());
+            assertEquals(dAct.getCanceled(), dExp.getCanceled());
+            assertEquals(dAct.getIsbn(), dExp.getIsbn());
+        }
     }
 
     private void changeDemandFor(String username, char mask[]) throws Exception {

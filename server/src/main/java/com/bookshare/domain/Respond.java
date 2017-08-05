@@ -1,6 +1,7 @@
 package com.bookshare.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -68,6 +69,25 @@ public class Respond implements Serializable {
         this.demand = demand;
         this.bookshelf = bookshelf;
         this.priority = priority;
+    }
+
+    public static Respond breakRecursiveRef(Respond respond) {
+        respond.getBookshelf().setDemand(null);
+        respond.getBookshelf().setResponds(null);
+        respond.getBookshelf().setUser(null);
+
+        respond.getDemand().setBookshelf(null);
+        respond.getDemand().setResponds(null);
+        respond.getDemand().setUser(null);
+
+        return respond;
+    }
+
+    public static List<Respond> breakRecursiveRef(List<Respond> responds) {
+        for (Respond respond : responds) {
+            breakRecursiveRef(respond);
+        }
+        return responds;
     }
 
 }
