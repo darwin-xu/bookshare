@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.slf4j.Logger;
@@ -31,7 +30,6 @@ public class User implements Serializable {
 
     @Id
     @GeneratedValue
-    @JsonIgnore
     private Long id;
 
     @Column
@@ -49,10 +47,6 @@ public class User implements Serializable {
     @JsonIgnore
     @Column
     private long verifyCodeValidity;
-
-    @JsonIgnore
-    @ManyToMany
-    private List<Book> bookList;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
@@ -109,14 +103,6 @@ public class User implements Serializable {
 
     public long getVerifyCodeValidity() {
         return verifyCodeValidity;
-    }
-
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
     }
 
     public List<Bookshelf> getBookshelfs() {

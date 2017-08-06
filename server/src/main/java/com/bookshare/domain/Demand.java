@@ -123,7 +123,6 @@ public class Demand implements Serializable {
     }
 
     public static Demand breakRecursiveRef(Demand demand) {
-        demand.getUser().setBookList(null);
         demand.getUser().setBookshelfs(null);
         demand.getUser().setDemands(null);
 

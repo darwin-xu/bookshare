@@ -1,7 +1,5 @@
 package com.bookshare.dao;
 
-import java.util.List;
-
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -13,7 +11,5 @@ import com.bookshare.domain.User;
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     User findByUsername(@Param("username") String username);
-
-    List<User> findByBookList_Isbn13(String isbn);
 
 }

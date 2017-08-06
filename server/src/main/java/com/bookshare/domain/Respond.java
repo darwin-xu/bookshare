@@ -9,8 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 public class Respond implements Serializable {
 
@@ -23,7 +21,6 @@ public class Respond implements Serializable {
     @ManyToOne
     private Demand demand;
 
-    @JsonIgnore
     @ManyToOne
     private Bookshelf bookshelf;
 
