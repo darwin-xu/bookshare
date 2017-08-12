@@ -71,7 +71,15 @@ public class DemandDispatcher {
                         r.getBookshelf().setDemand(r.getDemand());
                         r.getDemand().setBookshelf(r.getBookshelf());
                         demandRepository.save(r.getDemand());
+
+                        Bookshelf b = r.getDemand().getBookshelf();
+                        logger.trace("SSS -: " + b);
                         sel = "selected";
+                        Demand dd = demandRepository.findById(r.getDemand().getId());
+                        Bookshelf b1 = dd.getBookshelf();
+                        logger.trace("SSS - 1: " + b1);
+                        Demand ddd = b1.getDemand();
+                        System.out.println("SSS - 3: " + b1 + " " + ddd);
                     }
                     logger.trace("SSS: " + r.getDemand().getUser().getUsername() + " demand for ["
                             + r.getDemand().getIsbn() + "] is on the shelf of "

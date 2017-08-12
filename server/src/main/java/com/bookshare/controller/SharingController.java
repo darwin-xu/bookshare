@@ -57,6 +57,10 @@ public class SharingController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             User user = session.getUser();
+            List<Demand> ds = user.getDemands();
+            for (Demand d: ds) {
+                System.out.println("SSS - 2:"+d.getBookshelf());
+            }
             return Demand.breakRecursiveRef(user.getDemands());
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

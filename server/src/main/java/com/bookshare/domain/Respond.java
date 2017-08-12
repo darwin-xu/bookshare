@@ -69,14 +69,18 @@ public class Respond implements Serializable {
     }
 
     public static Respond breakRecursiveRef(Respond respond) {
-        respond.getBookshelf().setDemand(null);
-        respond.getBookshelf().setResponds(null);
-        respond.getBookshelf().setUser(null);
-
-        respond.getDemand().setBookshelf(null);
-        respond.getDemand().setResponds(null);
-        respond.getDemand().setUser(null);
-
+        Bookshelf bookshelf = respond.getBookshelf();
+        if (bookshelf != null) {
+            bookshelf.setDemand(null);
+            bookshelf.setResponds(null);
+            bookshelf.setUser(null);
+        }
+        Demand demand = respond.getDemand();
+        if (demand != null) {
+            demand.setBookshelf(null);
+            demand.setResponds(null);
+            demand.setUser(null);
+        }
         return respond;
     }
 

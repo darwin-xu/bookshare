@@ -157,7 +157,7 @@ public class UserController {
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        return bookshelf;
+        return Bookshelf.breakRecursiveRef(bookshelf);
     }
 
     @RequestMapping(value = "bookshelf", method = RequestMethod.GET, produces = "application/json")
@@ -166,10 +166,13 @@ public class UserController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             bookshelfs = session.getUser().getBookshelfs();
+            for (Bookshelf b : bookshelfs) {
+                System.out.println("RRR: " + b + " " + b.getIsbn() + " " + b.getDemand());
+            }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        return bookshelfs;
+        return Bookshelf.breakRecursiveRef(bookshelfs);
     }
 
     @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.GET, produces = "application/json")
@@ -184,7 +187,7 @@ public class UserController {
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-        return bookshelf;
+        return Bookshelf.breakRecursiveRef(bookshelf);
     }
 
     @RequestMapping(value = "bookshelf/{id}", method = RequestMethod.PUT)

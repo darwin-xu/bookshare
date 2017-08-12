@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,9 +24,11 @@ public class Bookshelf implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @JsonIgnore
     @ManyToOne
     private User user;
 
+    @JsonIgnore
     @ManyToOne
     private Book book;
 
@@ -36,7 +39,6 @@ public class Bookshelf implements Serializable {
     @Column
     private Timestamp importedOn;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "bookshelf")
     private Demand demand;
 
@@ -45,6 +47,9 @@ public class Bookshelf implements Serializable {
 
     @Column
     private Timestamp agreedOn;
+
+    @Transient
+    private String isbn;
 
     public Long getId() {
         return id;
@@ -64,6 +69,7 @@ public class Bookshelf implements Serializable {
 
     public void setBook(Book book) {
         this.book = book;
+        this.isbn = book.getIsbn13();
     }
 
     public List<Respond> getResponds() {
@@ -100,6 +106,16 @@ public class Bookshelf implements Serializable {
         return agreedOn;
     }
 
+    public String getIsbn() {
+        if (isbn == null) {
+            Book book = getBook();
+            if (book != null) {
+                isbn = book.getIsbn13();
+            }
+        }
+        return isbn;
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -133,6 +149,24 @@ public class Bookshelf implements Serializable {
         this.book = book;
         this.importedOn = new Timestamp(System.currentTimeMillis());
         this.agreed = false;
+        this.isbn = book.getIsbn13();
+    }
+
+    public static Bookshelf breakRecursiveRef(Bookshelf bookshelf) {
+        Demand demand = bookshelf.getDemand();
+        if (demand != null) {
+            demand.setBookshelf(null);
+            demand.setResponds(null);
+            demand.setUser(null);
+        }
+        return bookshelf;
+    }
+
+    public static List<Bookshelf> breakRecursiveRef(List<Bookshelf> bookshelfs) {
+        for (Bookshelf bookshelf : bookshelfs) {
+            breakRecursiveRef(bookshelf);
+        }
+        return bookshelfs;
     }
 
 }
