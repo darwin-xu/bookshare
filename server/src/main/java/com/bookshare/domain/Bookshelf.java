@@ -153,18 +153,22 @@ public class Bookshelf implements Serializable {
     }
 
     public static Bookshelf breakRecursiveRef(Bookshelf bookshelf) {
-        Demand demand = bookshelf.getDemand();
-        if (demand != null) {
-            demand.setBookshelf(null);
-            demand.setResponds(null);
-            demand.setUser(null);
+        if (bookshelf != null) {
+            Demand demand = bookshelf.getDemand();
+            if (demand != null) {
+                demand.setBookshelf(null);
+                demand.setResponds(null);
+                demand.setUser(null);
+            }
         }
         return bookshelf;
     }
 
     public static List<Bookshelf> breakRecursiveRef(List<Bookshelf> bookshelfs) {
-        for (Bookshelf bookshelf : bookshelfs) {
-            breakRecursiveRef(bookshelf);
+        if (bookshelfs != null) {
+            for (Bookshelf bookshelf : bookshelfs) {
+                breakRecursiveRef(bookshelf);
+            }
         }
         return bookshelfs;
     }

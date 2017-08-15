@@ -104,7 +104,7 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
         for (String toSearch : isbns) {
             Bookshelf bookshelf = perform(mockMvc, Method.GET, "/users/bookshelf/search/" + toSearch, cookie, null,
                     status().isOk(), Bookshelf.class);
-            assertEquals(bookshelf.getBook().getIsbn13(), toSearch);
+            assertEquals(bookshelf.getIsbn(), toSearch);
         }
     }
 
@@ -149,7 +149,7 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
         Bookshelf bookshelfs[] = perform(mockMvc, Method.GET, "/users/bookshelf", cookie, null, status().isOk(),
                 Bookshelf[].class);
         for (Bookshelf b : bookshelfs) {
-            if (isbnsToAgree.contains(b.getBook().getIsbn13()))
+            if (isbnsToAgree.contains(b.getIsbn()))
                 assertTrue(b.getAgreed());
             else
                 assertFalse(b.getAgreed());
@@ -175,7 +175,7 @@ public class UserBookshelfTest extends AbstractMockMvcTest {
     private List<String> getIsbns(Bookshelf bookshelfs[]) {
         List<String> sl = new ArrayList<String>();
         for (Bookshelf b : bookshelfs) {
-            sl.add(b.getBook().getIsbn13());
+            sl.add(b.getIsbn());
         }
         return sl;
     }
