@@ -173,8 +173,6 @@ public class DemandRespondTest extends AbstractMockMvcTest {
 
     @Test(groups = "checkMatch", dependsOnGroups = "checkChange", timeOut = int_timeout_ms)
     public void checkMatchedDemand() throws Exception {
-
-        System.out.println("SSS - 4");
         checkMatchedDemandFor("v", v6);
         checkMatchedDemandFor("w", w6);
         checkMatchedDemandFor("x", x6);
@@ -184,7 +182,6 @@ public class DemandRespondTest extends AbstractMockMvcTest {
 
     @Test(groups = "checkMatch", dependsOnGroups = "checkChange", timeOut = int_timeout_ms)
     public void checkMatchedBookshelf() throws Exception {
-        System.out.println("SSS - 5");
         checkMatchedBookshelfFor("v", v7);
         checkMatchedBookshelfFor("w", w7);
         checkMatchedBookshelfFor("x", x7);

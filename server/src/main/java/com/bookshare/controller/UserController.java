@@ -166,9 +166,6 @@ public class UserController {
         Session session = sessionRepository.findBySessionID(sessionID);
         if (session != null) {
             bookshelfs = session.getUser().getBookshelfs();
-            for (Bookshelf b : bookshelfs) {
-                System.out.println("RRR: " + b + " " + b.getIsbn() + " " + b.getDemand());
-            }
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
